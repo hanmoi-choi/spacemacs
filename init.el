@@ -13,12 +13,10 @@
 ;; Without this comment emacs25 adds (package-initialize) here
 ;; (package-initialize)
 
-<<<<<<< HEAD
-(defconst spacemacs-version          "0.103.6" "Spacemacs version.")
-=======
+
 (setq gc-cons-threshold 100000000)
 (defconst spacemacs-version          "0.104.0" "Spacemacs version.")
->>>>>>> 9f3b249e274139640a508e4ca7099abb646be36c
+
 (defconst spacemacs-emacs-min-version   "24.3" "Minimal version of Emacs.")
 
 (defun spacemacs/emacs-version-ok ()
