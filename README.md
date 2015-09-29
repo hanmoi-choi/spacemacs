@@ -242,14 +242,8 @@ branch, for instance to revert to the last `0.103`:
 `Spacemacs` is a community-driven project, it needs _you_ to keep it up to
 date and propose useful and complete configuration!
 
-<<<<<<< HEAD
-If you are ready to contribute please begin by consulting the
-[contribution guidelines][CONTRIBUTE.org] and [conventions][CONVENTIONS.org],
-thanks!
-=======
 Before contributing be sure to consult the
 [contribution guidelines][CONTRIBUTE.org] and [conventions][CONVENTIONS.org].
->>>>>>> 9f3b249e274139640a508e4ca7099abb646be36c
 
 # License
 
@@ -277,53 +271,22 @@ Thank you !
 [CONTRIBUTE.org]: doc/CONTRIBUTE.org
 [CONVENTIONS.org]: doc/CONVENTIONS.org
 [DOCUMENTATION.org]: doc/DOCUMENTATION.org
-<<<<<<< HEAD
-[HOWTOs.org]: doc/HOWTOs.org
-[VIMUSERS.org]: doc/VIMUSERS.org
-[config]: doc/DOCUMENTATION.org#configuration-layers
-=======
 [QUICK_START.org]: doc/QUICK_START.org
 [FAQ.org]: doc/FAQ.org
 [HOWTOs.org]: doc/HOWTOs.org
 [VIMUSERS.org]: doc/VIMUSERS.org
->>>>>>> 9f3b249e274139640a508e4ca7099abb646be36c
 [dotfile]: doc/DOCUMENTATION.org#dotfile-configuration
 [troubleshoot]: doc/DOCUMENTATION.org#troubleshoot
-<<<<<<< HEAD
-[contrib layers]: doc/DOCUMENTATION.org#using-configuration-layers
-[Git support]: contrib/git/README.org
-[git layer]: contrib/git
-[ace-jump]: doc/DOCUMENTATION.org#vim-motions-with-ace-jump-mode
-[project management]: doc/DOCUMENTATION.org#project-management
-[Evil Mode]: doc/DOCUMENTATION.org#evil
-[private]: ./private
-[layers]: ./contrib
-[font section]: doc/DOCUMENTATION.org#font
-[powerline-seps]: doc/DOCUMENTATION.org#powerline-separators
-[FAQ]: https://github.com/syl20bnr/spacemacs#faq
-[dotfile template]: ./core/templates/.spacemacs.template
-[install OSX section]: https://github.com/syl20bnr/spacemacs#os-x
-=======
->>>>>>> 9f3b249e274139640a508e4ca7099abb646be36c
-[osx layer]: contrib/osx/README.org
+[osx layer]: layers/osx/README.org
 [Gitter Chat]: https://gitter.im/syl20bnr/spacemacs
 [Gitter Chat IRC server]: https://irc.gitter.im/
 [emacs-mac-port]: https://github.com/railwaycat/homebrew-emacsmacport
 [emacs-mac-port-server]: https://github.com/railwaycat/emacs-mac-port/blob/master/README-mac#L210-L213
 [emacs-for-windows]: http://emacsbinw64.sourceforge.net/
 [the platinum searcher]: https://github.com/monochromegane/the_platinum_searcher
-<<<<<<< HEAD
-[powerline-srgb-issue]: https://github.com/milkypostman/powerline/issues/54
-[powerline-doc]: doc/DOCUMENTATION.org#powerline-separators
-=======
->>>>>>> 9f3b249e274139640a508e4ca7099abb646be36c
 [so-server-unsafe]: http://stackoverflow.com/questions/885793/emacs-error-when-calling-server-start
 [Spacemacs logo]: https://github.com/nashamri/spacemacs-logo
 [Nasser Alshammari]: https://github.com/nashamri
 [cpaulik-unity-icon]: http://splendidabacus.com/posts/2015/03/spacemacs-unity-icon/
-<<<<<<< HEAD
-[Windows Image Support]: http://stackoverflow.com/questions/2650041/emacs-under-windows-and-png-files
-=======
 [icon-mac-instructions]: http://www.idownloadblog.com/2014/07/16/how-to-change-app-icon-mac/
 [icon-repository]: https://github.com/nashamri/spacemacs-logo
->>>>>>> 9f3b249e274139640a508e4ca7099abb646be36c
