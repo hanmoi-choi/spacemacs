@@ -1469,7 +1469,7 @@ It will toggle the overlay under point or create an overlay of one character."
     :init
     (progn
       (add-to-list 'evil-motion-state-modes 'neotree-mode)
-      (setq neo-window-width 32
+      (setq neo-window-width 40
             neo-create-file-auto-open t
             neo-banner-message nil
             neo-show-updir-line nil
@@ -1480,7 +1480,7 @@ It will toggle the overlay under point or create an overlay of one character."
             neo-show-hidden-files t
             neo-auto-indent-point t
             neo-modern-sidebar t
-            neo-vc-integration '(face))
+            neo-vc-integration nil)
 
       (defun spacemacs/neotree-expand-or-open ()
         "Collapse a neotree node."
@@ -1528,8 +1528,9 @@ It will toggle the overlay under point or create an overlay of one character."
 
       (defun spacemacs//neotree-key-bindings ()
         "Set the key bindings for a neotree buffer."
-        (define-key evil-motion-state-local-map (kbd "TAB") 'neotree-stretch-toggle)
+        (define-key evil-motion-state-local-map (kbd "TAB") 'neotree-enter)
         (define-key evil-motion-state-local-map (kbd "RET") 'neotree-enter)
+        (define-key evil-motion-state-local-map (kbd "SPC") 'neotree-enter)
         (define-key evil-motion-state-local-map (kbd "|")   'neotree-enter-vertical-split)
         (define-key evil-motion-state-local-map (kbd "-")   'neotree-enter-horizontal-split)
         (define-key evil-motion-state-local-map (kbd "?")   'evil-search-backward)
