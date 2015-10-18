@@ -46,3 +46,6 @@ private/*
 !private/local/README.md
 /games/
 /GPATH
+/.mc-lists.el
+/GRTAGS
+/GTAGS
