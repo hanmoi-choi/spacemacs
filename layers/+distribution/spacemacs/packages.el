@@ -17,14 +17,14 @@
         ace-window
         adaptive-wrap
         aggressive-indent
-        auto-dictionary
+        ;; auto-dictionary
         auto-highlight-symbol
         avy
         buffer-move
         (centered-cursor :location local)
         clean-aindent-mode
-        define-word
-        desktop
+        ;; define-word
+        ;; desktop
         doc-view
         eval-sexp-fu
         evil-anzu
@@ -33,39 +33,39 @@
         evil-iedit-state
         (evil-indent-textobject :location (recipe :fetcher github :repo "TheBB/evil-indent-textobject"))
         evil-jumper
-        evil-lisp-state
+        ;; evil-lisp-state
         evil-nerd-commenter
         evil-matchit
         evil-numbers
         evil-search-highlight-persist
         ;; Temporarily disabled, pending the resolution of
         ;; https://github.com/7696122/evil-terminal-cursor-changer/issues/8
-        (evil-terminal-cursor-changer :excluded t)
-        evil-tutor
+        evil-terminal-cursor-changer
+        ;; evil-tutor
         expand-region
         fancy-battery
-        flx-ido
-        golden-ratio
-        google-translate
+        ;; flx-ido
+        ;; golden-ratio
+        ;; google-translate
         helm-ag
         helm-make
         helm-mode-manager
         helm-swoop
-        helm-themes
+        ;; helm-themes
         highlight-indentation
         highlight-numbers
         highlight-parentheses
         ;; waiting for an overlay bug to be fixed
         ;; see https://github.com/syl20bnr/spacemacs/issues/2529
         (hl-anything :excluded t)
-        hungry-delete
-        info+
-        iedit
-        indent-guide
-        open-junk-file
-        leuven-theme
-        linum-relative
-        move-text
+        ;; hungry-delete
+        ;; info+
+        ;; iedit
+        ;; indent-guide
+        ;; open-junk-file
+        ;; leuven-theme
+        ;; linum-relative
+        ;; move-text
         neotree
         pcre2el
         powerline
@@ -73,12 +73,12 @@
         recentf
         smartparens
         smooth-scrolling
-        (solarized-theme :location local)
-        spray
+        ;; (solarized-theme :location local)
+        ;; spray
         vi-tilde-fringe
         volatile-highlights
         window-numbering
-        (zoom-frm :location local)
+        ;; (zoom-frm :location local)
         ))
 
 ;; Paradox from MELPA is not compatible with 24.3, so we use

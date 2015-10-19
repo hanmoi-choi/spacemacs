@@ -13,12 +13,12 @@
 (setq javascript-packages
   '(
     coffee-mode
-    company
+    ;; company
     company-tern
-    flycheck
-    js-doc
+    ;; flycheck
+    ;; js-doc
     js2-mode
-    js2-refactor
+    ;; js2-refactor
     json-mode
     json-snatcher
     tern
@@ -51,6 +51,7 @@
       :if (and (configuration-layer/package-usedp 'company)
                (configuration-layer/package-usedp 'tern))
       :defer t
+      :diminish "[TN] "
       :init
       (push 'company-tern company-backends-js2-mode))))
 

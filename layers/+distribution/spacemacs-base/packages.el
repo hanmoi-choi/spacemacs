@@ -49,7 +49,7 @@
         (uniquify :location built-in)
         use-package
         which-key
-        whitespace
+        ;; whitespace
         winner))
 
 ;; Initialization of packages
@@ -201,6 +201,7 @@
       (defun evil-insert-state-cursor-hide ()
         (setq evil-insert-state-cursor '((hbar . 0))))
 
+      (define-key evil-normal-state-map (kbd "M-.") nil)
       (evil-mode 1))
     :config
     (progn

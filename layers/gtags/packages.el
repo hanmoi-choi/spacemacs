@@ -23,6 +23,7 @@
 (defun gtags/init-helm-gtags ()
   (use-package helm-gtags
     :defer t
+    :diminish "[HG] "
     :init
     (progn
       (setq helm-gtags-ignore-case t
@@ -30,19 +31,23 @@
             helm-gtags-use-input-at-cursor t
             helm-gtags-pulse-at-cursor t)
       ;; modes that do not have a layer, define here
-      (spacemacs/helm-gtags-define-keys-for-mode 'tcl-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'java-mode)
-      (spacemacs/helm-gtags-define-keys-for-mode 'vhdl-mode)
+      (spacemacs/helm-gtags-define-keys-for-mode 'enh-ruby-mode)
+      (spacemacs/helm-gtags-define-keys-for-mode 'web-mode)
+      (spacemacs/helm-gtags-define-keys-for-mode 'js2-mode)
+      (spacemacs/helm-gtags-define-keys-for-mode 'emacs-lisp-mode)
+      (spacemacs/helm-gtags-define-keys-for-mode 'common-lisp-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'shell-script-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'awk-mode)
-      (spacemacs/helm-gtags-define-keys-for-mode 'asm-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'dired-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'compilation-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'shell-mode)
 
-      (spacemacs/ggtags-enable-eldoc 'tcl-mode)
       (spacemacs/ggtags-enable-eldoc 'java-mode)
-      (spacemacs/ggtags-enable-eldoc 'vhdl-mode))
+      (spacemacs/ggtags-enable-eldoc 'enh-ruby--mode)
+      (spacemacs/ggtags-enable-eldoc 'js2-mode)
+      (spacemacs/ggtags-enable-eldoc 'web-mode)
+      )
     :config
     (progn
       ;; if anyone uses helm-gtags, they would want to use these key bindings

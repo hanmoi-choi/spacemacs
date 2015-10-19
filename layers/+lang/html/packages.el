@@ -12,12 +12,12 @@
 
 (setq html-packages
   '(
-    company
+    ;; company
     company-web
     css-mode
     emmet-mode
-    evil-matchit
-    flycheck
+    ;; evil-matchit
+    ;; flycheck
     haml-mode
     helm-css-scss
     jade-mode
@@ -29,7 +29,7 @@
     smartparens
     tagedit
     web-mode
-    yasnippet
+    ;; yasnippet
     ))
 
 (when (configuration-layer/layer-usedp 'auto-completion)
