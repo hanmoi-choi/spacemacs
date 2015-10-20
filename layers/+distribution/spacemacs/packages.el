@@ -400,6 +400,7 @@
       (setq avy-background t)
       (evil-leader/set-key
         "SPC" 'avy-goto-word-or-subword-1
+        "o" 'avy-goto-char
         "l" 'avy-goto-line))
     :config
     (evil-leader/set-key "`" 'avy-pop-mark)))

@@ -1,7 +1,7 @@
 (setq osx-packages
   '(
     pbcopy
-    launchctl
+    ;; launchctl
     reveal-in-osx-finder
     ))
 
