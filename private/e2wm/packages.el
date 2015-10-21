@@ -92,4 +92,10 @@
     (global-set-key (kbd "<f8>") 'toggle-e2wm))
   :config
   (progn
+    (require 'e2wm)
+    (e2wm:add-keymap
+     e2wm:pst-minor-mode-keymap
+     '(("M-]"       . e2wm:pst-history-forward-command) ; 履歴を進む
+       ("M-["       . e2wm:pst-history-back-command) ; 履歴をもどる
+       ) e2wm:prefix-key)
     ))
