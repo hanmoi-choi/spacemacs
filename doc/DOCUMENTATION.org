@@ -1793,7 +1793,6 @@ Spacemacs can be interfaced with different search utilities like:
   - [[https://github.com/ggreer/the_silver_searcher][ag]]
   - [[https://github.com/monochromegane/the_platinum_searcher][pt]]
 
-<<<<<<< HEAD
 The search commands in Spacemacs are organized under the ~SPC s~ prefix with
 the next key is the tool to use and the last key is the scope. For instance
 ~SPC s a b~ will search in all opened buffers using =ag=.
@@ -1805,21 +1804,6 @@ selected for the search. This tool corresponds to the first tool found on the
 system of the list =dotspacemacs-search-tools=, the default order is =ag=,
 =pt=, =ack= then =grep=. For instance ~SPC s b~ will search in the opened
 buffers using =pt= if =ag= has not been found on the system.
-=======
-The search commands in Spacemacs are organized under the ~SPC s~ prefix with the
-next key is the tool to use and the last key is the scope. For instance ~SPC s a
-b~ will search in all opened buffers using =ag=.
-
-If the last key (determining the scope) is uppercase then the current region or
-symbol under point is used as default input for the search. For instance ~SPC s
-a B~ will search with symbol under point (if there is no active region).
-
-If the tool key is omitted then a default tool will be automatically selected
-for the search. This tool corresponds to the first tool found on the system of
-the list =dotspacemacs-search-tools=, the default order is =ag=, =pt=, =ack=
-then =grep=. For instance ~SPC s b~ will search in the opened buffers using =pt=
-if =ag= has not been found on the system.
->>>>>>> 9f3b249e274139640a508e4ca7099abb646be36c
 
 The tool keys are:
 

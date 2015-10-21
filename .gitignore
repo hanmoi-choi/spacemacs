@@ -40,7 +40,7 @@ server/
 python-*-docs-html
 
 # Private directory
-private/*
+private/snippets/*
 !private/README.md
 !private/snippets/README.md
 !private/local/README.md
