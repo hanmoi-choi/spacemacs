@@ -57,7 +57,7 @@
 (add-hook 'prog-mode-hook 'linum-mode)
 (add-hook 'prog-mode-hook 'font-lock-comment-annotations)
 
-(flyspell-mode t)
+;; (flyspell-mode t)
 (spacemacs|diminish flyspell-mode " ✎")
 (add-hook 'inferior-lisp-mode-hook
           (lambda () (progn
