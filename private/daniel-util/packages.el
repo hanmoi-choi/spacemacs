@@ -18,8 +18,8 @@
         vlf
         find-file-in-project
         tabbar-ruler
-        helm-ls-git
-        ))
+        multiple-cursors
+        helm-ls-git))
 
 ;; List of packages to exclude.
 (setq daniel-util-excluded-packages '())
@@ -33,6 +33,19 @@
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:
 ;; https://github.com/jwiegley/use-package
+
+(defun daniel-util/init-multiple-cursors ()
+  (use-package multiple-cursors
+    :init
+    (progn
+      (evil-leader/set-key
+        "<down>" 'mc/mark-next-like-this
+        "<up>" 'mc/mark-previous-like-this
+        "<left>" 'mc/mark-all-like-this)
+      (global-unset-key (kbd "M-<down-mouse-1>"))
+      (global-set-key (kbd "C-M-g") 'mc/delete-region-overlay)
+      (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click) )
+    ))
 
 (defun daniel-util/init-vlf ()
   "Initialize my package"
@@ -50,6 +63,7 @@
   (use-package tabbar-ruler
     :init
     (progn
+      (global-set-key (kbd "<f9>") 'tabbar-mode)
       (defvar tabbar-prefix-map nil)
       (when (require 'tabbar-ruler nil t)
         (setq tabbar-buffer-list-function
@@ -67,7 +81,6 @@
                  (buffer-list))))
         (tabbar-mode ))
 
-      (global-set-key (kbd "<f9>") 'tabbar-mode)
       (setq tabbar-ruler-global-tabbar t)
 
       ;; Set nil

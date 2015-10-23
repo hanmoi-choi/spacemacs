@@ -1,4 +1,4 @@
-;;; extensions.el --- daniel-util Layer extensions File for Spacemacs
+;;; extensions.el --- daniel-email Layer extensions File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2014 Sylvain Benner
 ;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
@@ -10,19 +10,19 @@
 ;;
 ;;; License: GPLv3
 
-(setq daniel-util-pre-extensions
+(setq daniel-email-pre-extensions
       '(
         ;; pre extension names go here
         ))
 
-(setq daniel-util-post-extensions
+(setq daniel-email-post-extensions
       '(
         ;; post extension names go here
         ))
 
-;; For each extension, define a function daniel-util/init-<extension-name>
+;; For each extension, define a function daniel-email/init-<extension-name>
 ;;
-;; (defun daniel-util/init-my-extension ()
+;; (defun daniel-email/init-my-extension ()
 ;;   "Initialize my extension"
 ;;   )
 ;;

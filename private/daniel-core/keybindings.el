@@ -1,8 +1,3 @@
-;; Buffers --------------------------------------------------------------------
-;; (define-key personal-global-map (kbd "G") 'w3m-goto-url)
-;; (define-key personal-global-map (kbd "b") 'browse-url-at-point)
-;; (define-key personal-global-map (kbd "S") 'w3m-search)
-
 (evil-leader/set-key
   "wC" 'ace-delete-window
   "Nb" 'spacemacs/new-empty-buffer

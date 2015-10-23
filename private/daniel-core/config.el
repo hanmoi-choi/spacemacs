@@ -65,31 +65,13 @@
                   (smartparens-mode t))))
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
-;; (require 'back-button)
 (require 'textmate-links)
-;; (when (require 'diminish nil 'noerror)
-;;   (eval-after-load "back-button"
-;;     '(diminish 'back-button-mode "")))
-;; (back-button-mode 1)
 
 (defun private/save-all ()
   (interactive)
-  ;; (back-button-push-mark-local-and-global)
   (save-some-buffers t))
 
 (add-hook 'evil-insert-state-exit-hook 'private/save-all)
-
-;; (require 'whitespace)
-;; (setq whitespace-line-column 3000) ;; limit line length
-;; (setq whitespace-style '(spaces tabs newline space-mark tab-mark newline-mark face lines-tail))
-;; (setq whitespace-display-mappings
-;;       ;; all numbers are Unicode codepoint in decimal. e.g. (insert-char 182 1)
-;;       '((space-mark nil) ; 32 SPACE, 183 MIDDLE DOT
-;;         (newline-mark 10 [172 10]) ; 10 LINE FEED
-;;         (tab-mark 9 [183 9] [92 9]) ; 9 TAB, MIDDLE DOT
-;;         ))
-;; (setq whitespace-global-modes '(not w3m-mode mu4e-main-mode dired-mode org-mode web-mode "Web" emacs-lisp-mode))
-;; (global-whitespace-mode)
 
 ;;Dired
 ;; I want this for dired-jump
@@ -172,100 +154,62 @@
 (eval-after-load 'prodigy
   '(progn
      (prodigy-define-tag
-       :name 'rails
-       :on-output (lambda (&rest args)
-                    (let ((output (plist-get args :output))
-                          (service (plist-get args :service)))
-                      (when (or (s-matches? "Listening on 0\.0\.0\.0:[0-9]+, CTRL\\+C to stop" output)
-                                (s-matches? "Ctrl-C to shutdown server" output))
-                        (prodigy-set-status service 'ready)))))
+      :name 'rails
+      :on-output (lambda (&rest args)
+                   (let ((output (plist-get args :output))
+                         (service (plist-get args :service)))
+                     (when (or (s-matches? "Listening on 0\.0\.0\.0:[0-9]+, CTRL\\+C to stop" output)
+                               (s-matches? "Ctrl-C to shutdown server" output))
+                       (prodigy-set-status service 'ready)))))
 
      (prodigy-define-service
-       :name "Maid Deamon"
-       :command "maid"
-       :args '("daemon")
-       :cwd "~")
+      :name "Maid Deamon"
+      :command "maid"
+      :args '("daemon")
+      :cwd "~")
 
      (prodigy-define-service
-       :name "fm_admin"
-       :command "foreman"
-       :args '("start")
-       :cwd "~/dev/fm_admin"
-       :tags '(rails))
+      :name "fm_admin"
+      :command "foreman"
+      :args '("start")
+      :cwd "~/dev/fm_admin"
+      :tags '(rails))
 
      (prodigy-define-service
-       :name "fm_origination : rails4"
-       :command "foreman"
-       :args '("start")
-       :cwd "~/dev/fm_origination_rails4/project"
-       :tags '(rails))
+      :name "fm_origination : rails4"
+      :command "foreman"
+      :args '("start")
+      :cwd "~/dev/fm_origination_rails4/project"
+      :tags '(rails))
 
      (prodigy-define-service
-       :name "fm_origination : nfs_mbfs_merge"
-       :command "foreman"
-       :args '("start")
-       :cwd "~/dev/fm_origination_nfs_mbfs_merge/project"
-       :tags '(rails))
+      :name "fm_origination : nfs_mbfs_merge"
+      :command "foreman"
+      :args '("start")
+      :cwd "~/dev/fm_origination_nfs_mbfs_merge/project"
+      :tags '(rails))
 
      (prodigy-define-service
-       :name "fm_credit"
-       :command "foreman"
-       :args '("start")
-       :cwd "~/dev/fm_credit"
-       :tags '(rails))
+      :name "fm_credit"
+      :command "foreman"
+      :args '("start")
+      :cwd "~/dev/fm_credit"
+      :tags '(rails))
 
      (prodigy-define-service
-       :name "fm_settlement"
-       :command "foreman"
-       :args '("start")
-       :cwd "~/dev/fm_settlement"
-       :tags '(rails))
+      :name "fm_settlement"
+      :command "foreman"
+      :args '("start")
+      :cwd "~/dev/fm_settlement"
+      :tags '(rails))
 
      (prodigy-define-service
-       :name "fm_insurance"
-       :command "foreman"
-       :args '("start")
-       :cwd "~/dev/fm_insurance"
-       :tags '(rails))))
+      :name "fm_insurance"
+      :command "foreman"
+      :args '("start")
+      :cwd "~/dev/fm_insurance"
+      :tags '(rails))))
 
-(eval-after-load 'tramp
-  '(progn
-     (setq tramp-verbose 1)
-     (setq vc-ignore-dir-regexp
-           (format "\\(%s\\)\\|\\(%s\\)"
-                   vc-ignore-dir-regexp
-                   tramp-file-name-regexp))
-
-     (setq tramp-ssh-controlmaster-options
-           (concat
-            "-o ControlPath=~/.ssh/sockets/%%r@%%h:%%p "
-            "-o ControlMaster=auto -o ControlPersist=yes"))
-
-     (defadvice tramp-handle-write-region
-         (after tramp-write-beep-advice activate)
-       "Make tramp beep after writing a file."
-       (interactive)
-       (beep))
-
-     (defadvice tramp-handle-do-copy-or-rename-file
-         (after tramp-copy-beep-advice activate)
-       "Make tramp beep after copying a file."
-       (interactive)
-       (beep))
-
-     (defadvice tramp-handle-insert-file-contents
-         (after tramp-insert-beep-advice activate)
-       "Make tramp beep after inserting a file."
-       (interactive)
-       (beep))
-
-     (defun my-mode-line-function ()
-       (when (string-match "^/su\\(do\\)?:" default-directory)
-         (setq mode-line-format
-               (format-mode-line mode-line-format 'font-lock-warning-face))))
-
-     (add-hook 'find-file-hook 'my-mode-line-function)
-     (add-hook 'dired-mode-hook 'my-mode-line-function)))
 
 ;; automagically tail log files
 (add-to-list 'auto-mode-alist '("\\.log\\'" . log-view-mode))

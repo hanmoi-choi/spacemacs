@@ -14,7 +14,6 @@
 ;; which require an initialization must be listed explicitly in the list.
 (setq daniel-org-packages
       '(
-        ;; evil-org
         org
         htmlize
         org-bullets
@@ -25,6 +24,7 @@
         ;;plantuml-mode
         ;; org-gcal
         org-jira
+        ;;org-plus-contrib
         ))
 
 ;; List of packages to exclude.
@@ -37,6 +37,24 @@
     (progn
       (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")))
   )
+
+(defun daniel-org/init-org-plus-contrib ()
+  (use-package org-plus-contrib
+    :init
+    (progn
+      (add-hook 'message-mode-hook
+                (lambda ()
+                  (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
+
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  (local-set-key "\C-c\M-o" 'org-mime-org-buffer-htmlize)))
+      )
+    ))
+
+(defun daniel-org/init-org-beautify-theme ()
+  (use-package org-beautify-theme
+    ))
 
 (defun daniel-org/init-org-jira ()
   (use-package org-jira

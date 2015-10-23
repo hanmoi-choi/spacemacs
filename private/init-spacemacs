@@ -32,8 +32,8 @@ values."
      version-control
      better-defaults
      syntax-checking
-     prodigy
-     ;; osx
+     ;; prodigy
+     gnus
 
      ;Language
      javascript
@@ -47,7 +47,9 @@ values."
      daniel-org
      daniel-ruby
      daniel-util
-     e2wm
+     daniel-tramp
+     daniel-web-browser
+     daniel-email
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
