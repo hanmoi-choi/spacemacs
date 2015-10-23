@@ -49,7 +49,7 @@ values."
      daniel-util
      daniel-tramp
      daniel-web-browser
-     daniel-email
+     ;; daniel-email
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -219,6 +219,3 @@ layers configuration. You are free to put any user code."
     (setq global-whitespace-mode nil)
     )
   )
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
