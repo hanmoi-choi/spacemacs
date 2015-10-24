@@ -20,12 +20,7 @@
         org-pomodoro
         toc-org
         org-reveal
-        kanban
-        ;;plantuml-mode
-        ;; org-gcal
-        org-jira
-        ;;org-plus-contrib
-        ))
+        kanban))
 
 ;; List of packages to exclude.
 (setq daniel-org-excluded-packages '())
@@ -38,23 +33,6 @@
       (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")))
   )
 
-(defun daniel-org/init-org-plus-contrib ()
-  (use-package org-plus-contrib
-    :init
-    (progn
-      (add-hook 'message-mode-hook
-                (lambda ()
-                  (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
-
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  (local-set-key "\C-c\M-o" 'org-mime-org-buffer-htmlize)))
-      )
-    ))
-
-(defun daniel-org/init-org-beautify-theme ()
-  (use-package org-beautify-theme
-    ))
 
 (defun daniel-org/init-org-jira ()
   (use-package org-jira
@@ -121,13 +99,11 @@
        (quote ((emacs-lisp . t)
                (dot . t)
                (ditaa . t)
-               (R . t)
                (python . t)
                (ruby . t)
                (gnuplot . t)
                (clojure . t)
                (sh . t)
-               (ledger . t)
                (org . t)
                (plantuml . t)
                (latex . t))))
@@ -226,7 +202,7 @@ Will work on both org-mode and any mode that accepts plain html."
       (require 'ox-publish)
       (setq org-publish-project-alist
             '(("org-tasks"
-               :base-directory "~/Dropbox/org/"
+               :base-directory "~/Dropbox/org/todo"
                :base-extension "org"
                :publishing-directory "~/Save To Evernote"
                :recursive t
@@ -245,7 +221,7 @@ Will work on both org-mode and any mode that accepts plain html."
       (setq org-startup-folded nil)
       (setq org-cycle-include-plain-lists 'integrate)
       (define-key org-mode-map (kbd "M-s-p") 'daniel/insert-link-org-link-with-title)
-      (defvar sacha/org-basic-task-template "* TODO %^{Task} %^g
+      (defvar daniel/org-basic-task-template "* TODO %^{Task} %^g
 SCHEDULED: %^t
 :PROPERTIES:
 :Effort: %^{effort|0:30|1:00|2:00|4:00|1day|2day}
@@ -259,25 +235,26 @@ SCHEDULED: %^t
                "* TODO  %?\t\t\t%T\n %i\n Link: %l\n")
               ("t" "Tasks" entry
                (file+headline "~/Dropbox/org/todo/organizer.org" "Tasks")
-               ,sacha/org-basic-task-template)
-              ("T" "Quick task" entry
+               ,daniel/org-basic-task-template)
+              ("q" "Quick task" entry
                (file+headline "~/Dropbox/org/todo/organizer.org" "Quick Tasks")
                "* TODO %^{Task}"
                :immediate-finish t)
               ("w" "Work task" entry
                (file+headline "~/Dropbox/org/todo/work.org" "Work Tasks")
-               ,sacha/org-basic-task-template)
-              ("q" "Quick Notes" item
-               (file+headline "~/Dropbox/org/todo/notes.org" "Quick notes")
-               "* %^{Title} %^g
-Added: %T")
+               ,daniel/org-basic-task-template)
+              ("m" "TODO from Mail" entry (file+headline "~/Dropbox/org/todo/email.org" "Inbox")
+               "* TODO %?, Link: %a")
               ("n" "Notes" entry
                (file+datetree "~/Dropbox/org/todo/notes.org")
                "* %^{Title} %^g
-Added: %T"
-               )))
+Added: %T")))
 
-;;;###autoload
+      (defun hs/replace ()
+        (interactive)
+        (goto-char 1)
+        (replace-string "INBOX" "Archive"))
+      (add-hook 'org-capture-prepare-finalize-hook 'hs/replace)
 
       (require 'org-capture)
       (setq org-reverse-note-order t)
@@ -289,9 +266,10 @@ Added: %T"
 
       (setq org-todo-keywords
             '((sequence
-               "TODO(t)"  ; next action
+               "TODO(t)"
                "STARTED(s)"
                "WAITING(w)"
+               "MEMO(m)"
                "SOMEDAY(.)" "|" "DONE(d)" "CANCELLED(c)")))
 
       (setq org-todo-keyword-faces
@@ -299,6 +277,7 @@ Added: %T"
               ("DONE" . (:foreground "green" :weight bold))
               ("STARTED" . (:foreground "cyan" :weight bold))
               ("CANCELLED" . (:foreground "dark magenta" :weight bold))
+              ("MEMO" . (:foreground "blue" :weight bold))
               ("WAITING" . (:foreground "purple" :weight bold))
               ("SOMEDAY" . (:foreground "orange" :weight bold))))
 
@@ -316,42 +295,17 @@ Added: %T"
                             ("@lowenergy" . ?0)
                             ("@highenergy" . ?1)))
 
-      (org-clock-persistence-insinuate)
-      (add-hook 'org-clock-in-hook 'sacha/org-clock-in-set-state-to-started)
 
       (setq org-log-into-drawer "LOGBOOK")
       (setq org-clock-into-drawer 1)
 
-      (setq org-habit-graph-column 80)
-      (setq org-habit-show-habits-only-for-today nil)
-
-      (defvar sacha/org-agenda-limit-items nil "Number of items to show in agenda to-do views; nil if unlimited.")
-
-      '(defadvice org-agenda-finalize-entries (around sacha activate)
-         (if sacha/org-agenda-limit-items
-             (progn
-               (setq list (mapcar 'org-agenda-highlight-todo list))
-               (setq ad-return-value
-                     (subseq list 0 sacha/org-agenda-limit-items))
-               (when org-agenda-before-sorting-filter-function
-                 (setq list (delq nil (mapcar org-agenda-before-sorting-filter-function list))))
-               (setq ad-return-value
-                     (mapconcat 'identity
-                                (delq nil
-                                      (subseq
-                                       (sort list 'org-entries-lessp)
-                                       0
-                                       sacha/org-agenda-limit-items))
-                                "\n")))
-           ad-do-it))
-
-      (load "./next-spec-day.el" t)
       (setq org-agenda-files
             (delq nil
                   (mapcar (lambda (x) (and (file-exists-p x) x))
                           '("~/Dropbox/org/todo/organizer.org"
                             "~/Dropbox/org/todo/notes.org"
-                            "~/Dropbox/org/todo/repo_toto.org"
+                            "~/Dropbox/org/todo/repo_todo.org"
+                            "~/Dropbox/org/todo/email.org"
                             "~/Dropbox/org/todo/work.org"))))
 
       (setq org-agenda-span 7)
@@ -427,6 +381,8 @@ Added: %T"
             `(("T" tags-todo "TODO=\"TODO\"-goal-routine-SCHEDULED={.+}")
               ("w" todo ""
                ((org-agenda-files '("~/Dropbox/org/todo/work.org"))))
+              ("m" todo ""
+               ((org-agenda-files '("~/Dropbox/org/todo/mail.org"))))
               ("n" todo ""
                ((org-agenda-files '("~/Dropbox/org/todo/note.org"))))
               ("o" todo ""
@@ -441,9 +397,6 @@ Added: %T"
                ((org-agenda-span 7)
                 (org-agenda-log-mode 1)))
               ("2" "Bi-weekly review" agenda "" ((org-agenda-span 14) (org-agenda-log-mode 1)))
-              ("gw" "Work" todo ""
-               ((org-agenda-files '("~/Dropbox/org/todo/work.org"))
-                (org-agenda-view-columns-initially t)))
               ("gc" "Coding" tags-todo "@coding"
                ((org-agenda-view-columns-initially t)))
               ("gh" "Home" tags-todo "@home"

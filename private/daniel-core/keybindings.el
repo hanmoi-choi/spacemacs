@@ -111,3 +111,13 @@
     (global-set-key (kbd "C-s-f") 'spacemacs/toggle-frame-fullscreen)
     ;; Emacs sometimes registers C-s-f as this weird keycode
     (global-set-key (kbd "<C-s-268632070>") 'spacemacs/toggle-frame-fullscreen)))
+
+(add-to-list 'load-path (car (file-expand-wildcards "~/.emacs.d/vendor/org-plus-contrib")))
+(require 'org-mime)
+(add-hook 'message-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\M-o" 'org-mime-org-buffer-htmlize)))
