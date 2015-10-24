@@ -94,11 +94,6 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(zenburn
-                         ;; spacemacs-dark
-                         ;; spacemacs-light
-                         ;; solarized-light
-                         ;; solarized-dark
-                         ;; leuven
                          monokai)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -192,7 +187,6 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -200,8 +194,13 @@ values."
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
-   dotspacemacs-default-package-repository nil
-   ))
+   dotspacemacs-default-package-repository nil)
+
+  (when (display-graphic-p)
+    dotspacemacs-persistent-server t
+    )
+
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -217,5 +216,4 @@ layers configuration. You are free to put any user code."
     (global-company-mode)
     (setq global-hl-line-mode nil)
     (setq global-whitespace-mode nil)
-    )
-  )
+    ))
