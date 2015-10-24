@@ -24,7 +24,7 @@
         (centered-cursor :location local)
         clean-aindent-mode
         ;; define-word
-        ;; desktop
+        desktop
         doc-view
         eval-sexp-fu
         evil-anzu
@@ -45,7 +45,7 @@
         expand-region
         fancy-battery
         ;; flx-ido
-        ;; golden-ratio
+        golden-ratio
         ;; google-translate
         helm-ag
         helm-make
@@ -58,14 +58,14 @@
         ;; waiting for an overlay bug to be fixed
         ;; see https://github.com/syl20bnr/spacemacs/issues/2529
         (hl-anything :excluded t)
-        ;; hungry-delete
-        ;; info+
+        hungry-delete
+        info+
         ;; iedit
         ;; indent-guide
         ;; open-junk-file
         ;; leuven-theme
-        ;; linum-relative
-        ;; move-text
+        linum-relative
+        move-text
         neotree
         pcre2el
         powerline
@@ -74,7 +74,7 @@
         smartparens
         smooth-scrolling
         ;; (solarized-theme :location local)
-        ;; spray
+        spray
         vi-tilde-fringe
         volatile-highlights
         window-numbering

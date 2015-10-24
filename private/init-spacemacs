@@ -33,7 +33,6 @@ values."
      better-defaults
      syntax-checking
      ;; prodigy
-     gnus
 
      ;Language
      javascript
@@ -48,7 +47,7 @@ values."
      daniel-ruby
      daniel-util
      daniel-tramp
-     daniel-web-browser
+     ;; daniel-web-browser
      ;; daniel-email
      )
    ;; List of additional packages that will be installed without being
