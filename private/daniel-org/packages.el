@@ -466,7 +466,18 @@ Added: %T")))
 (defun daniel-org/init-org-bullets ()
   (use-package org-bullets
     :defer t
-    :init (add-hook 'org-mode-hook 'org-bullets-mode)))
+    :init
+    (progn
+      (add-hook 'org-mode-hook 'org-bullets-mode)
+      (setq org-bullets-bullet-list
+        '(;;; Large
+          "◉"
+          "○"
+          "◆"
+          "◇"
+          "•"
+          ))
+      )))
 
 (defun daniel-org/init-org-pomodoro ()
   (use-package org-pomodoro
