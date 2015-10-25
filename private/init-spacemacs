@@ -32,6 +32,7 @@ values."
      version-control
      better-defaults
      syntax-checking
+     org
 
      ;Language
      javascript
@@ -42,7 +43,7 @@ values."
      spell-checking
 
      daniel-core
-     daniel-org
+     ;; daniel-org
      daniel-ruby
      daniel-util
      daniel-tramp
