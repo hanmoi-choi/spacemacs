@@ -12,12 +12,12 @@
 
 (setq spacemacs-packages
       '(
-        ;; default
+        default
         ace-link
         ace-window
         adaptive-wrap
         aggressive-indent
-        ;; auto-dictionary
+        auto-dictionary
         auto-highlight-symbol
         avy
         buffer-move
@@ -33,7 +33,7 @@
         evil-iedit-state
         (evil-indent-textobject :location (recipe :fetcher github :repo "TheBB/evil-indent-textobject"))
         evil-jumper
-        ;; evil-lisp-state
+        evil-lisp-state
         evil-nerd-commenter
         evil-matchit
         evil-numbers
@@ -60,9 +60,9 @@
         (hl-anything :excluded t)
         hungry-delete
         info+
-        ;; iedit
+        iedit
         ;; indent-guide
-        ;; open-junk-file
+        open-junk-file
         ;; leuven-theme
         linum-relative
         move-text

@@ -19,11 +19,12 @@
         find-file-in-project
         tabbar-ruler
         multiple-cursors
+        vimish-fold
+        cliphist
         helm-ls-git))
 
 ;; List of packages to exclude.
 (setq daniel-util-excluded-packages '())
-
 ;; For each package, define a function daniel-util/init-<package-name>
 ;;
 ;; (defun daniel-util/init-my-package ()
@@ -47,10 +48,23 @@
       (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click) )
     ))
 
+(defun daniel-util/init-cliphist()
+  (use-package cliphist
+    :init
+    (progn
+      (evil-leader/set-key
+        "Cp" 'cliphist-paste-item)
+      (setq cliphist-select-item-callback
+            (lambda (str) (cliphist-paste-item str)))
+      )))
+
 (defun daniel-util/init-vlf ()
   "Initialize my package"
   (use-package vlf
-    :defer t
+    ))
+
+(defun daniel-util/init-vimish-fold ()
+  (use-package vimish-fold
     ))
 
 (defun daniel-util/init-find-file-in-project ()
