@@ -10,9 +10,9 @@
 ;;
 ;;; License: GPLv3
 
-(setq org-post-extensions '(ox-gfm))
+(setq daniel-org-post-extensions '(ox-gfm))
 
-(defun org/init-ox-gfm ()
+(defun daniel-org/init-ox-gfm ()
   ;; installing this package from melpa is buggy,
   ;; so we install it as an extension for now.
   (use-package ox-gfm

@@ -12,7 +12,7 @@
 
 ;; Variables
 
-(defvar org-enable-github-support nil
+(defvar org-enable-github-support t
   "If non-nil Github related packages are configured.")
 
 (spacemacs|defvar-company-backends org-mode)

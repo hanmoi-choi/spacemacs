@@ -10,7 +10,7 @@
 ;;
 ;;; License: GPLv3
 
-(setq org-packages
+(setq daniel-org-packages
   '(
     company
     company-emoji
@@ -30,16 +30,16 @@
     toc-org))
 
 (when (configuration-layer/layer-usedp 'auto-completion)
-  (defun org/post-init-company ()
+  (defun daniel-org/post-init-company ()
     (spacemacs|add-company-hook org-mode)
     (push 'company-capf company-backends-org-mode))
-  (defun org/post-init-company-emoji ()
+  (defun daniel-org/post-init-company-emoji ()
     (push 'company-emoji company-backends-org-mode)))
 
-(defun org/post-init-emoji-cheat-sheet-plus ()
+(defun daniel-org/post-init-emoji-cheat-sheet-plus ()
   (add-hook 'org-mode-hook 'spacemacs/delay-emoji-cheat-sheet-hook))
 
-(defun org/init-evil-org ()
+(defun daniel-org/init-evil-org ()
   (use-package evil-org
     :commands evil-org-mode
     :init
@@ -61,16 +61,16 @@
         "O" 'evil-open-above)
       (spacemacs|diminish evil-org-mode " ⓔ" " e"))))
 
-(defun org/init-gnuplot ()
+(defun daniel-org/init-gnuplot ()
   (use-package gnuplot
     :defer t
     :init (evil-leader/set-key-for-mode 'org-mode
             "mtp" 'org-plot/gnuplot)))
 
 ;; dummy init function to force installation of `org-plus-contrib'
-(defun org/init-org-plus-contrib ())
+(defun daniel-org/init-org-plus-contrib ())
 
-(defun org/init-org ()
+(defun daniel-org/init-org ()
   (use-package org
     :mode ("\\.org$" . org-mode)
     :defer t
@@ -85,7 +85,7 @@
       (eval-after-load 'org-indent
         '(spacemacs|hide-lighter org-indent-mode))
       (setq org-startup-indented t)
-      (let ((dir (configuration-layer/get-layer-property 'org :dir)))
+      (let ((dir (configuration-layer/get-layer-property 'daniel-org :dir)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
       (defmacro spacemacs|org-emphasize (fname char)
         "Make function for setting the emphasis in org mode"
@@ -549,7 +549,7 @@ Added: %T")))
           ))
       )))
 
-(defun org/init-org-mime ()
+(defun daniel-org/init-org-mime ()
   (use-package org-mime
     :defer t
     :commands (org-mime-htmlize org-mime-org-buffer-htmlize)
@@ -560,7 +560,7 @@ Added: %T")))
       (evil-leader/set-key-for-mode 'org-mode
         "mm" 'org-mime-org-buffer-htmlize))))
 
-(defun org/init-org-pomodoro ()
+(defun daniel-org/init-org-pomodoro ()
   (use-package org-pomodoro
     :defer t
     :init
@@ -570,7 +570,7 @@ Added: %T")))
       (evil-leader/set-key-for-mode 'org-mode
         "mp" 'org-pomodoro))))
 
-(defun org/init-org-present ()
+(defun daniel-org/init-org-present ()
   (use-package org-present
     :defer t
     :init
@@ -596,7 +596,7 @@ Added: %T")))
       (add-hook 'org-present-mode-hook 'spacemacs//org-present-start)
       (add-hook 'org-present-mode-quit-hook 'spacemacs//org-present-end))))
 
-(defun org/init-org-repo-todo ()
+(defun daniel-org/init-org-repo-todo ()
   (use-package org-repo-todo
     :defer t
     :init
@@ -607,7 +607,7 @@ Added: %T")))
       (evil-leader/set-key-for-mode 'org-mode
         "mgt" 'ort/goto-todos))))
 
-(defun org/init-toc-org ()
+(defun daniel-org/init-toc-org ()
   (use-package toc-org
     :defer t
     :init
@@ -615,6 +615,6 @@ Added: %T")))
       (setq toc-org-max-depth 10)
       (add-hook 'org-mode-hook 'toc-org-enable))))
 
-(defun org/init-htmlize ()
+(defun daniel-org/init-htmlize ()
  (use-package htmlize
     :defer t))
