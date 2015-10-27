@@ -21,6 +21,7 @@
         multiple-cursors
         vimish-fold
         cliphist
+        symon
         helm-ls-git))
 
 ;; List of packages to exclude.
@@ -61,6 +62,16 @@
 (defun daniel-util/init-vlf ()
   "Initialize my package"
   (use-package vlf
+    ))
+
+(defun daniel-util/init-symon ()
+  "Initialize my package"
+  (use-package symon
+    :init
+    (progn
+      (setq symon-sparkline-type 'boxed)
+      (symon-mode 1)
+      )
     ))
 
 (defun daniel-util/init-vimish-fold ()

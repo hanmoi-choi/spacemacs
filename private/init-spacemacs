@@ -23,8 +23,12 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     auto-completion
-     (ibuffer :variables ibuffer-group-buffers-by 'projects)
+     (auto-completion :variables
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'complete)
+
+     (ibuffer
+      :variables ibuffer-group-buffers-by 'projects)
      colors
      dash
      git
@@ -91,13 +95,15 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
+   dotspacemacs-themes '(cyberpunk
+                         zenburn
+                         leuven
                          monokai)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Fira Mono for Powerline"
+   dotspacemacs-default-font '("Source Code Pro for Powerline"
                                :size 13
                                :weight normal
                                :width normal
@@ -212,33 +218,5 @@ user code."
 layers configuration. You are free to put any user code."
   (progn
     (global-company-mode)
-
     (setq global-hl-line-mode nil)
     (setq global-whitespace-mode nil)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evil-shift-width 2)
- '(package-selected-packages
-   (quote
-    (magit cliphist vimish-fold company helm projectile gmail2bbdb org-plus-contrib zenburn-theme yard-mode yaml-mode window-numbering which-key web-mode web-beautify w3m volatile-highlights vlf vi-tilde-fringe use-package tagedit tabbar-ruler spray spacemacs-theme smooth-scrolling smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-refactor ruby-hash-syntax rspec-mode robe rainbow-mode rainbow-identifiers rainbow-delimiters quelpa projectile-rails prodigy powerline popwin pcre2el paradox page-break-lines org-pomodoro org-jira org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep linum-relative leuven-theme less-css-mode kanban json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-ls-git helm-gtags helm-gitignore helm-flyspell helm-descbinds helm-dash helm-css-scss helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flycheck-pos-tip flx-ido find-file-in-project fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-terminal-cursor-changer evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-jumper evil-indent-textobject evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu enh-ruby-mode emmet-mode elisp-slime-nav e2wm diff-hl define-word dash-at-point company-web company-tern company-statistics company-quickhelp coffee-mode clean-aindent-mode buffer-move bbdb auto-yasnippet auto-highlight-symbol auto-dictionary aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
- '(smeargle-colors
-   (quote
-    ((older-than-1day . "red")
-     (older-than-3day . "green")
-     (older-than-1week . "yellow")
-     (older-than-2week)
-     (older-than-1month . "orange")
-     (older-than-3month . "pink")
-     (older-than-6month . "cyan")
-     (older-than-1year . "grey50")))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

@@ -26,7 +26,6 @@
     (org-mime :location built-in)
     org-pomodoro
     org-present
-    org-repo-todo
     toc-org))
 
 (when (configuration-layer/layer-usedp 'auto-completion)
@@ -73,6 +72,7 @@
 (defun daniel-org/init-org ()
   (use-package org
     :mode ("\\.org$" . org-mode)
+    :bind ("C-c c" . org-capture)
     :defer t
     :init
     (progn
@@ -230,7 +230,6 @@ Will work on both org-mode and any mode that accepts plain html."
       (evil-leader/set-key
         "Cc" 'org-capture)
 
-
       (defun markdown-preview-file-with-marked ()
         "run Marked on the current file (convert it to markdown in advance if the file is *.org)."
         (interactive)
@@ -302,31 +301,31 @@ SCHEDULED: %^t
 
       (setq org-capture-templates
             `(("r" "Repo Todso" entry
-               (file+headline "~/Dropbox/org/todo/repo_todo.org" "Repo Todos")
+               (file+headline "~/Dropbox/org/todo/repo_todo.org" "Repo Task ")
                "* TODO  %?\t\t\t%T\n %i\n Link: %l\n")
               ("t" "Tasks" entry
-               (file+headline "~/Dropbox/org/todo/organizer.org" "Tasks")
+               (file+headline "~/Dropbox/org/todo/organizer.org" "PRIVATE Task")
                ,daniel/org-basic-task-template)
               ("q" "Quick task" entry
                (file+headline "~/Dropbox/org/todo/organizer.org" "Quick Tasks")
-               "* TODO %^{Task}"
+               "* TODO %^{Task} %^g"
                :immediate-finish t)
               ("w" "Work task" entry
-               (file+headline "~/Dropbox/org/todo/work.org" "Work Tasks")
+               (file+headline "~/Dropbox/org/todo/work.org" "IBSA Tasks")
                ,daniel/org-basic-task-template)
-              ("m" "TODO from Mail" entry (file+headline "~/Dropbox/org/todo/email.org" "Inbox")
-               "* TODO %?, Link: %a")
+              ("m" "TODO from Mail" entry (file+headline "~/Dropbox/org/todo/email.org" "INBOX")
+               "* TODO %? %^g\nLink: %a")
               ("n" "Notes" entry
                (file+datetree "~/Dropbox/org/todo/notes.org")
-               "* %^{Title} %^g
-Added: %T")))
+               "* %^{Title} %^g \nAdded: %T")))
 
-      (defun hs/replace ()
+      (defun daniel/org-level1-replace ()
         (interactive)
         (goto-char 1)
-        (replace-string "INBOX" "Archive"))
-      (add-hook 'org-capture-prepare-finalize-hook 'hs/replace)
+        (progn
+          (replace-string "INBOX" "Archive")))
 
+      (add-hook 'org-capture-prepare-finalize-hook 'daniel/org-level1-replace)
       (setq org-reverse-note-order t)
       (setq org-refile-use-outline-path nil)
       (setq org-refile-allow-creating-parent-nodes 'confirm)
@@ -343,18 +342,19 @@ Added: %T")))
                "SOMEDAY(.)" "|" "DONE(d)" "CANCELLED(c)")))
 
       (setq org-todo-keyword-faces
-            '(("TODO" . (:foreground "red" :weight bold))
-              ("DONE" . (:foreground "green" :weight bold))
-              ("STARTED" . (:foreground "cyan" :weight bold))
-              ("CANCELLED" . (:foreground "dark magenta" :weight bold))
-              ("MEMO" . (:foreground "blue" :weight bold))
+            '(("TODO" . (:foreground "#CC9393" :weight bold))
+              ("DONE" . (:foreground "#7F9F7F" :weight bold))
+              ("STARTED" . (:foreground "#93E0E3" :weight bold))
+              ("CANCELLED" . (:foreground "#DC8CC3" :weight bold))
+              ("MEMO" . (:foreground "#94BFF3" :weight bold))
               ("WAITING" . (:foreground "purple" :weight bold))
-              ("SOMEDAY" . (:foreground "orange" :weight bold))))
+              ("SOMEDAY" . (:foreground "#656555" :weight bold))))
 
       (setq org-tags-exclude-from-inheritance '("project"))
       (setq org-tag-alist '(("@work" . ?w)
                             ("@home" . ?h)
-                            ("@steve" . ?s)
+                            ("@Steve" . ?s)
+                            ("@Michael" . ?s)
                             ("@buy" . ?b)
                             ("@personal" . ?p)
                             ("@errands" . ?e)
@@ -362,9 +362,13 @@ Added: %T")))
                             ("@coding" . ?c)
                             ("@phone" . ?P)
                             ("@reading" . ?r)
+                            ("@fm_origination" . ?O)
+                            ("@fm_insurance" . ?I)
+                            ("@fm_admin" . ?A)
+                            ("@JIRA" . ?J)
+                            ("@fm_admin" . ?A)
                             ("@lowenergy" . ?0)
                             ("@highenergy" . ?1)))
-
 
       (setq org-log-into-drawer "LOGBOOK")
       (setq org-clock-into-drawer 1)
@@ -389,13 +393,17 @@ Added: %T")))
       (setq org-agenda-time-grid
             '((daily today require-timed)
               "----------------"
-              (0800 1000 1200 1400 1600 1800)))
+              (0900 1100 1300 1500 1700 1900)))
       (setq org-columns-default-format "%50ITEM %12SCHEDULED %TODO %3PRIORITY %Effort{:} %TAGS")
-
       (setq org-agenda-start-on-weekday 6)
 
       (defvar sacha/org-agenda-contexts
-        '((tags-todo "+@steve")
+        '((tags-todo "+@Steve")
+          (tags-todo "+@Michael")
+          (tags-todo "+@fm_origination")
+          (tags-todo "+@fm_insurance")
+          (tags-todo "+@fm_admin")
+          (tags-todo "+@JIRA")
           (tags-todo "+@work")
           (tags-todo "+@coding")
           (tags-todo "+@buy")
@@ -446,7 +454,6 @@ Added: %T")))
 
 
       (setq org-latex-to-pdf-process '("tex --pdf --clean --verbose --batch %f"))
-
       (setq org-agenda-custom-commands
             `(("T" tags-todo "TODO=\"TODO\"-goal-routine-SCHEDULED={.+}")
               ("w" todo ""
@@ -530,8 +537,7 @@ Added: %T")))
 
       (setq org-html-head-extra
             "<link rel=\"stylesheet\" href=\"http://dakrone.github.io/org.css\" type=\"text/css\" />")
-      (setq org-html-head-include-default-style nil)
-      )))
+      (setq org-html-head-include-default-style nil))))
 
 (defun daniel-org/init-org-bullets ()
   (use-package org-bullets
@@ -541,13 +547,13 @@ Added: %T")))
       (add-hook 'org-mode-hook 'org-bullets-mode)
       (setq org-bullets-bullet-list
         '(;;; Large
+          "✚"
           "◉"
           "○"
           "◆"
           "◇"
           "•"
-          ))
-      )))
+          )))))
 
 (defun daniel-org/init-org-mime ()
   (use-package org-mime
@@ -595,17 +601,6 @@ Added: %T")))
         (evil-normal-state))
       (add-hook 'org-present-mode-hook 'spacemacs//org-present-start)
       (add-hook 'org-present-mode-quit-hook 'spacemacs//org-present-end))))
-
-(defun daniel-org/init-org-repo-todo ()
-  (use-package org-repo-todo
-    :defer t
-    :init
-    (progn
-      (evil-leader/set-key
-        "Ct"  'ort/capture-todo
-        "CT"  'ort/capture-checkitem)
-      (evil-leader/set-key-for-mode 'org-mode
-        "mgt" 'ort/goto-todos))))
 
 (defun daniel-org/init-toc-org ()
   (use-package toc-org
