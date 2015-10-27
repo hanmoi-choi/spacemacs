@@ -78,6 +78,7 @@
         vi-tilde-fringe
         volatile-highlights
         window-numbering
+        cyberpunk-theme
         ;; (zoom-frm :location local)
         ))
 
@@ -1436,6 +1437,11 @@ It will toggle the overlay under point or create an overlay of one character."
 
 (defun spacemacs/init-leuven-theme ()
   (use-package leuven-theme
+    :defer t
+    :init (setq org-fontify-whole-heading-line t)))
+
+(defun spacemacs/init-cyberpunk-theme ()
+  (use-package cyberpunk-theme
     :defer t
     :init (setq org-fontify-whole-heading-line t)))
 
