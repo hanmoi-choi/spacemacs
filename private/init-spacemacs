@@ -24,6 +24,9 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-private-snippets-directory "~/.emacs.d/snippets"
                       auto-completion-return-key-behavior 'complete
                       auto-completion-tab-key-behavior 'complete)
 
@@ -36,6 +39,8 @@ values."
      version-control
      better-defaults
      syntax-checking
+     resetclient
+     deft
 
      ;Language
      javascript
@@ -44,7 +49,6 @@ values."
      markdown
 
      spell-checking
-
      daniel-core
      daniel-org
      daniel-ruby
@@ -203,7 +207,6 @@ values."
   (when (display-graphic-p)
     dotspacemacs-persistent-server t
     )
-
   )
 
 (defun dotspacemacs/user-init ()
@@ -218,5 +221,34 @@ user code."
 layers configuration. You are free to put any user code."
   (progn
     (global-company-mode)
+    (setq deft-directory "~/Dropbox/org/notes")
+    (setq deft-extensions '("org" "md" "txt"))
     (setq global-hl-line-mode nil)
     (setq global-whitespace-mode nil)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evil-shift-width 2)
+ '(package-selected-packages
+   (quote
+    (with-editor markdown-mode haml-mode gitignore-mode company evil-leader package-build bind-key s dash git-commit swiper magit-popup magit deft smex web-mode ruby-refactor js2-mode helm-flyspell helm-ag avy flycheck helm evil zenburn-theme zeal-at-point yard-mode yaml-mode window-numbering which-key web-beautify w3m volatile-highlights vlf vimish-fold vi-tilde-fringe use-package undo-tree toc-org tagedit tabbar-ruler symon spray spacemacs-theme smooth-scrolling smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-hash-syntax rspec-mode robe rainbow-mode rainbow-identifiers rainbow-delimiters quelpa projectile-rails powerline popwin pcre2el paradox page-break-lines org-repo-todo org-present org-pomodoro org-plus-contrib org-bullets org-beautify-theme open-junk-file neotree multiple-cursors move-text mmm-mode markdown-toc magit-gitflow macrostep linum-relative less-css-mode kanban json-mode jade-mode info+ ido-vertical-mode ibuffer-projectile hungry-delete htmlize highlight-parentheses highlight-numbers highlight-indentation helm-swoop helm-projectile helm-mode-manager helm-make helm-ls-git helm-gtags helm-gitignore helm-descbinds helm-dash helm-css-scss helm-c-yasnippet goto-chg golden-ratio gnuplot gmail2bbdb gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flycheck-pos-tip flx-ido find-file-in-project fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-terminal-cursor-changer evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-jumper evil-indent-textobject evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu enh-ruby-mode emmet-mode elisp-slime-nav diff-hl dash-at-point cyberpunk-theme company-web company-tern company-statistics company-quickhelp color-theme-sanityinc-tomorrow coffee-mode cliphist clean-aindent-mode buffer-move bbdb auto-yasnippet auto-highlight-symbol auto-dictionary aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
+ '(smeargle-colors
+   (quote
+    ((older-than-1day . "red")
+     (older-than-3day . "green")
+     (older-than-1week . "yellow")
+     (older-than-2week)
+     (older-than-1month . "orange")
+     (older-than-3month . "pink")
+     (older-than-6month . "cyan")
+     (older-than-1year . "grey50")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((((class color) (min-colors 89)) (:foreground "#d3d3d3" :background "#000000"))))
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
