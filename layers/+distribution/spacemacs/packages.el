@@ -41,7 +41,7 @@
         ;; Temporarily disabled, pending the resolution of
         ;; https://github.com/7696122/evil-terminal-cursor-changer/issues/8
         evil-terminal-cursor-changer
-        ;; evil-tutor
+        evil-tutor
         expand-region
         fancy-battery
         ;; flx-ido
@@ -52,7 +52,7 @@
         helm-mode-manager
         helm-swoop
         ;; helm-themes
-        highlight-indentation
+        ;; highlight-indentation
         highlight-numbers
         highlight-parentheses
         ;; waiting for an overlay bug to be fixed
@@ -61,10 +61,10 @@
         hungry-delete
         info+
         iedit
-        ;; indent-guide
+        indent-guide
         open-junk-file
         ;; leuven-theme
-        linum-relative
+        ;; linum-relative
         move-text
         neotree
         pcre2el
@@ -697,12 +697,13 @@
                             :foreground nil))
       (spacemacs/adaptive-evil-highlight-persist-face))))
 
+;;      (setq evil-insert-state-cursor '("green" bar)); ⎸
 (defun spacemacs/init-evil-terminal-cursor-changer ()
   (use-package evil-terminal-cursor-changer
     :if (not (display-graphic-p))
     :init (setq evil-visual-state-cursor 'box
-                evil-insert-state-cursor 'bar
-                evil-emacs-state-cursor 'hbar)))
+                evil-insert-state-cursor '("red" bar)
+                evil-emacs-state-cursor '("#4c83ff" box))))
 
 (defun spacemacs/init-evil-tutor ()
   (use-package evil-tutor
@@ -2193,7 +2194,7 @@ one of `l' or `r'."
       (spacemacs/add-to-hooks (if dotspacemacs-smartparens-strict-mode
                                   'smartparens-strict-mode
                                 'smartparens-mode)
-                              '(prog-mode-hook))
+                              '(emacs-lisp-mode-hook common-lisp-mode-hook))
 
       ;; enable smartparens-mode in `eval-expression'
       (defun conditionally-enable-smartparens-mode ()

@@ -54,7 +54,7 @@
   "Faces for displaying Jiralib information."
   :group 'jiralib)
 
-(defcustom jiralib-host "IBS"
+(defcustom jiralib-host ""
   "User customizable host name of the Jiralib server.
 
 This will be used with USERNAME to compute password from
@@ -108,10 +108,11 @@ This will be used with USERNAME to compute password from
 (defvar jiralib-mode-map nil)
 
 (defcustom jiralib-wsdl-descriptor-url
-  "https://jira.ibsglobalweb.com/rpc/soap/jirasoapservice-v2?wsdl"
+  ""
   "The location for the WSDL descriptor for the JIRA service.
 This is specific to your local JIRA installation.  The URL is
 tipically:
+
   http://YOUR_INSTALLATION/rpc/soap/jirasoapservice-v2?wsdl
 
 The default value works if JIRA is located at a hostname named
@@ -120,7 +121,7 @@ The default value works if JIRA is located at a hostname named
   :group 'jiralib)
 
 (defcustom jiralib-url
-  "https://jira.ibsglobalweb.com"
+  "http://localhost:18888/"
   "The address of the jira host."
   :type 'string
   :group 'jiralib)
@@ -372,7 +373,7 @@ might not be possible to find *ALL* the issues that match a
 query."
   (unless (or limit (numberp limit))
     (setq limit 100))
-  (jiralib-call "getIssuesFromTextSearch" "CS-1640"))
+  (jiralib-call "getIssuesFromJqlSearch" jql limit))
 
 (defun jiralib-get-available-actions (issue-key)
   "Return the available workflow actions for ISSUE-KEY.

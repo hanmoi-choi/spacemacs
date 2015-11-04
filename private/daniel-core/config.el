@@ -5,8 +5,6 @@
 (setq-default fill-column 100)
 (setq-default default-tab-width 2)
 (setq-default indent-tabs-mode nil)
-;; always add new line to the end of a file
-(setq require-final-newline t)
 
 ;; add no new lines when "arrow-down key" at the end of a buffer
 (setq next-line-add-newlines nil)
@@ -26,25 +24,7 @@
 ;; 50 files ought to be enough.
 (setq recentf-max-saved-items 50)
 
-;; Use global-prettify-symbols-mode
-(when (boundp 'global-prettify-symbols-mode)
-  (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (push '("lambda" . ?λ) prettify-symbols-alist)))
-  (add-hook 'clojure-mode-hook
-            (lambda ()
-              (push '("fn" . ?ƒ) prettify-symbols-alist)))
-  (global-prettify-symbols-mode +1))
-(global-prettify-symbols-mode t)
-(modify-frame-parameters nil `((alpha . 100)))
-(delete 'term-mode evil-insert-state-modes)
-(delete 'ansi-term-mode evil-insert-state-modes)
-(delete 'multi-term-mode evil-insert-state-modes)
-(add-to-list 'evil-emacs-state-modes 'term-mode)
-(setq system-uses-terminfo nil)
-
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
-(add-hook 'js2-mode-hook #'js2-refactor-mode)
 
 (custom-set-variables
  '(evil-shift-width 2))
@@ -54,15 +34,10 @@
 (setq-default elisp-basic-offset 2)
 (setq-default indent-tabs-mode nil)
 
-(add-hook 'prog-mode-hook 'linum-mode)
 (add-hook 'prog-mode-hook 'font-lock-comment-annotations)
 
 ;; (flyspell-mode t)
 (spacemacs|diminish flyspell-mode " ✎")
-(add-hook 'inferior-lisp-mode-hook
-          (lambda () (progn
-                  (inferior-slime-mode t)
-                  (smartparens-mode t))))
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
 (require 'textmate-links)

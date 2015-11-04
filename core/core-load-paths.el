@@ -12,6 +12,9 @@
 (defun add-to-load-path (dir) (add-to-list 'load-path dir))
 
 ;; paths
+(defconst user-home-directory
+  (expand-file-name "~/")
+  "User home directory (~/).")
 (defconst spacemacs-core-directory
   (expand-file-name (concat user-emacs-directory "core/"))
   "Spacemacs core directory.")
@@ -28,7 +31,7 @@
   (expand-file-name (concat spacemacs-banner-directory "img/spacemacs.png"))
   "Spacemacs official banner image.")
 (defconst spacemacs-cache-directory
-  (expand-file-name (concat user-emacs-directory ".cache/"))
+  (expand-file-name (concat user-home-directory ".cache/"))
   "Spacemacs storage area for persistent files")
 (defconst spacemacs-auto-save-directory
   (expand-file-name (concat spacemacs-cache-directory "auto-save/"))
@@ -40,9 +43,6 @@
   (expand-file-name (concat user-emacs-directory "tests/"))
   "Spacemacs tests directory.")
 
-(defconst user-home-directory
-  (expand-file-name "~/")
-  "User home directory (~/).")
 (defconst pcache-directory
   (concat spacemacs-cache-directory "pcache"))
 (unless (file-exists-p spacemacs-cache-directory)

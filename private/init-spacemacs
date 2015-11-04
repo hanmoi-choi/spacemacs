@@ -23,12 +23,13 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     (auto-completion :variables
-                      auto-completion-enable-sort-by-usage t
-                      auto-completion-enable-snippets-in-popup t
-                      auto-completion-private-snippets-directory "~/.emacs.d/snippets"
-                      auto-completion-return-key-behavior 'complete
-                      auto-completion-tab-key-behavior 'complete)
+     (auto-completion
+      :variables
+      auto-completion-enable-sort-by-usage t
+      auto-completion-enable-snippets-in-popup t
+      auto-completion-private-snippets-directory "~/.emacs.d/snippets"
+      auto-completion-return-key-behavior 'complete
+      auto-completion-tab-key-behavior 'complete)
 
      (ibuffer
       :variables ibuffer-group-buffers-by 'projects)
@@ -39,7 +40,7 @@ values."
      version-control
      better-defaults
      syntax-checking
-     resetclient
+     restclient
      deft
 
      ;Language
@@ -47,8 +48,8 @@ values."
      html
      emacs-lisp
      markdown
-
      spell-checking
+
      daniel-core
      daniel-org
      daniel-ruby
@@ -192,7 +193,7 @@ values."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters 'all
+   dotspacemacs-highlight-delimiters `nil
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
    ;; List of search tool executable names. Spacemacs uses the first installed
@@ -206,6 +207,7 @@ values."
 
   (when (display-graphic-p)
     dotspacemacs-persistent-server t
+    dotspacemacs-highlight-delimiters 'all
     )
   )
 
@@ -224,7 +226,10 @@ layers configuration. You are free to put any user code."
     (setq deft-directory "~/Dropbox/org/notes")
     (setq deft-extensions '("org" "md" "txt"))
     (setq global-hl-line-mode nil)
-    (setq global-whitespace-mode nil)))
+    (setq global-whitespace-mode nil)
+    (when (display-graphic-p)
+      (setq global-hl-line-mode t)
+      (setq global-whitespace-mode t))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -233,7 +238,7 @@ layers configuration. You are free to put any user code."
  '(evil-shift-width 2)
  '(package-selected-packages
    (quote
-    (with-editor markdown-mode haml-mode gitignore-mode company evil-leader package-build bind-key s dash git-commit swiper magit-popup magit deft smex web-mode ruby-refactor js2-mode helm-flyspell helm-ag avy flycheck helm evil zenburn-theme zeal-at-point yard-mode yaml-mode window-numbering which-key web-beautify w3m volatile-highlights vlf vimish-fold vi-tilde-fringe use-package undo-tree toc-org tagedit tabbar-ruler symon spray spacemacs-theme smooth-scrolling smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-hash-syntax rspec-mode robe rainbow-mode rainbow-identifiers rainbow-delimiters quelpa projectile-rails powerline popwin pcre2el paradox page-break-lines org-repo-todo org-present org-pomodoro org-plus-contrib org-bullets org-beautify-theme open-junk-file neotree multiple-cursors move-text mmm-mode markdown-toc magit-gitflow macrostep linum-relative less-css-mode kanban json-mode jade-mode info+ ido-vertical-mode ibuffer-projectile hungry-delete htmlize highlight-parentheses highlight-numbers highlight-indentation helm-swoop helm-projectile helm-mode-manager helm-make helm-ls-git helm-gtags helm-gitignore helm-descbinds helm-dash helm-css-scss helm-c-yasnippet goto-chg golden-ratio gnuplot gmail2bbdb gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flycheck-pos-tip flx-ido find-file-in-project fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-terminal-cursor-changer evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-jumper evil-indent-textobject evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu enh-ruby-mode emmet-mode elisp-slime-nav diff-hl dash-at-point cyberpunk-theme company-web company-tern company-statistics company-quickhelp color-theme-sanityinc-tomorrow coffee-mode cliphist clean-aindent-mode buffer-move bbdb auto-yasnippet auto-highlight-symbol auto-dictionary aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
+    (projectile-rails neotree js2-mode helm-ls-git helm-dash gh-md ggtags ac-ispell company swiper flycheck yasnippet helm markdown-mode evil which-key yard-mode yaml-mode window-numbering web-mode web-beautify w3m volatile-highlights vlf vimish-fold vi-tilde-fringe use-package undo-tree toc-org tagedit tabbar-ruler symon spray spacemacs-theme smooth-scrolling smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-refactor ruby-hash-syntax rspec-mode robe restclient rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa powerline popwin pcre2el paradox page-break-lines org-present org-pomodoro org-plus-contrib org-bullets open-junk-file multiple-cursors move-text mmm-mode markdown-toc magit-gitflow macrostep linum-relative less-css-mode json-mode jade-mode info+ inflections indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize highlight-parentheses highlight-numbers highlight-indentation helm-swoop helm-projectile helm-mode-manager helm-make helm-gtags helm-gitignore helm-flyspell helm-descbinds helm-css-scss helm-c-yasnippet helm-ag goto-chg golden-ratio gnuplot gmail2bbdb gitconfig-mode gitattributes-mode git-timemachine git-messenger flycheck-pos-tip find-file-in-project fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-terminal-cursor-changer evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-jumper evil-indent-textobject evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu enh-ruby-mode emmet-mode elisp-slime-nav diff-hl deft dash-at-point cyberpunk-theme company-web company-tern company-statistics company-quickhelp coffee-mode cliphist clean-aindent-mode buffer-move bbdb auto-yasnippet auto-highlight-symbol auto-dictionary auto-complete aggressive-indent adaptive-wrap ace-window ace-link)))
  '(smeargle-colors
    (quote
     ((older-than-1day . "red")
