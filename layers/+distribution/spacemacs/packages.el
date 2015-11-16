@@ -23,7 +23,7 @@
         buffer-move
         (centered-cursor :location local)
         clean-aindent-mode
-        ;; define-word
+        define-word
         desktop
         doc-view
         eval-sexp-fu
@@ -44,15 +44,15 @@
         evil-tutor
         expand-region
         fancy-battery
-        ;; flx-ido
+        flx-ido
         golden-ratio
-        ;; google-translate
+        google-translate
         helm-ag
         helm-make
         helm-mode-manager
         helm-swoop
-        ;; helm-themes
-        ;; highlight-indentation
+        helm-themes
+        highlight-indentation
         highlight-numbers
         highlight-parentheses
         ;; waiting for an overlay bug to be fixed
@@ -63,8 +63,8 @@
         iedit
         indent-guide
         open-junk-file
-        ;; leuven-theme
-        ;; linum-relative
+        leuven-theme
+        linum-relative
         move-text
         neotree
         pcre2el
@@ -73,13 +73,13 @@
         recentf
         smartparens
         smooth-scrolling
-        ;; (solarized-theme :location local)
+        (solarized-theme :location local)
         spray
         vi-tilde-fringe
         volatile-highlights
         window-numbering
         cyberpunk-theme
-        ;; (zoom-frm :location local)
+        (zoom-frm :location local)
         ))
 
 ;; Paradox from MELPA is not compatible with 24.3, so we use
@@ -2194,7 +2194,7 @@ one of `l' or `r'."
       (spacemacs/add-to-hooks (if dotspacemacs-smartparens-strict-mode
                                   'smartparens-strict-mode
                                 'smartparens-mode)
-                              '(emacs-lisp-mode-hook common-lisp-mode-hook))
+                              '(emacs-lisp-mode-hook common-lisp-mode-hook clojure-mode web-mode))
 
       ;; enable smartparens-mode in `eval-expression'
       (defun conditionally-enable-smartparens-mode ()
@@ -2226,8 +2226,6 @@ one of `l' or `r'."
     (progn
       (require 'smartparens-config)
       (spacemacs|diminish smartparens-mode " ⓟ" " p")
-
-      (show-smartparens-global-mode +1)
 
       (defun spacemacs/smartparens-pair-newline (id action context)
         (save-excursion

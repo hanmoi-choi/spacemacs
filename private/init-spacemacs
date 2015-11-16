@@ -1,4 +1,4 @@
-;; -*- mode: emacs-lisp -*-
+;-*- MODE: emacs-lisp -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -16,8 +16,7 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
-   dotspacemacs-configuration-layers
-   '(
+   dotspacemacs-configuration-layers '(
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -58,17 +57,36 @@ values."
      daniel-web-browser
      daniel-email
      )
+   )
+
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    ;; base
+                                    whitespace
+                                    ;; additional
+                                    auto-dictionary
+                                    buffer-move
+                                    doc-view
+                                    clean-aindent
+                                    evil-tutor
+                                    google-translate
+                                    fancy-battery
+                                    define-word
+                                    leuven-theme
+                                    spary
+                                    vi-tilde-fringe
+                                    volatile-highlights
+                                    cyberpunk-theme
+                                    zoom-frm)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
-   dotspacemacs-delete-orphan-packages nil))
+   dotspacemacs-delete-orphan-packages nil)
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -92,7 +110,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -100,12 +118,13 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(cyberpunk
+   dotspacemacs-themes '(
+
                          zenburn
-                         leuven
                          monokai)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
+
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro for Powerline"
@@ -120,7 +139,7 @@ values."
    dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
-   dotspacemacs-major-mode-leader-key ","
+   dotspacemacs-major-mode-leader-key "C-M-m"
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m)
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
@@ -144,7 +163,7 @@ values."
    dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
-   dotspacemacs-helm-no-header nil
+   dotspacemacs-helm-no-header t
    ;; define the position to display `helm', options are `bottom', `top',
    ;; `left', or `right'. (default 'bottom)
    dotspacemacs-helm-position 'bottom
@@ -193,7 +212,7 @@ values."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters `nil
+   dotspacemacs-highlight-delimiters `current
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
    ;; List of search tool executable names. Spacemacs uses the first installed
@@ -205,10 +224,6 @@ values."
    ;; Not used for now. (default nil)
    dotspacemacs-default-package-repository nil)
 
-  (when (display-graphic-p)
-    dotspacemacs-persistent-server t
-    dotspacemacs-highlight-delimiters 'all
-    )
   )
 
 (defun dotspacemacs/user-init ()
@@ -226,19 +241,40 @@ layers configuration. You are free to put any user code."
     (setq deft-directory "~/Dropbox/org/notes")
     (setq deft-extensions '("org" "md" "txt"))
     (setq global-hl-line-mode nil)
-    (setq global-whitespace-mode nil)
+    (setq show-smartparens-global-mode nil)
+    (setq show-smartparens-mode nil)
+    (setq smartparens-strict-mode nil)
+
+    (setq ibuffer-formats
+          '((mark modified read-only " "
+                  (name 50 50 :left :elide) " "
+                  (size 9 -1 :right) " "
+                  (mode 16 16 :left :elide) " " filename-and-process)
+            (mark " " (name 16 -1) " " filename)))
+
+    ;; Persist Undo
+    (setq undo-tree-auto-save-history t
+          undo-tree-history-directory-alist
+          `(("." . ,(concat spacemacs-cache-directory "emacs-undo"))))
+    (unless (file-exists-p (concat spacemacs-cache-directory "emacs-undo"))
+      (make-directory (concat spacemacs-cache-directory "emacs-undo")))
+
     (when (display-graphic-p)
-      (setq global-hl-line-mode t)
-      (setq global-whitespace-mode t))))
+      (setq dotspacemacs-persistent-server t))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+ '(emamux:completing-read-type (quote helm))
+ '(emamux:use-nearest-pane t)
  '(evil-shift-width 2)
  '(package-selected-packages
    (quote
-    (projectile-rails neotree js2-mode helm-ls-git helm-dash gh-md ggtags ac-ispell company swiper flycheck yasnippet helm markdown-mode evil which-key yard-mode yaml-mode window-numbering web-mode web-beautify w3m volatile-highlights vlf vimish-fold vi-tilde-fringe use-package undo-tree toc-org tagedit tabbar-ruler symon spray spacemacs-theme smooth-scrolling smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-refactor ruby-hash-syntax rspec-mode robe restclient rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa powerline popwin pcre2el paradox page-break-lines org-present org-pomodoro org-plus-contrib org-bullets open-junk-file multiple-cursors move-text mmm-mode markdown-toc magit-gitflow macrostep linum-relative less-css-mode json-mode jade-mode info+ inflections indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize highlight-parentheses highlight-numbers highlight-indentation helm-swoop helm-projectile helm-mode-manager helm-make helm-gtags helm-gitignore helm-flyspell helm-descbinds helm-css-scss helm-c-yasnippet helm-ag goto-chg golden-ratio gnuplot gmail2bbdb gitconfig-mode gitattributes-mode git-timemachine git-messenger flycheck-pos-tip find-file-in-project fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-terminal-cursor-changer evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-jumper evil-indent-textobject evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu enh-ruby-mode emmet-mode elisp-slime-nav diff-hl deft dash-at-point cyberpunk-theme company-web company-tern company-statistics company-quickhelp coffee-mode cliphist clean-aindent-mode buffer-move bbdb auto-yasnippet auto-highlight-symbol auto-dictionary auto-complete aggressive-indent adaptive-wrap ace-window ace-link)))
+    (web-mode spacemacs-theme projectile-rails paradox flycheck-pos-tip flycheck find-file-in-project evil-nerd-commenter avy smartparens projectile magit which-key use-package zenburn-theme yard-mode yaml-mode window-numbering web-beautify w3m volatile-highlights vlf vimish-fold vi-tilde-fringe toc-org tagedit tabbar-ruler symon spray spinner smooth-scrolling smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-hash-syntax rubocop rspec-mode robe restclient rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa powerline popwin pkg-info pcre2el page-break-lines org-present org-pomodoro org-plus-contrib org-bullets open-junk-file neotree multiple-cursors move-text mmm-mode markdown-toc magit-gitflow macrostep linum-relative leuven-theme less-css-mode json-mode js2-mode jade-mode info+ inflections indent-guide ido-vertical-mode ibuffer-projectile hydra hungry-delete htmlize highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-ls-git helm-gtags helm-gitignore helm-flyspell helm-descbinds helm-dash helm-css-scss helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gmail2bbdb gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-terminal-cursor-changer evil-surround evil-search-highlight-persist evil-numbers evil-matchit evil-lisp-state evil-jumper evil-indent-textobject evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu enh-ruby-mode emmet-mode emamux elisp-slime-nav diminish diff-hl deft define-word dash-at-point cyberpunk-theme company-web company-tern company-statistics company-quickhelp coffee-mode cliphist clean-aindent-mode buffer-move bind-key bbdb auto-yasnippet auto-highlight-symbol auto-dictionary aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
  '(smeargle-colors
    (quote
     ((older-than-1day . "red")
@@ -254,6 +290,6 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((((class color) (min-colors 89)) (:foreground "#d3d3d3" :background "#000000"))))
+ '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

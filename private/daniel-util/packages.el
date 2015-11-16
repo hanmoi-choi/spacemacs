@@ -1,21 +1,7 @@
-;;; packages.el --- daniel-util Layer packages File for Spacemacs
-;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
-;;
-;; Author: Sylvain Benner <sylvain.benner@gmail.com>
-;; URL: https://github.com/syl20bnr/spacemacs
-;;
-;; This file is not part of GNU Emacs.
-;;
-;;; License: GPLv3
-
-;; List of all packages to install and/or initialize. Built-in packages
-;; which require an initialization must be listed explicitly in the list.
 (setq daniel-util-packages
       '(
-        ;; package names go here
         vlf
+        emamux
         find-file-in-project
         tabbar-ruler
         multiple-cursors
@@ -64,15 +50,32 @@
   (use-package vlf
     ))
 
+(defun daniel-util/init-emamux ()
+  "Initialize my package"
+  (use-package emamux
+    :defer t
+    :init
+    (progn
+      (evil-leader/set-key
+        "Es" 'emamux:send-command
+        "Er" 'emamux:run-command
+        "El" 'emamux:run-last-command
+        "Ey" 'emamux:yank-from-list-buffers
+        "Ec" 'emamux:close-runner-pane
+        "EC" 'emamux:copy-kill-ring
+        "Ei" 'emamux:interrupt-runner)
+      (custom-set-variables
+       '(emamux:completing-read-type 'helm)
+       '(emamux:use-nearest-pane t))
+      )))
+
 (defun daniel-util/init-symon ()
   "Initialize my package"
   (use-package symon
     :init
     (progn
       (setq symon-sparkline-type 'boxed)
-      (symon-mode 1)
-      )
-    ))
+      (symon-mode 1))))
 
 (defun daniel-util/init-vimish-fold ()
   (use-package vimish-fold

@@ -49,7 +49,7 @@
         (uniquify :location built-in)
         use-package
         which-key
-        ;; whitespace
+        whitespace
         winner))
 
 ;; Initialization of packages
@@ -212,6 +212,7 @@
       ;; Make the current definition and/or comment visible.
       (define-key evil-normal-state-map "zf" 'reposition-window)
       ;; toggle maximize buffer
+
       (define-key evil-window-map (kbd "o") 'spacemacs/toggle-maximize-buffer)
       (define-key evil-window-map (kbd "C-o") 'spacemacs/toggle-maximize-buffer)
       ;; make cursor keys work

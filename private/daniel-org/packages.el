@@ -8,10 +8,11 @@
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; License: GPLv3
+;;; nse: GPLv3
 
 (setq daniel-org-packages
       '(
+        company
         gnuplot
         htmlize
         ;; org is installed by `org-plus-contrib'
@@ -24,6 +25,11 @@
         org-present
         (org-jira :location local)
         toc-org))
+
+(when (configuration-layer/layer-usedp 'auto-completion)
+  (defun org/post-init-company ()
+    (spacemacs|add-company-hook org-mode)
+    (push 'company-capf company-backends-org-mode)))
 
 (defun daniel-org/init-org-jira ()
   (use-package org-jira
@@ -288,28 +294,24 @@ Will work on both org-mode and any mode that accepts plain html."
       (defvar daniel/task-template "* TODO %^{Task} %^g
 SCHEDULED: %^t ")
 
-      (defvar daniel/code-template "* TODO %^{Task} %i
+      (defvar daniel/task-with-link-template "* TODO %^{Task} %^g
 SCHEDULED: %^t
 Link: %l\n
 %a")
-
-      (defvar daniel/note-template "* %^{Title}                        :NOTE:
-:END:" )
-
+      (defvar daniel/note-template "* %^{Title}                        :NOTE: " )
       (defvar daniel/note-with-link-template "* %^{Title} :NOTE:
-Link: %l\n
-:END:" )
+Link: %l\n" )
       (setq org-default-notes-file "~/Dropbox/org/todo/refile.org")
       (setq org-capture-templates
             `(("r" "CODE" entry
                (file "~/Dropbox/org/todo/refile.org")
-               ,daniel/code-template)
+               ,daniel/task-with-link-template)
               ("t" "Tasks" entry
                (file "~/Dropbox/org/todo/refile.org")
                ,daniel/task-template)
               ("mt" "TODO from Mail" entry
                (file+headline "~/Dropbox/org/todo/refile.org" "INBOX")
-               ,daniel/code-template)
+               ,daniel/task-with-link-template)
               ("mm" "TODO from Mail" entry
                (file "~/Dropbox/org/todo/notes.org")
                ,daniel/note-with-link-template)

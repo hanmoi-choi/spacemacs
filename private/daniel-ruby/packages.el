@@ -1,59 +1,49 @@
 (setq daniel-ruby-packages
       '(
         ;; bundler
+        company
         rvm
         rspec-mode
         enh-ruby-mode
         robe
         ruby-tools
         projectile-rails
-        ruby-refactor
         yaml-mode
-        ;; rubocop
+        rubocop
         ruby-hash-syntax
-        ;; ruby-additional
         yard-mode
+        ;; ruby-end
         ))
 
 (defun daniel-ruby/init-rubocop ()
   (use-package rubocop
     :diminish ""
-    :config
+    :defer t
+    :init
     (progn
-      (add-hook 'enh-ruby-mode-hook 'rubocop-mode)
+      (add-hook 'enh-ruby-mode-hook 'rubocop-mode))))
+
+(defun daniel-ruby/init-ruby-end ()
+  (use-package ruby-end
+    :diminish ""
+    :defer t
+    :init
+    (progn
+      (add-hook 'enh-ruby-mode-hook 'ruby-end-mode)
       )
     ))
 
-(defun daniel-ruby/init-ruby-refactor ()
-  (use-package ruby-refactor
-    :config
-    (progn
-      (add-hook 'enh-ruby-mode-hook 'ruby-refactor-mode-launch)
-      (spacemacs|diminish ruby-refactor-mode "")
-      )))
-
 (defun daniel-ruby/init-ruby-hash-syntax ()
   (use-package ruby-hash-syntax
-    :config
-    (progn
-      )
     ))
 
 (defun daniel-ruby/init-yard-mode ()
   (use-package yard-mode
-    :config
+    :defer t
+    :init
     (progn
       (add-hook 'enh-ruby-mode-hook 'yard-mode)
-      (spacemacs|diminish yard-mode "")
-      )
-    ))
-
-(defun daniel-ruby/init-ruby-additional ()
-  (use-package ruby-additional
-    :config
-    (progn
-      )
-    ))
+      (spacemacs|diminish yard-mode ""))))
 
 (defun daniel-ruby/init-rvm ()
   "Initialize RVM mode"
@@ -70,7 +60,6 @@
         "Use BASH shell for running the specs because of ZSH issues."
         (let ((shell-file-name "/bin/bash"))
           ad-do-it))
-
       ;; From Sacha
       (defun sacha/rspec-verify-single ()
         "Runs the specified example at the point of the current buffer."
@@ -104,8 +93,6 @@
                   (modify-syntax-entry ?: ".")
                   (modify-syntax-entry ?_ "w"))) ;; Adds ":" to the word definition
 
-      ;; (add-hook 'enh-ruby-mode-hook 'auto-complete-mode)
-      (add-hook 'enh-ruby-mode-hook 'ruby-refactor-mode-launch)
       (setq enh-ruby-deep-indent-paren nil
             enh-ruby-hanging-paren-deep-indent-level 2)
       (add-hook 'enh-ruby-mode-hook 'company-mode)
@@ -113,13 +100,7 @@
       (setq flyspell-issue-message-flg nil)
       (add-hook 'enh-ruby-mode-hook
                 (lambda () (flyspell-prog-mode)))
-
-      (require 'smartparens)
-      (sp-with-modes '(ruby-mode enh-ruby-mode)
-        (sp-local-pair "{" "}"
-                       :pre-handlers '(sp-ruby-pre-handler)
-                       :post-handlers '(sp-ruby-post-handler (spacemacs/smartparens-pair-newline-and-indent "RET"))
-                       :suffix "")))))
+      )))
 
 (defun daniel-ruby/init-ruby-tools ()
   (use-package ruby-tools
@@ -228,11 +209,9 @@
       (setq robe-mode-map (make-sparse-keymap)))
     :config
     (progn
-
-      ;; (spacemacs|hide-lighter robe-mode)
+      (spacemacs|hide-lighter robe-mode)
       ;; robe mode specific
       (spacemacs|diminish robe-mode "")
-      ;; (ADD-hook 'robe-mode-hook 'ac-robe-setup)
       (defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
         (rvm-activate-corresponding-ruby))
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mgg" 'robe-jump)
