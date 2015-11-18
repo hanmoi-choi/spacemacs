@@ -22,7 +22,6 @@
         ;; org-mime is installed by `org-plus-contrib'
         (org-mime :location built-in)
         org-pomodoro
-        org-present
         (org-jira :location local)
         toc-org))
 
@@ -51,7 +50,6 @@
 (defun daniel-org/init-org ()
   (use-package org
     :mode ("\\.\\(org|org_archive|txt\\)$" . org-mode)
-    :bind ("C-c c" . org-capture)
     :defer t
     :init
     (progn
@@ -59,21 +57,33 @@
             (concat spacemacs-cache-directory "org-clock-save.el")
             org-log-done t
             org-startup-with-inline-images t
-            org-src-fontify-natively t)
+            org-src-fontify-natively t
+            org-startup-indented t
+            org-cycle-include-plain-lists t
+            org-clone-delete-id t
+            org-agenda-window-setup 'current-window)
+
       (setq mail-setup-hook
             (quote (orgstruct++-mode
                     (lambda nil (setq fill-column 80) (flyspell-mode 1))
                     turn-on-auto-fill
                     bbdb-define-all-aliases)))
+
       (eval-after-load 'org-indent
         '(spacemacs|hide-lighter org-indent-mode))
-      (setq org-startup-indented t)
       (let ((dir (configuration-layer/get-layer-property 'daniel-org :dir)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
+
       (defmacro spacemacs|org-emphasize (fname char)
         "Make function for setting the emphasis in org mode"
         `(defun ,fname () (interactive)
                 (org-emphasize ,char)))
+
+      (font-lock-add-keywords
+       'org-mode '(("\\(@@html:<kbd>@@\\) \\(.*\\) \\(@@html:</kbd>@@\\)"
+                    (1 font-lock-comment-face prepend)
+                    (2 font-lock-function-name-face)
+                    (3 font-lock-comment-face prepend))))
 
       ;; Insert key for org-mode and markdown a la C-h k
       ;; from SE endless http://emacs.stackexchange.com/questions/2206/i-want-to-have-the-kbd-tags-for-my-blog-written-in-org-mode/2208#2208
@@ -89,13 +99,11 @@ Will work on both org-mode and any mode that accepts plain html."
             (forward-char -8))))
       (evil-leader/set-key-for-mode 'org-mode
         "m'" 'org-edit-special
-        "mc" 'org-capture
         "md" 'org-deadline
         "me" 'org-export-dispatch
         "mf" 'org-set-effort
         "m:" 'org-set-tags
 
-        "ma" 'org-agenda
         "mb" 'org-tree-to-indirect-buffer
         "mA" 'org-archive-subtree
         "ml" 'org-open-at-point
@@ -112,12 +120,6 @@ Will work on both org-mode and any mode that accepts plain html."
         "mH" 'org-shiftleft
         "mJ" 'org-shiftdown
         "mK" 'org-shiftup
-
-        ;; Change between TODO sets
-        "m C-S-l" 'org-shiftcontrolright
-        "m C-S-h" 'org-shiftcontrolleft
-        "m C-S-j" 'org-shiftcontroldown
-        "m C-S-k" 'org-shiftcontrolup
 
         ;; Subtree editing
         "mSl" 'org-demote-subtree
@@ -154,13 +156,14 @@ Will work on both org-mode and any mode that accepts plain html."
         "mtw" 'org-table-wrap-region
 
         "mI" 'org-clock-in
+
         (if dotspacemacs-major-mode-leader-key
             (concat "m" dotspacemacs-major-mode-leader-key)
           "m,") 'org-ctrl-c-ctrl-c
           "mn" 'org-narrow-to-subtree
           "mN" 'widen
           "mO" 'org-clock-out
-          "mq" 'org-clock-cancel
+          "mQ" 'org-clock-cancel
           "mR" 'org-refile
           "ms" 'org-schedule
 
@@ -202,28 +205,34 @@ Will work on both org-mode and any mode that accepts plain html."
         "OL" 'bh/clock-in-last-task
         "Ot" 'bh/insert-inactive-timestamp
         "Ou" 'bh/untabify
-        "Os" 'org-iswitchb
-        )
-      (define-key global-map "\C-cl" 'org-store-link)
-      (define-key global-map "\C-ca" 'org-agenda)
+        "Os" 'org-iswitchb)
+
+      (global-set-key (kbd "C-c c") 'org-capture)
+      (global-set-key (kbd "C-c l") 'org-store-link)
+      (global-set-key (kbd "<f12>") 'org-agenda)
+      (global-set-key (kbd "<f11>") 'org-clock-goto)
+      (global-set-key (kbd "C-<f11>") 'org-clock-in)
+      (global-set-key (kbd "C-<f9>") 'previous-buffer)
+      (global-set-key (kbd "C-<f10>") 'next-buffer)
+      (global-set-key (kbd "<f5>") 'bh/org-todo)
+
+      (add-hook 'org-agenda-mode-hook
+                '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
+                'append)
+
+      (define-key org-mode-map (kbd "C-x C-v" ) 'markdown-preview-file-with-marked)
 
       (setq org-emphasis-alist (quote (("*" bold "<b>" "</b>")
                                        ("/" italic "<i>" "</i>")
                                        ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
                                        ("=" org-code "<code>" "</code>" verbatim)
                                        ("~" org-verbatim "<code>" "</code>" verbatim))))
+
       (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
       (setq org-time-clocksum-format
             '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
       (setq org-catch-invisible-edits 'error)
-      (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
-      (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
-      (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
-      (add-hook 'message-mode-hook 'orgtbl-mode 'append)
-      (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
-      (add-hook 'message-mode-hook
-                '(lambda () (setq fill-column 72))
-                'append)
+
       (setq org-structure-template-alist
             (quote (("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
                     ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
@@ -238,19 +247,6 @@ Will work on both org-mode and any mode that accepts plain html."
                     ("A" "#+ascii: ")
                     ("i" "#+index: ?" "#+index: ?")
                     ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
-      (setq org-src-fontify-natively t)
-      (setq org-cycle-include-plain-lists t)
-      (setq org-clone-delete-id t)
-      (setq org-agenda-window-setup 'current-window)
-      (global-set-key (kbd "<C-f6>") '(lambda () (interactive) (bookmark-set "SAVED")))
-      (global-set-key (kbd "<f6>") '(lambda () (interactive) (bookmark-jump "SAVED")))
-      (unless (file-exists-p org-directory)
-        (make-directory org-directory))
-      (font-lock-add-keywords
-       'org-mode '(("\\(@@html:<kbd>@@\\) \\(.*\\) \\(@@html:</kbd>@@\\)"
-                    (1 font-lock-comment-face prepend)
-                    (2 font-lock-function-name-face)
-                    (3 font-lock-comment-face prepend))))
 
       (require 'org-indent)
       ;; We add this key mapping because an Emacs user can change
@@ -258,15 +254,16 @@ Will work on both org-mode and any mode that accepts plain html."
       ;; C-c ' is shadowed by `spacemacs/default-pop-shell', effectively making
       ;; the Emacs user unable to exit src block editing.
       (define-key org-src-mode-map (kbd (concat dotspacemacs-major-mode-emacs-leader-key " '")) 'org-edit-src-exit)
-
-
-      (define-key org-mode-map (kbd "C-x C-v" ) 'markdown-preview-file-with-marked)
-
-      (setq org-ditaa-jar-path "~/Dropbox/Apps/spacemacs/private/bin/ditaa0_9.jar")
-      (setq org-plantuml-jar-path "~/Dropbox/Apps/spacemacs/private/bin/plantuml.jar")
-
       (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
-      (setq org-babel-results-keyword "results")
+
+      (setq org-goto-interface 'outline
+            org-goto-max-level 10
+            org-startup-folded 'content
+            org-cycle-include-plain-lists 'integrate
+            org-log-done t
+            org-ditaa-jar-path "~/Dropbox/Apps/spacemacs/private/bin/ditaa0_9.jar"
+            org-plantuml-jar-path "~/Dropbox/Apps/spacemacs/private/bin/plantuml.jar"
+            org-babel-results-keyword "results")
 
       (org-babel-do-load-languages
        (quote org-babel-load-languages)
@@ -282,175 +279,175 @@ Will work on both org-mode and any mode that accepts plain html."
                (plantuml . t)
                (latex . t))))
 
-      (setq org-log-done t)
       (eval-after-load 'org-indent
         '(spacemacs|hide-lighter org-indent-mode))
-      (setq org-startup-indented t)
-
-      (setq org-goto-interface 'outline
-            org-goto-max-level 10)
-      (setq org-startup-folded nil)
-      (setq org-cycle-include-plain-lists 'integrate)
-      (defvar daniel/task-template "* TODO %^{Task} %^g
-SCHEDULED: %^t ")
-
-      (defvar daniel/task-with-link-template "* TODO %^{Task} %^g
-SCHEDULED: %^t
-Link: %l\n
-%a")
-      (defvar daniel/note-template "* %^{Title}                        :NOTE: " )
-      (defvar daniel/note-with-link-template "* %^{Title} :NOTE:
-Link: %l\n" )
-      (setq org-default-notes-file "~/Dropbox/org/todo/refile.org")
-      (setq org-capture-templates
-            `(("r" "CODE" entry
-               (file "~/Dropbox/org/todo/refile.org")
-               ,daniel/task-with-link-template)
-              ("t" "Tasks" entry
-               (file "~/Dropbox/org/todo/refile.org")
-               ,daniel/task-template)
-              ("mt" "TODO from Mail" entry
-               (file+headline "~/Dropbox/org/todo/refile.org" "INBOX")
-               ,daniel/task-with-link-template)
-              ("mm" "TODO from Mail" entry
-               (file "~/Dropbox/org/todo/notes.org")
-               ,daniel/note-with-link-template)
-              ("n" "Notes" entry
-               (file+datetree "~/Dropbox/org/todo/notes.org")
-               ,daniel/note-template)))
-
       (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
       (add-hook 'org-capture-prepare-finalize-hook 'daniel/org-level1-replace)
-      (setq org-global-properties (quote (("Effort_ALL" . "0:10 0:30 1:00 2:00 3:00 4:00 5:00 6:00 7:00 8:00"))))
-      (setq org-reverse-note-order t)
-      (setq org-refile-use-outline-path nil)
-      (setq org-refile-allow-creating-parent-nodes t)
-      (setq org-refile-use-cache nil)
-      (setq org-refile-targets '((org-agenda-files . (:maxlevel . 5))))
-      (setq org-blank-before-new-entry nil)
-      (setq org-todo-keywords (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
-                                      (sequence "WAITING(w@/!)" "SOMEDAY(S!)" "|" "CANCELLED(c@/!)")
-                                      (sequence "QUOTE(q!)" "QUOTED(Q!)" "|" "APPROVED(A@)" "EXPIRED(E@)" "REJECTED(R@)")
-                                      (sequence "OPEN(O)" "|" "CLOSED(C)"))))
+
+      (setq org-reverse-note-order t
+            org-refile-use-outline-path nil
+            org-refile-allow-creating-parent-nodes t
+            org-refile-use-cache nil
+            org-refile-targets '((org-agenda-files . (:maxlevel . 5)))
+            org-tags-exclude-from-inheritance '("project")
+            org-blank-before-new-entry nil)
+
+      (setq org-default-notes-file "~/Dropbox/org/todo/refile.org")
+
+      (setq org-todo-keywords
+            (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                    (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
       (setq org-todo-keyword-faces
-            (quote (("TODO"      :foreground "red"          :weight bold :box t)
-                    ("STARTED"      :foreground "blue"         :weight bold :box t)
-                    ("DONE"      :foreground "forest green" :weight bold :box t)
-                    ("WAITING"   :foreground "yellow"       :weight bold :box t)
-                    ("SOMEDAY"   :foreground "goldenrod"    :weight bold :box t)
-                    ("CANCELLED" :foreground "orangered"    :weight bold :box t)
-                    ("QUOTE"     :foreground "hotpink"      :weight bold :box t)
-                    ("QUOTED"    :foreground "indianred1"   :weight bold :box t)
-                    ("APPROVED"  :foreground "forest green" :weight bold :box t)
-                    ("EXPIRED"   :foreground "olivedrab1"   :weight bold :box t)
-                    ("REJECTED"  :foreground "olivedrab"    :weight bold :box t)
-                    ("OPEN"      :foreground "magenta"      :weight bold :box t)
-                    ("CLOSED"    :foreground "forest green" :weight bold :box t))))
+            (quote (("TODO" :foreground "red" :weight bold)
+                    ("NEXT" :foreground "blue" :weight bold)
+                    ("DONE" :foreground "forest green" :weight bold)
+                    ("WAITING" :foreground "orange" :weight bold)
+                    ("HOLD" :foreground "magenta" :weight bold)
+                    ("CANCELLED" :foreground "forest green" :weight bold)
+                    ("MEETING" :foreground "forest green" :weight bold)
+                    ("PHONE" :foreground "forest green" :weight bold))))
 
       (setq org-todo-state-tags-triggers
-            (quote (("CANCELLED"
-                     ("CANCELLED" . t))
-                    ("WAITING"
-                     ("WAITING" . t))
-                    ("SOMEDAY"
-                     ("WAITING" . t))
-                    (done
-                     ("WAITING"))
-                    ("TODO"
-                     ("WAITING")
-                     ("CANCELLED"))
-                    ("NEXT"
-                     ("WAITING"))
-                    ("DONE"
-                     ("WAITING")
-                     ("CANCELLED")))))
+            (quote (("CANCELLED" ("CANCELLED" . t))
+                    ("WAITING" ("WAITING" . t))
+                    ("HOLD" ("WAITING") ("HOLD" . t))
+                    (done ("WAITING") ("HOLD"))
+                    ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                    ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                    ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
-      (setq org-tags-exclude-from-inheritance '("project"))
-      (setq org-tag-alist '(("work" . ?w)
-                            ("private" . ?p)
-                            ("@Steve" . ?s)
-                            ("@Michael" . ?s)
-                            ("@home" . ?h)
-                            ("@errands" . ?e)
-                            ("church" . ?c)
-                            ("bill" . ?$)
-                            ("health" . ?H)
-                            ("Medical" . ?m)
-                            ("special_date" . ?S)
-                            ("appointment" . ?a)
-                            ("code" . ?C)
-                            ("@phone" . ?P)
-                            ("@reading" . ?r)
-                            ("fm_origination" . ?O)
-                            ("fm_insurance" . ?I)
-                            ("fm_admin" . ?A)
-                            ("fm_credit" . ?D)
-                            ("TFA" . ?1)
-                            ("MBFS" . ?2)
-                            ("NFS" . ?3)))
+      ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+      (setq org-capture-templates
+            (quote (("t" "TODO" entry (file "~/Dropbox/org/todo/refile.org")
+                     "* TODO %?\n%U\n" :clock-in t :clock-resume t)
+                    ("r" "RESPOND" entry (file "~/Dropbox/org/todo/refile.org")
+                     "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+                    ("n" "NOTE" entry (file "~/Dropbox/org/todo/refile.org")
+                     "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                    ("j" "JOURNAL" entry (file+datetree "~/Dropbox/org/todo/diary.org")
+                     "* %?\n%U\n" :clock-in t :clock-resume t)
+                    ("w" "WORK LOG" entry (file "~/Dropbox/org/todo/worklog.org")
+                     "* %?\n%U\n" :clock-in t :clock-resume t)
+                    ("m" "MEETING" entry (file "~/Dropbox/org/todo/refile.org")
+                     "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+                    ("p" "PHONE CALL" entry (file "~/Dropbox/org/todo/refile.org")
+                     "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+                    ("h" "HABIT" entry (file "~/Dropbox/org/todo/refile.org")
+                     "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 
       (setq org-agenda-files
             (delq nil
                   (mapcar (lambda (x) (and (file-exists-p x) x))
-                          '("~/Dropbox/org/todo/todo.org"
-                            "~/Dropbox/org/todo/notes.org"
-                            "~/Dropbox/org/todo/refile.org"
+                          '("~/Dropbox/org/todo/refile.org"
+                            "~/Dropbox/org/todo/private.org"
                             "~/Dropbox/org/todo/code.org"
                             "~/Dropbox/org/todo/work.org"))))
 
-      (setq org-agenda-span 7)
-      (setq org-agenda-sticky nil)
-      (setq org-agenda-inhibit-startup t)
-      (setq org-agenda-use-tag-inheritance nil)
-      (setq org-agenda-show-log t)
-      (setq org-agenda-skip-scheduled-if-done t)
-      (setq org-agenda-skip-deadline-if-done t)
-      (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-      ;; (setq org-agenda-time-grid
-      ;;       '((daily today require-timed)
-      ;;         "---------------------------"
-      ;;         (0900 1100 1300 1500 1700 1900)))
-      (setq org-columns-default-format "%50ITEM %12SCHEDULED %TODO %3PRIORITY %Effort{:} %TAGS")
+      ;; Resume clocking task when emacs is restarted
+      (org-clock-persistence-insinuate)
+      ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
+      (setq org-clock-history-length 23)
+      ;; Resume clocking task on clock-in if the clock is open
+      (setq org-clock-in-resume t)
+      ;; Change tasks to NEXT when clocking in
+      (setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+      ;; Separate drawers for clocking and logs
+      (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
+      ;; Save clock data and state changes and notes in the LOGBOOK drawer
+      (setq org-clock-into-drawer t)
+      ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+      (setq org-clock-out-remove-zero-time-clocks t)
+      ;; Clock out when moving task to a done state
+      (setq org-clock-out-when-done t)
+      ;; Save the running clock and all clock history when exiting Emacs, load it on startup
+      (setq org-clock-persist t)
+      ;; Do not prompt to resume an active clock
+      (setq org-clock-persist-query-resume nil)
+      ;; Enable auto clock resolution for finding open clocks
+      (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+      ;; Include current clocking task in clock reports
+      (setq org-clock-report-include-clocking-task t)
+      (setq bh/keep-clock-running nil)
+      (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
 
-      (setq org-agenda-exporter-settings
-            '((ps-number-of-columns 2)
-              (ps-landscape-mode t)
-              (org-agenda-add-entry-text-maxlines 5)
-              (htmlize-output-type 'css)))
+      (require 'org-id)
+      (defun bh/clock-in-task-by-id (id)
+        "Clock in a task by id"
+        (org-with-point-at (org-id-find id 'marker)
+          (org-clock-in nil)))
 
-      (require 'ox-latex)
-      ;; 'djcb-org-article' for export org documents to the LaTex 'article', using
-      ;; XeTeX and some fancy fonts; requires XeTeX (see org-latex-to-pdf-process)
-      (unless (boundp 'org-latex-classes) (setq org-latex-classes nil))
+      (defun bh/clock-in-last-task (arg)
+        "Clock in the interrupted task if there is one
+Skip the default task and get the next one.
+A prefix arg forces clock in of the default task."
+        (interactive "p")
+        (let ((clock-in-to-task
+               (cond
+                ((eq arg 4) org-clock-default-task)
+                ((and (org-clock-is-active)
+                      (equal org-clock-default-task (cadr org-clock-history)))
+                 (caddr org-clock-history))
+                ((org-clock-is-active) (cadr org-clock-history))
+                ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
+                (t (car org-clock-history)))))
+          (widen)
+          (org-with-point-at clock-in-to-task
+            (org-clock-in nil))))
+      (setq org-time-stamp-rounding-minutes (quote (1 1)))
+      (setq org-agenda-clock-consistency-checks
+            (quote (:max-duration "4:00"
+                                  :min-duration 0
+                                  :max-gap 0
+                                  :gap-ok-around ("4:00"))))
+      (setq org-clock-out-remove-zero-time-clocks t)
+      (setq org-agenda-clockreport-parameter-plist
+            (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
+                                        ; Set default column view headings: Task Effort Clock_Summary
+      (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+                                        ; global Effort estimate values
+                                        ; global STYLE property values for completion
+      (setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                                          ("STYLE_ALL" . "habit"))))
+      ;; Agenda log mode items to display (closed and state changes by default)
+      (setq org-agenda-log-mode-items (quote (closed state)))
+                                        ; Tags with fast selection keys
+      (setq org-tag-alist (quote ((:startgroup)
+                                  ("@errand" . ?e)
+                                  ("@work" . ?o)
+                                  ("@home" . ?H)
+                                  (:endgroup)
+                                  ("WAITING" . ?w)
+                                  ("HOLD" . ?h)
+                                  ("PERSONAL" . ?P)
+                                  ("WORK" . ?W)
+                                  ("NOTE" . ?n)
+                                  ("CANCELLED" . ?c)
+                                  ("FLAGGED" . ??))))
 
-      (setq org-latex-classes
-            (cons '("org-article"
-                    "\\documentclass[11pt,a4paper]{article}
-      \\usepackage[T1]{fontenc}
-      \\usepackage{fontspec}
-      \\usepackage{graphicx}
-      \\defaultfontfeatures{Mapping=tex-text}
-      \\setromanfont{Arial}
-      \\setromanfont [BoldFont={Arial Bold},
-                      ItalicFont={Arial Basic Italic}]{Arial Basic}
-      \\setsansfont{Helvetica}
-      \\setmonofont[Scale=1.0]{Consolas}
-      \\usepackage{geometry}
-      \\geometry{a4paper, textwidth=6.5in, textheight=10in,
-                  marginparsep=7pt, marginparwidth=.6in}
-      \\pagestyle{empty}
-      \\title{}
-            [NO-DEFAULT-PACKAGES]
-            [NO-PACKAGES]"
-                    ("\\section{%s}" . "\\section*{%s}")
-                    ("\\subsection{%s}" . "\\subsection*{%s}")
-                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                  org-latex-classes))
+                                        ; Allow setting single tags without the menu
+      (setq org-fast-tag-selection-single-key (quote expert))
+                                        ; For tag searches ignore tasks with scheduled and deadline dates
+      (setq org-agenda-tags-todo-honor-ignore-options t)
 
-      (setq org-latex-to-pdf-process '("tex --pdf --clean --verbose --batch %f"))
+      (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                       (org-agenda-files :maxlevel . 9))))
+      (setq org-refile-use-outline-path t)
+      (setq org-outline-path-complete-in-steps nil)
+      (setq org-refile-allow-creating-parent-nodes (quote confirm))
+      (setq org-indirect-buffer-display 'current-window)
+      (defun bh/verify-refile-target ()
+        "Exclude todo keywords with a done state from refile targets"
+        (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+      (setq org-refile-target-verify-function 'bh/verify-refile-target)
+
+      (setq org-agenda-dim-blocked-tasks nil
+            org-agenda-compact-blocks t
+            org-agenda-sticky nil
+            org-agenda-inhibit-startup t
+            org-agenda-show-log t)
+
       (setq org-agenda-custom-commands
             (quote (("w" "Tasks waiting on something" tags "WAITING/!"
                      ((org-use-tag-inheritance nil)
@@ -486,51 +483,7 @@ Link: %l\n" )
                     ("c" "Select default clocking task" tags "LEVEL=2-REFILE"
                      ((org-agenda-skip-function
                        '(org-agenda-skip-subtree-if 'notregexp "^\\*\\* Organization"))
-                      (org-agenda-overriding-header "Set default clocking task with C-u C-u I"))))))
-
-      (setq org-agenda-sorting-strategy
-            '((agenda time-up priority-down tag-up effort-up category-keep)
-              (todo user-defined-up todo-state-up priority-down effort-up)
-              (tags user-defined-up)
-              (search category-keep)))
-      (setq org-agenda-cmp-user-defined 'sacha/org-sort-agenda-items-user-defined)
-      (setq org-export-with-section-numbers nil)
-      (setq org-html-include-timestamps nil)
-      (setq org-attach-store-link-p 'attached)
-      (setq org-attach-auto-tag nil)
-      (setq org-enforce-todo-dependencies t)
-      (setq org-track-ordered-property-with-tag t)
-      (setq org-agenda-dim-blocked-tasks t)
-
-      (setq org-html-head-extra
-            "<link rel=\"stylesheet\" href=\"http://dakrone.github.io/org.css\" type=\"text/css\" />")
-      (setq org-html-head-include-default-style nil)
-
-      ;; Resume clocking tasks when emacs is restarted
-      (org-clock-persistence-insinuate)
-      ;;
-      ;; Yes it's long... but more is better ;)
-      (setq org-clock-history-length 28)
-      ;; Resume clocking task on clock-in if the clock is open
-      (setq org-clock-in-resume t)
-      ;; Change task state to NEXT when clocking in
-      (setq org-clock-in-switch-to-state (quote bh/clock-in-to-next))
-      ;; Separate drawers for clocking and logs
-      (setq org-drawers (quote ("PROPERTIES" "LOGBOOK" "CLOCK")))
-      ;; Save clock data in the CLOCK drawer and state changes and notes in the LOGBOOK drawer
-      (setq org-clock-into-drawer "CLOCK")
-      ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
-      (setq org-clock-out-remove-zero-time-clocks t)
-      ;; Clock out when moving task to a done state
-      (setq org-clock-out-when-done t)
-      ;; Save the running clock and all clock history when exiting Emacs, load it on startup
-      (setq org-clock-persist (quote history))
-      ;; Enable auto clock resolution for finding open clocks
-      (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
-      ;; Include current clocking task in clock reports
-      (setq org-clock-report-include-clocking-task t)
-      (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
-      )))
+                      (org-agenda-overriding-header "Set default clocking task with C-u C-u I")))))))))
 
 (defun daniel-org/init-org-bullets ()
   (use-package org-bullets
@@ -544,8 +497,7 @@ Link: %l\n" )
               "◉"
               "○"
               "◆"
-              "◇"
-              )))))
+              "◇")))))
 
 (defun daniel-org/init-org-mime ()
   (use-package org-mime
@@ -567,32 +519,6 @@ Link: %l\n" )
         (setq org-pomodoro-audio-player "/usr/bin/afplay"))
       (evil-leader/set-key-for-mode 'org-mode
         "mp" 'org-pomodoro))))
-
-(defun daniel-org/init-org-present ()
-  (use-package org-present
-    :defer t
-    :init
-    (progn
-      (evilify nil org-present-mode-keymap
-               "h" 'org-present-prev
-               "l" 'org-present-next
-               "q" 'org-present-quit)
-      (defun spacemacs//org-present-start ()
-        "Initiate `org-present' mode"
-        (org-present-big)
-        (org-display-inline-images)
-        (org-present-hide-cursor)
-        (org-present-read-only)
-        (evil-evilified-state))
-      (defun spacemacs//org-present-end ()
-        "Terminate `org-present' mode"
-        (org-present-small)
-        (org-remove-inline-images)
-        (org-present-show-cursor)
-        (org-present-read-write)
-        (evil-normal-state))
-      (add-hook 'org-present-mode-hook 'spacemacs//org-present-start)
-      (add-hook 'org-present-mode-quit-hook 'spacemacs//org-present-end))))
 
 (defun daniel-org/init-toc-org ()
   (use-package toc-org

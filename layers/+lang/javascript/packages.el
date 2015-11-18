@@ -13,9 +13,9 @@
 (setq javascript-packages
   '(
     coffee-mode
-    ;; company
+    company
     company-tern
-    ;; flycheck
+    flycheck
     ;; js-doc
     js2-mode
     ;; js2-refactor

@@ -1,10 +1,8 @@
 (evil-leader/set-key
-  "wC" 'ace-delete-window
-  "Nb" 'spacemacs/new-empty-buffer
   "bl" 'helm-buffers-list)
 
-(define-key global-map (kbd "C-=") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "<M-f6>") '(lambda () (interactive) (bookmark-set "SAVED")))
+(global-set-key (kbd "<f6>") '(lambda () (interactive) (bookmark-jump "SAVED")))
 
 (global-set-key (kbd "M-k") 'er/expand-region)
 (global-set-key (kbd "M-j") 'er/contract-region)
@@ -27,17 +25,12 @@
 
 (global-set-key (kbd "C-x C-s") 'private/save-all)
 
-;; C-8 will increase opacity (== decrease transparency)
-;; C-9 will decrease opacity (== increase transparency
-;; C-0 will returns the state to normal
 (global-set-key (kbd "C-8") '(lambda()(interactive)(djcb-opacity-modify)))
 (global-set-key (kbd "C-9") '(lambda()(interactive)(djcb-opacity-modify t)))
 (global-set-key (kbd "C-0") '(lambda()(interactive)
                                (modify-frame-parameters nil `((alpha . 100)))))
 
 (global-set-key (kbd "M-w") 'kill-this-buffer)
-(global-set-key (kbd "C-c m") 'spacemacs/toggle-maximize-buffer)
-(global-set-key (kbd "<M-backspace>") 'kill-region)
 
 (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
@@ -47,15 +40,11 @@
 
 (global-set-key (kbd "C-c f") 'helm-projectile-find-file)
 (global-set-key (kbd "C-c b") 'helm-projectile-switch-to-buffer)
-(global-set-key (kbd "s-e") 'helm-projectile-recentf)
 (global-set-key (kbd "M-e") 'helm-projectile-recentf)
-(global-set-key (kbd "C-s-e") 'helm-recentf)
 (global-set-key (kbd "C-M-e") 'helm-recentf)
 
 ;; Search
-(global-set-key (kbd "s-f") 'helm-swoop)
 (global-set-key (kbd "M-f") 'helm-swoop)
-(global-set-key (kbd "s-r") 'spacemacs/helm-swoop-region-or-symbol)
 (global-set-key (kbd "M-r") 'spacemacs/helm-swoop-region-or-symbol)
 
 ;;;; Opened buffers socpe
@@ -63,7 +52,6 @@
 (global-set-key (kbd "C-c O") 'spacemacs/helm-buffers-smart-do-search-region-or-symbol)
 
 ;;;; Project scope
-(global-set-key (kbd "C-s-f") 'spacemacs/helm-project-smart-do-search)
 (global-set-key (kbd "C-M-f") 'spacemacs/helm-project-smart-do-search)
 (global-set-key (kbd "C-c C-p") 'neotree-project-dir)
 
@@ -111,13 +99,3 @@
     (global-set-key (kbd "C-s-f") 'spacemacs/toggle-frame-fullscreen)
     ;; Emacs sometimes registers C-s-f as this weird keycode
     (global-set-key (kbd "<C-s-268632070>") 'spacemacs/toggle-frame-fullscreen)))
-
-(add-to-list 'load-path (car (file-expand-wildcards "~/.emacs.d/vendor/org-plus-contrib")))
-(require 'org-mime)
-(add-hook 'message-mode-hook
-          (lambda ()
-            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key "\C-c\M-o" 'org-mime-org-buffer-htmlize)))

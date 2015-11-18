@@ -30,9 +30,7 @@
         "<down>" 'mc/mark-next-like-this
         "<up>" 'mc/mark-previous-like-this
         "<left>" 'mc/mark-all-like-this)
-      (global-unset-key (kbd "M-<down-mouse-1>"))
-      (global-set-key (kbd "C-M-g") 'mc/delete-region-overlay)
-      (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click) )
+      (global-set-key (kbd "C-M-g") 'mc/delete-region-overlay))
     ))
 
 (defun daniel-util/init-cliphist()
@@ -91,7 +89,6 @@
   (use-package tabbar-ruler
     :init
     (progn
-      (global-set-key (kbd "<f9>") 'tabbar-mode)
       (defvar tabbar-prefix-map nil)
       (when (require 'tabbar-ruler nil t)
         (setq tabbar-buffer-list-function

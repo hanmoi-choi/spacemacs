@@ -79,8 +79,7 @@
         volatile-highlights
         window-numbering
         cyberpunk-theme
-        (zoom-frm :location local)
-        ))
+        (zoom-frm :location local)))
 
 ;; Paradox from MELPA is not compatible with 24.3, so we use
 ;; a local paradox with 24.3
@@ -702,8 +701,8 @@
   (use-package evil-terminal-cursor-changer
     :if (not (display-graphic-p))
     :init (setq evil-visual-state-cursor 'box
-                evil-insert-state-cursor '("red" bar)
-                evil-emacs-state-cursor '("#4c83ff" box))))
+                evil-insert-state-cursor 'bar
+                evil-emacs-state-cursor 'hbar)))
 
 (defun spacemacs/init-evil-tutor ()
   (use-package evil-tutor

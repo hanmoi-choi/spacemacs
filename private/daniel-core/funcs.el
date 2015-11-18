@@ -195,13 +195,3 @@ This functions should be added to the hooks of major modes for programming."
           (neotree-dir project-dir)
           (neotree-find file-name))
       (message "Could not find git project root."))))
-
-(defun markdown-preview-file-with-marked ()
-  "run Marked on the current file (convert it to markdown in advance if the file is *.org)."
-  (interactive)
-  (if (string= (file-name-extension buffer-file-name) "org")
-      (org-md-export-to-markdown) nil)
-  (shell-command
-   (format "open -a /Applications/Marked\\ 2.app %s"
-           (shell-quote-argument
-            (concat (file-name-sans-extension buffer-file-name) ".md")))))
