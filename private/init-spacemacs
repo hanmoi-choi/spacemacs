@@ -37,14 +37,14 @@ values."
                                        dash
                                        git
                                        gtags
-                                       version-control
                                        better-defaults
+                                       version-control
                                        syntax-checking
                                        restclient
                                        deft
-                                       vim-powerline
+                                       ;; vim-powerline
 
-                                       ;Language
+                                        ;Language
                                        javascript
                                        html
                                        emacs-lisp
@@ -57,8 +57,7 @@ values."
                                        daniel-util
                                        daniel-tramp
                                        daniel-web-browser
-                                       daniel-email
-                                       )
+                                       daniel-email)
    )
 
   ;; List of additional packages that will be installed without being
@@ -70,9 +69,13 @@ values."
   dotspacemacs-excluded-packages '(
                                    ;; base
                                    whitespace
+                                   helm-make
+                                   helm-mode-manager
+                                   helm-themes
                                    ;; additional
                                    auto-dictionary
                                    buffer-move
+                                   powerline
                                    doc-view
                                    clean-aindent
                                    evil-tutor
@@ -88,7 +91,7 @@ values."
   ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
   ;; are declared in a layer which is not a member of
   ;; the list `dotspacemacs-configuration-layers'. (default t)
-  dotspacemacs-delete-orphan-packages nil)
+  dotspacemacs-delete-orphan-packages t)
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -228,6 +231,41 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
+  (progn
+    ;; Fix issue <TAB> with org-mode
+    (setq evil-want-C-i-jump nil)
+
+    ;; ITerm2 Key Remappping
+    (define-key input-decode-map "\e[1;2A" [S-up])
+    (define-key input-decode-map "\e[1;2B" [S-down])
+    (define-key input-decode-map "\e[1;2C" [S-right])
+    (define-key input-decode-map "\e[1;2D" [S-left])
+
+    (define-key input-decode-map "\e[1;4A" [M-up])
+    (define-key input-decode-map "\e[1;4B" [M-down])
+    (define-key input-decode-map "\e[1;4C" [M-right])
+    (define-key input-decode-map "\e[1;4D" [M-left])
+
+    (define-key input-decode-map "\e[1;5A" [C-up])
+    (define-key input-decode-map "\e[1;5B" [C-down])
+    (define-key input-decode-map "\e[1;5C" [C-right])
+    (define-key input-decode-map "\e[1;5D" [C-left])
+
+    (define-key input-decode-map "\e[1;6A" [C-S-up])
+    (define-key input-decode-map "\e[1;6B" [C-S-down])
+    (define-key input-decode-map "\e[1;6C" [C-S-right])
+    (define-key input-decode-map "\e[1;6D" [C-S-left])
+
+    (define-key input-decode-map "\e[1;8A" [C-M-up])
+    (define-key input-decode-map "\e[1;8B" [C-M-down])
+    (define-key input-decode-map "\e[1;8C" [C-M-right])
+    (define-key input-decode-map "\e[1;8D" [C-M-left])
+
+    (define-key input-decode-map "\e[1;10A" [S-M-up])
+    (define-key input-decode-map "\e[1;10B" [S-M-down])
+    (define-key input-decode-map "\e[1;10C" [S-M-right])
+    (define-key input-decode-map "\e[1;10D" [S-M-left])
+    )
   )
 
 (defun dotspacemacs/user-config ()
@@ -241,14 +279,14 @@ layers configuration. You are free to put any user code."
     (setq ggtags-mode-map (make-sparse-keymap))
 
     ;; Mode hook
-    (add-hook 'prog-mode (lambda ()
-                           (progn
-                             (linum-mode)
-                             )))
+    (add-hook 'prog-mode-hook (lambda ()
+                                (progn
+                                  (linum-relative-mode)
+                                  (linum-mode))))
 
-    (add-hook 'ggtag-mode (lambda ()
-                           (progn
-                             (helm-gtags-mode))))
+    (add-hook 'ggtag-mode-hook (lambda ()
+                                 (progn
+                                   (helm-gtags-mode))))
     ;; Enable mouse support
     (unless window-system
       (require 'mouse)

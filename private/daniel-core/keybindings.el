@@ -10,8 +10,8 @@
 (global-set-key (kbd "C-c t") 'toggle-camelcase-underscores)
 (global-set-key (kbd "M-d") 'private/duplicate-current-line-or-region)
 
-(global-set-key [M-up] 'private/move-text-up)
-(global-set-key [M-down] 'private/move-text-down)
+(global-set-key [C-up] 'private/move-text-up)
+(global-set-key [C-down] 'private/move-text-down)
 
 (define-key global-map (kbd "C-c C-l" ) 'helm-buffers-list)
 (define-key global-map "\C-c\C-n" 'private/indent-buffer)

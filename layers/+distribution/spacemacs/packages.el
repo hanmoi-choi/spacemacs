@@ -55,6 +55,7 @@
         highlight-indentation
         highlight-numbers
         highlight-parentheses
+        powerline
         ;; waiting for an overlay bug to be fixed
         ;; see https://github.com/syl20bnr/spacemacs/issues/2529
         (hl-anything :excluded t)
@@ -68,7 +69,7 @@
         move-text
         neotree
         pcre2el
-        powerline
+        ;; powerline
         rainbow-delimiters
         recentf
         smartparens
@@ -181,6 +182,7 @@
     :defer t
     :init
     (progn
+      (setq auto-highlight-symbol-mode-map (make-sparse-keymap))
       (setq ahs-case-fold-search nil
             ahs-default-range 'ahs-range-whole-buffer
             ;; by default disable auto-highlight of symbol
@@ -700,8 +702,8 @@
 (defun spacemacs/init-evil-terminal-cursor-changer ()
   (use-package evil-terminal-cursor-changer
     :if (not (display-graphic-p))
-    :init (setq evil-visual-state-cursor 'box
-                evil-insert-state-cursor 'bar
+    :init (setq evil-visual-state-cursor '("green" 'box)
+                evil-insert-state-cursor '("blue" bar)
                 evil-emacs-state-cursor 'hbar)))
 
 (defun spacemacs/init-evil-tutor ()

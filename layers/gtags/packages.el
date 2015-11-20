@@ -38,7 +38,6 @@
       (spacemacs/helm-gtags-define-keys-for-mode 'emacs-lisp-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'common-lisp-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'shell-script-mode)
-      (spacemacs/helm-gtags-define-keys-for-mode 'awk-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'dired-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'compilation-mode)
       (spacemacs/helm-gtags-define-keys-for-mode 'shell-mode)
@@ -46,12 +45,9 @@
       (spacemacs/ggtags-enable-eldoc 'java-mode)
       (spacemacs/ggtags-enable-eldoc 'enh-ruby--mode)
       (spacemacs/ggtags-enable-eldoc 'js2-mode)
-      (spacemacs/ggtags-enable-eldoc 'web-mode)
-      )
+      (spacemacs/ggtags-enable-eldoc 'web-mode))
     :config
     (progn
       ;; if anyone uses helm-gtags, they would want to use these key bindings
       (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-      (define-key helm-gtags-mode-map (kbd "C-x 4 .") 'helm-gtags-find-tag-other-window)
-      (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-      (define-key helm-gtags-mode-map (kbd "M-*") 'helm-gtags-pop-stack))))
+      (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))))

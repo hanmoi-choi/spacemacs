@@ -7,7 +7,7 @@
         multiple-cursors
         vimish-fold
         cliphist
-        symon
+        ;; symon
         helm-ls-git))
 
 ;; List of packages to exclude.
@@ -67,14 +67,6 @@
        '(emamux:use-nearest-pane t))
       )))
 
-(defun daniel-util/init-symon ()
-  "Initialize my package"
-  (use-package symon
-    :init
-    (progn
-      (setq symon-sparkline-type 'boxed)
-      (symon-mode 1))))
-
 (defun daniel-util/init-vimish-fold ()
   (use-package vimish-fold
     ))
@@ -109,10 +101,10 @@
       (setq tabbar-ruler-global-tabbar t)
 
       ;; Set nil
-      (define-key tabbar-mode-map (kbd "C-x <left>") 'tabbar-backward-tab)
-      (define-key tabbar-mode-map (kbd "C-x <right>") 'tabbar-forward-tab)
-      (define-key tabbar-mode-map (kbd "C-x <down>") 'tabbar-backward-group)
-      (define-key tabbar-mode-map (kbd "C-x <up>") 'tabbar-forward-group)
+      (define-key tabbar-mode-map [S-left] 'tabbar-backward-tab)
+      (define-key tabbar-mode-map [S-right] 'tabbar-forward-tab)
+      (define-key tabbar-mode-map [S-down] 'tabbar-backward-group)
+      (define-key tabbar-mode-map [S-up] 'tabbar-forward-group)
 
       ;; Add a buffer modification state indicator in the tab label, and place a
       ;; space around the label to make it looks less crowd.
