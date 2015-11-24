@@ -49,3 +49,6 @@ private/snippets/*
 /.mc-lists.el
 /GRTAGS
 /GTAGS
+/.projectile
+/network-security.data
+/recentf
