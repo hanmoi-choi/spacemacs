@@ -271,11 +271,6 @@ layers configuration. You are free to put any user code."
                                  (show-smartparens-mode)
                                  (highlight-indentation-current-column-mode)
                                  (linum-mode))))
-    (eval-after-load 'evil-matchit-ruby
-      '(progn
-         (add-to-list 'evilmi-ruby-extract-keyword-howtos '("^[ \t]*\\([a-z]+\\)\\( .*\\| *\\)$" 1))
-         (add-to-list 'evilmi-ruby-match-tags '(("unless" "if") ("elsif" "else") "end"))))
-
     (require 'sgml-mode)
     (add-to-list 'hs-special-modes-alist
                  '(web-mode
