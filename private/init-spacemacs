@@ -263,14 +263,19 @@ layers configuration. You are free to put any user code."
                                (progn
                                  (show-smartparens-mode)
                                  (highlight-indentation-current-column-mode)
-                                 (linum-mode))))
+                                 )))
 
+
+    (add-hook 'emacs-lisp-mode-hook (lambda ()
+                               (progn
+                                 (show-smartparens-mode)
+                                 )))
 
     (add-hook 'js2-mode-hook (lambda ()
                                (progn
                                  (show-smartparens-mode)
-                                 (highlight-indentation-current-column-mode)
-                                 (linum-mode))))
+                                 (highlight-indentation-current-column-mode))))
+
     (require 'sgml-mode)
     (add-to-list 'hs-special-modes-alist
                  '(web-mode

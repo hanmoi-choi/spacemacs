@@ -43,7 +43,7 @@
         recentf
         savehist
         saveplace
-        spacemacs-theme
+        ;; spacemacs-theme
         subword
         undo-tree
         (uniquify :location built-in)

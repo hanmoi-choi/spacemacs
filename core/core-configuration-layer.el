@@ -24,6 +24,8 @@
 (require 'core-spacemacs-buffer)
 
 (unless package--initialized
+  ;; (setq package-archives '(("melpa-stable" . "https://stable.melpa.org/packages/")
+  ;;                          ("org" . "http://orgmode.org/elpa/")))
   (setq package-archives '(("melpa" . "http://melpa.org/packages/")
                            ("org" . "http://orgmode.org/elpa/")
                            ("gnu" . "http://elpa.gnu.org/packages/")))

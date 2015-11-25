@@ -23,7 +23,7 @@
         ;; buffer-move
         (centered-cursor :location local)
         clean-aindent-mode
-        ;; define-word
+        define-word
         desktop
         ;; doc-view
         eval-sexp-fu
@@ -77,7 +77,8 @@
         ;; spray
         volatile-highlights
         window-numbering
-        (zoom-frm :location local)))
+        ;; (zoom-frm :location local)
+        ))
 
 ;; Paradox from MELPA is not compatible with 24.3, so we use
 ;; a local paradox with 24.3

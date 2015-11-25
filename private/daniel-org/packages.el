@@ -320,21 +320,40 @@ Will work on both org-mode and any mode that accepts plain html."
                     ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
       ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+
+      (defun my/org-contacts-template-email (&optional return-value)
+        "Try to return the contact email for a template.
+If not found return RETURN-VALUE or something that would ask the user."
+        (or (cadr (if (gnus-alive-p)
+                      (gnus-with-article-headers
+                       (mail-extract-address-components
+                        (or (mail-fetch-field "Reply-To") (mail-fetch-field "From") "")))))
+            return-value
+            (concat "%^{" org-contacts-email-property "}p")))
+
+      (defvar my/org-basic-task-template "* TODO %^{Task}
+SCHEDULED: %^t
+:PROPERTIES:
+:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}
+:END:
+%<%Y-%m-%d %H:%M>
+%?
+" "Basic task data")
+
       (setq org-capture-templates
-            (quote (("t" "TODO" entry (file "~/Dropbox/org/todo/refile.org")
-                     "* TODO %?\n%U\n" :clock-in t :clock-resume t)
-                    ("r" "RESPOND" entry (file "~/Dropbox/org/todo/refile.org")
-                     "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+            (quote (("t" "TODO" entry
+                     (file "~/Dropbox/org/todo/refile.org")
+                     ,my/org-basic-task-template)
+                    ("i" "Interrupting task" entry
+                     (file+headline "~/personal/organizer.org" "Tasks")
+                     "* STARTED %^{Task}"
+                     :clock-in :clock-resume)
                     ("n" "NOTE" entry (file "~/Dropbox/org/todo/refile.org")
                      "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                    ("j" "JOURNAL" entry (file+datetree "~/Dropbox/org/todo/diary.org")
-                     "* %?\n%U\n" :clock-in t :clock-resume t)
-                    ("w" "WORK LOG" entry (file "~/Dropbox/org/todo/worklog.org")
-                     "* %?\n%U\n" :clock-in t :clock-resume t)
-                    ("m" "MEETING" entry (file "~/Dropbox/org/todo/refile.org")
-                     "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-                    ("p" "PHONE CALL" entry (file "~/Dropbox/org/todo/refile.org")
-                     "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+                    ("w" "WORK LOG" plain
+                     (file+datetree+prompt "~/Dropbox/org/todo/worklog.org")
+                     "%K - %a\n%i\n%?\n"
+                     :unnarrowed t)
                     ("h" "HABIT" entry (file "~/Dropbox/org/todo/refile.org")
                      "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 
