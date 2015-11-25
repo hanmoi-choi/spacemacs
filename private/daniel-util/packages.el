@@ -7,31 +7,17 @@
         multiple-cursors
         vimish-fold
         cliphist
-        ;; symon
         helm-ls-git))
 
-;; List of packages to exclude.
 (setq daniel-util-excluded-packages '())
-;; For each package, define a function daniel-util/init-<package-name>
-;;
-;; (defun daniel-util/init-my-package ()
-;;   "Initialize my package"
-;;   )
-;;
-;; Often the body of an initialize function uses `use-package'
-;; For more info on `use-package', see readme:
-;; https://github.com/jwiegley/use-package
 
 (defun daniel-util/init-multiple-cursors ()
   (use-package multiple-cursors
     :init
     (progn
-      (evil-leader/set-key
-        "<down>" 'mc/mark-next-like-this
-        "<up>" 'mc/mark-previous-like-this
-        "<left>" 'mc/mark-all-like-this)
-      (global-set-key (kbd "C-M-g") 'mc/delete-region-overlay))
-    ))
+      (global-set-key [M-down] 'mc/mark-next-like-this)
+      (global-set-key [M-up] 'mc/mark-previous-like-this)
+      (global-set-key (kbd "C-M-g") 'mc/delete-region-overlay))))
 
 (defun daniel-util/init-cliphist()
   (use-package cliphist
@@ -40,8 +26,7 @@
       (evil-leader/set-key
         "Cp" 'cliphist-paste-item)
       (setq cliphist-select-item-callback
-            (lambda (str) (cliphist-paste-item str)))
-      )))
+            (lambda (str) (cliphist-paste-item str))))))
 
 (defun daniel-util/init-vlf ()
   "Initialize my package"

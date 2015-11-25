@@ -35,9 +35,8 @@
     :load-path "~/.emacs.d/vendor/org-jira/"
     :init
     (progn
-      (setq jiralib-url "https://jira.ibsglobalweb.com:80")
-      ))
-  )
+      (setq jiralib-url "https://jira.ibsglobalweb.com:80"))))
+
 (defun daniel-org/init-gnuplot ()
   (use-package gnuplot
     :defer t
@@ -71,6 +70,7 @@
 
       (eval-after-load 'org-indent
         '(spacemacs|hide-lighter org-indent-mode))
+
       (let ((dir (configuration-layer/get-layer-property 'daniel-org :dir)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
 
@@ -211,10 +211,12 @@ Will work on both org-mode and any mode that accepts plain html."
       (global-set-key (kbd "C-c l") 'org-store-link)
       (global-set-key (kbd "<f12>") 'org-agenda)
       (global-set-key (kbd "<f11>") 'org-clock-goto)
-      (global-set-key (kbd "C-<f11>") 'org-clock-in)
-      (global-set-key (kbd "C-<f9>") 'previous-buffer)
-      (global-set-key (kbd "C-<f10>") 'next-buffer)
-      (global-set-key (kbd "<f5>") 'bh/org-todo)
+
+      (add-hook 'org-mode-hook
+                (lambda ()
+                  (if window-system            nil
+                    (progn
+                      (define-key org-mode-map (kbd "C-M-j") 'org-meta-return)))))
 
       (add-hook 'org-agenda-mode-hook
                 '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
@@ -497,7 +499,9 @@ A prefix arg forces clock in of the default task."
               "◉"
               "○"
               "◆"
-              "◇")))))
+              "◆"
+              "◆"
+              "◆")))))
 
 (defun daniel-org/init-org-mime ()
   (use-package org-mime

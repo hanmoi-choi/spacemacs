@@ -20,38 +20,38 @@
         auto-dictionary
         auto-highlight-symbol
         avy
-        buffer-move
+        ;; buffer-move
         (centered-cursor :location local)
         clean-aindent-mode
-        define-word
+        ;; define-word
         desktop
-        doc-view
+        ;; doc-view
         eval-sexp-fu
         evil-anzu
         evil-args
         evil-exchange
-        evil-iedit-state
+        ;; evil-iedit-state
         (evil-indent-textobject :location (recipe :fetcher github :repo "TheBB/evil-indent-textobject"))
         evil-jumper
         evil-lisp-state
         evil-nerd-commenter
         evil-matchit
-        evil-numbers
+        ;; evil-numbers
         evil-search-highlight-persist
         ;; Temporarily disabled, pending the resolution of
         ;; https://github.com/7696122/evil-terminal-cursor-changer/issues/8
         evil-terminal-cursor-changer
-        evil-tutor
+        ;; evil-tutor
         expand-region
-        fancy-battery
+        ;; fancy-battery
         flx-ido
-        golden-ratio
-        google-translate
+        ;; golden-ratio
+        ;; google-translate
         helm-ag
-        helm-make
+        ;; helm-make
         helm-mode-manager
         helm-swoop
-        helm-themes
+        ;; helm-themes
         highlight-indentation
         highlight-numbers
         highlight-parentheses
@@ -62,24 +62,22 @@
         hungry-delete
         info+
         iedit
-        indent-guide
-        open-junk-file
-        leuven-theme
+        ;; indent-guide
+        ;; open-junk-file
+        ;; leuven-theme
         linum-relative
-        move-text
+        ;; move-text
         neotree
         pcre2el
-        ;; powerline
+        powerline
         rainbow-delimiters
         recentf
         smartparens
         smooth-scrolling
-        (solarized-theme :location local)
-        spray
-        vi-tilde-fringe
+        ;; (solarized-theme :location local)
+        ;; spray
         volatile-highlights
         window-numbering
-        cyberpunk-theme
         (zoom-frm :location local)))
 
 ;; Paradox from MELPA is not compatible with 24.3, so we use
@@ -119,10 +117,10 @@
         "Ace jump to links in `spacemacs' buffer."
         (interactive)
         (let ((res (avy--with-avy-keys spacemacs/ace-buffer-links
-                    (avy--process
-                        (spacemacs//collect-spacemacs-buffer-links)
-                        #'avy--overlay-pre))))
-            (when res
+                                       (avy--process
+                                        (spacemacs//collect-spacemacs-buffer-links)
+                                        #'avy--overlay-pre))))
+          (when res
             (goto-char (1+ res))
             (widget-button-press (point))))))))
 
@@ -402,7 +400,7 @@
       (setq avy-background t)
       (evil-leader/set-key
         "SPC" 'avy-goto-word-or-subword-1
-        "o" 'avy-goto-char
+        "o" 'avy-goto-char-2
         "l" 'avy-goto-line))
     :config
     (evil-leader/set-key "`" 'avy-pop-mark)))
@@ -698,13 +696,13 @@
                             :foreground nil))
       (spacemacs/adaptive-evil-highlight-persist-face))))
 
-;;      (setq evil-insert-state-cursor '("green" bar)); ⎸
 (defun spacemacs/init-evil-terminal-cursor-changer ()
   (use-package evil-terminal-cursor-changer
     :if (not (display-graphic-p))
-    :init (setq evil-visual-state-cursor '("green" 'box)
-                evil-insert-state-cursor '("blue" bar)
-                evil-emacs-state-cursor 'hbar)))
+    :init (setq
+           evil-visual-state-cursor '("gray" box)
+           evil-insert-state-cursor '("chartreuse3" bar)
+           evil-emacs-state-cursor '("SkyBlue2" box))))
 
 (defun spacemacs/init-evil-tutor ()
   (use-package evil-tutor
@@ -958,9 +956,9 @@ For instance pass En as source for english."
                    ((symbol-function 'thing-at-point)
                     (lambda (thing)
                       (let ((res (if (region-active-p)
-                          (buffer-substring-no-properties
-                           (region-beginning) (region-end))
-                          (this-fn thing))))
+                                     (buffer-substring-no-properties
+                                      (region-beginning) (region-end))
+                                   (this-fn thing))))
                         (when res (rxt-quote-pcre res))))))
           (funcall func dir)))
 
@@ -980,7 +978,7 @@ For instance pass En as source for english."
                       (if (fboundp func)
                           func
                         (intern (format "%s-%s"  base x))))))
-                     tools)
+              tools)
            (t 'helm-do-grep))))
 
       ;; Search in current file ----------------------------------------------
@@ -1174,10 +1172,10 @@ If DEFAULT-INPUTP is non nil then the current region or symbol at point
 are used as default input."
         (interactive)
         (let ((projectile-require-project-root nil))
-         (call-interactively
-          (spacemacs//helm-do-search-find-tool "helm-project-do"
-                                               dotspacemacs-search-tools
-                                               default-inputp))))
+          (call-interactively
+           (spacemacs//helm-do-search-find-tool "helm-project-do"
+                                                dotspacemacs-search-tools
+                                                default-inputp))))
 
       (defun spacemacs/helm-project-smart-do-search-region-or-symbol ()
         "Search in current project using `dotspacemacs-search-tools' with
@@ -1326,10 +1324,15 @@ Search for a search tool in the order provided by `dotspacemacs-search-tools'."
         (add-hook 'prog-mode-hook #'highlight-parentheses-mode))
       (setq hl-paren-delay 0.2)
       (evil-leader/set-key "tCp" 'highlight-parentheses-mode)
-      (setq hl-paren-colors '("Springgreen3"
+      (setq hl-paren-colors '(
                               "IndianRed1"
-                              "IndianRed3"
-                              "IndianRed4")))
+                              "Orange"
+                              "Gold"
+                              "SpringGreen3"
+                              "Magenta"
+                              "SlateBlue"
+                              "LightCoral"
+                              )))
     :config
     (spacemacs|hide-lighter highlight-parentheses-mode)
     (set-face-attribute 'hl-paren-face nil :weight 'ultra-bold)))
@@ -1442,11 +1445,6 @@ It will toggle the overlay under point or create an overlay of one character."
     :defer t
     :init (setq org-fontify-whole-heading-line t)))
 
-(defun spacemacs/init-cyberpunk-theme ()
-  (use-package cyberpunk-theme
-    :defer t
-    :init (setq org-fontify-whole-heading-line t)))
-
 (defun spacemacs/init-linum-relative ()
   (use-package linum-relative
     :commands linum-relative-toggle
@@ -1464,7 +1462,7 @@ It will toggle the overlay under point or create an overlay of one character."
     :init
     (spacemacs|define-micro-state move-text
       :doc "[J] move down [K] move up"
-        :use-minibuffer t
+      :use-minibuffer t
       :execute-binding-on-enter t
       :evil-leader "xJ" "xK"
       :bindings
@@ -1805,7 +1803,7 @@ inspected at evaluation time by `spacemacs//eval-mode-line-segment'."
                (wrapper-func-available (intern (format "%S-available" wrapper-func)))
                (condition (if (plist-member props :when)
                               (plist-get props :when)
-                             t)))
+                            t)))
           `(progn
              (defun ,wrapper-func ()
                (when ,condition
@@ -1888,6 +1886,16 @@ It is a string holding:
                                       buffers " ")))
           long-names)
         :when (bound-and-true-p erc-track-mode))
+
+      (defpowerline powerline-vc
+        (when (and (buffer-file-name (current-buffer)) vc-mode)
+          (if window-system
+              (format-mode-line '(vc-mode vc-mode))
+            (let ((backend (vc-backend (buffer-file-name (current-buffer)))))
+              (when backend
+                (format " %s %s"
+                        (char-to-string #xe220)
+                        (vc-working-revision (buffer-file-name (current-buffer)) backend)))))))
 
       (spacemacs|define-mode-line-segment version-control
         (s-trim (powerline-vc))
@@ -2091,8 +2099,8 @@ one of `l' or `r'."
                                for s in spec
                                do (setq result (spacemacs//eval-mode-line-segment s))
                                if (segment-objects result)
-                                 collect result
-                                 and do (rotatef default-face other-face)))
+                               collect result
+                               and do (rotatef default-face other-face)))
 
                (dummy (make-segment :face-left line-face :face-right line-face))
                (separator-style (format "powerline-%S" powerline-default-separator))
@@ -2163,10 +2171,10 @@ one of `l' or `r'."
       (defun spacemacs//restore-powerline (buffer)
         "Restore the powerline in buffer"
         (with-current-buffer buffer
-              (setq-local mode-line-format
-                          '("%e" (:eval (spacemacs//mode-line-prepare))))
-              (powerline-set-selected-window)
-              (powerline-reset)))
+          (setq-local mode-line-format
+                      '("%e" (:eval (spacemacs//mode-line-prepare))))
+          (powerline-set-selected-window)
+          (powerline-reset)))
 
       (defun spacemacs//set-powerline-for-startup-buffers ()
         "Set the powerline for buffers created when Emacs starts."
@@ -2346,16 +2354,16 @@ one of `l' or `r'."
         (cond
          ((not (dotspacemacs|symbol-value
                 dotspacemacs-mode-line-unicode-symbols)) str)
-         ((equal str "1")  "➊")
-         ((equal str "2")  "➋")
-         ((equal str "3")  "➌")
-         ((equal str "4")  "➍")
-         ((equal str "5")  "➎")
-         ((equal str "6")  "❻")
-         ((equal str "7")  "➐")
-         ((equal str "8")  "➑")
-         ((equal str "9")  "➒")
-         ((equal str "0")  "➓"))))
+         ((equal str "1")  "1")
+         ((equal str "2")  "2")
+         ((equal str "3")  "3")
+         ((equal str "4")  "4")
+         ((equal str "5")  "5")
+         ((equal str "6")  "6")
+         ((equal str "7")  "7")
+         ((equal str "8")  "8")
+         ((equal str "9")  "9")
+         ((equal str "0")  "0"))))
 
     (defun spacemacs//window-numbering-assign (windows)
       "Custom number assignment for special buffers."

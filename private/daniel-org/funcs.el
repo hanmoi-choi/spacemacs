@@ -8,6 +8,12 @@
     (bh/narrow-to-org-subtree)
     (org-show-todo-tree nil)))
 
+(defun bh/narrow-to-org-subtree ()
+  (widen)
+  (org-narrow-to-subtree)
+  (save-restriction
+    (org-agenda-set-restriction-lock)))
+
 (defun bh/widen ()
   (interactive)
   (if (equal major-mode 'org-agenda-mode)

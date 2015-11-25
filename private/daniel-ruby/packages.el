@@ -12,7 +12,6 @@
         rubocop
         ruby-hash-syntax
         yard-mode
-        ;; ruby-end
         ))
 
 (defun daniel-ruby/init-rubocop ()
@@ -92,6 +91,9 @@
                   (hs-minor-mode 1) ;; Enables folding
                   (modify-syntax-entry ?: ".")
                   (modify-syntax-entry ?_ "w"))) ;; Adds ":" to the word definition
+
+      (sp-local-pair 'enh-ruby-mode "def" "end")
+      (sp-local-pair 'enh-ruby-mode "do" "end")
 
       (setq enh-ruby-deep-indent-paren nil
             enh-ruby-hanging-paren-deep-indent-level 2)

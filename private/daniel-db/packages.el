@@ -15,18 +15,14 @@
 (setq daniel-db-packages
     '(
       edbi
-      company-edbi
-      ))
+      company-edbi))
 
 ;; List of packages to exclude.
 (setq daniel-db-excluded-packages '())
 
 (defun daniel-db/init-edbi ()
-  (use-package edbi
-    )
-  )
+  (use-package edbi))
 
 (defun daniel-db/init-company-edbi ()
   (use-package company-edbi
-    :init (push 'company-edbi 'edbi:sql-mode)
-    ))
+    :init (push 'company-edbi 'edbi:sql-mode)))
