@@ -55,9 +55,7 @@ values."
                                        daniel-org
                                        daniel-ruby
                                        daniel-util
-                                       daniel-tramp
-                                       daniel-web-browser
-                                       daniel-email))
+                                       daniel-tramp))
 
 
   ;; List of additional packages that will be installed without being
@@ -66,7 +64,7 @@ values."
   ;; configuration in `dotspacemacs/config'.
   dotspacemacs-additional-packages '()
   ;; A list of packages and/or extensions that will not be install and loaded.
-  dotspacemacs-excluded-packages '()
+  dotspacemacs-excluded-packages '(auto-complete)
   ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
   ;; are declared in a layer which is not a member of
   ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -214,10 +212,7 @@ user code."
     ;; Fix issue <TAB> with org-mode
     (setq evil-want-C-i-jump nil)
 
-    ;; Mode hook
-
     ;; ITerm2 Key Remappping
-
     (define-key input-decode-map "\e[1;2A" [S-up])
     (define-key input-decode-map "\e[1;2B" [S-down])
     (define-key input-decode-map "\e[1;2C" [S-right])
@@ -259,18 +254,37 @@ layers configuration. You are free to put any user code."
     (setq js2-mode-map (make-sparse-keymap))
     (setq ggtags-mode-map (make-sparse-keymap))
 
-    ;; Mode hook
-    (add-hook 'web-mode-hook (lambda ()
-                                (progn
-                                  (helm-gtags-mode)
-                                  (highlight-indentation-current-column-mode)
-                                  (linum-mode))))
     (add-hook 'prog-mode-hook (lambda ()
                                 (progn
                                   (helm-gtags-mode)
-                                  (highlight-indentation-current-column-mode)
                                   (linum-mode))))
 
+    (add-hook 'web-mode-hook (lambda ()
+                               (progn
+                                 (show-smartparens-mode)
+                                 (highlight-indentation-current-column-mode)
+                                 (linum-mode))))
+
+
+    (add-hook 'js2-mode-hook (lambda ()
+                               (progn
+                                 (show-smartparens-mode)
+                                 (highlight-indentation-current-column-mode)
+                                 (linum-mode))))
+    (eval-after-load 'evil-matchit-ruby
+      '(progn
+         (add-to-list 'evilmi-ruby-extract-keyword-howtos '("^[ \t]*\\([a-z]+\\)\\( .*\\| *\\)$" 1))
+         (add-to-list 'evilmi-ruby-match-tags '(("unless" "if") ("elsif" "else") "end"))))
+
+    (require 'sgml-mode)
+    (add-to-list 'hs-special-modes-alist
+                 '(web-mode
+                   "<!--\\|<[^/>]*[^/]>"
+                   "-->\\|</[^/>]*[^/]>"
+                   "<!--"
+                   sgml-skip-tag-forward
+                   nil))
+    (add-hook 'web-mode-hook 'hs-minor-mode)
 
     ;; Enable mouse support
     (unless window-system
@@ -292,7 +306,8 @@ layers configuration. You are free to put any user code."
     ;; This make Emacs really slow
     (setq global-hl-line-mode nil)
     (setq show-smartparens-global-mode nil)
-    (setq show-smartparens-mode nil)
+
+    (require 'smartparens )
 
     ;; I want to see all filename
     (setq ibuffer-formats
@@ -313,7 +328,7 @@ layers configuration. You are free to put any user code."
           '((space-mark   ?\    [?\xB7]     [?.]); space
             (space-mark   ?\xA0 [?\xA4]     [?_]); hard space
             (newline-mark ?\n   [?\xB6 ?\n] [?$ ?\n]); end-of-line
-                        ))
+            ))
 
     ;; Only for GUI mode
     (when (display-graphic-p)

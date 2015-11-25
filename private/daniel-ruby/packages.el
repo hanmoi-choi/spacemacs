@@ -92,6 +92,7 @@
                   (modify-syntax-entry ?: ".")
                   (modify-syntax-entry ?_ "w"))) ;; Adds ":" to the word definition
 
+      (require 'smartparens)
       (sp-local-pair 'enh-ruby-mode "def" "end")
       (sp-local-pair 'enh-ruby-mode "do" "end")
 

@@ -55,7 +55,6 @@
         highlight-indentation
         highlight-numbers
         highlight-parentheses
-        powerline
         ;; waiting for an overlay bug to be fixed
         ;; see https://github.com/syl20bnr/spacemacs/issues/2529
         (hl-anything :excluded t)
@@ -646,7 +645,9 @@
 
 (defun spacemacs/init-evil-matchit ()
   (use-package evil-matchit
-    :defer t))
+    :config
+    (progn
+      (global-evil-matchit-mode 1))))
 
 (defun spacemacs/init-evil-numbers ()
   (use-package evil-numbers
