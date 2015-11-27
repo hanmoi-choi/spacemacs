@@ -114,7 +114,7 @@ values."
                                    :width normal
                                    :powerline-scale 1.1)
 
-                               '("Ubunto Mono"
+                               '("Source Code Pro for Powerline Regular"
                                  :size 13
                                  :weight normal
                                  :width normal
