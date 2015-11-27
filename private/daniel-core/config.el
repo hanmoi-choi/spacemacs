@@ -16,7 +16,7 @@
 ;; The first of the two lines in parentheses tells Emacs to turn on Text mode
 ;; when you find a file, unless that file should go into some other mode, such
 ;; as C mode.
-(setq-default major-mode 'text-mode)
+(setq-default major-mode 'org-mode)
 
 ;; delete the selection with a keypress
 (delete-selection-mode t)
@@ -141,49 +141,7 @@
       :name "Maid Deamon"
       :command "maid"
       :args '("daemon")
-      :cwd "~")
-
-     (prodigy-define-service
-      :name "fm_admin"
-      :command "foreman"
-      :args '("start")
-      :cwd "~/dev/fm_admin"
-      :tags '(rails))
-
-     (prodigy-define-service
-      :name "fm_origination : rails4"
-      :command "foreman"
-      :args '("start")
-      :cwd "~/dev/fm_origination_rails4/project"
-      :tags '(rails))
-
-     (prodigy-define-service
-      :name "fm_origination : nfs_mbfs_merge"
-      :command "foreman"
-      :args '("start")
-      :cwd "~/dev/fm_origination_nfs_mbfs_merge/project"
-      :tags '(rails))
-
-     (prodigy-define-service
-      :name "fm_credit"
-      :command "foreman"
-      :args '("start")
-      :cwd "~/dev/fm_credit"
-      :tags '(rails))
-
-     (prodigy-define-service
-      :name "fm_settlement"
-      :command "foreman"
-      :args '("start")
-      :cwd "~/dev/fm_settlement"
-      :tags '(rails))
-
-     (prodigy-define-service
-      :name "fm_insurance"
-      :command "foreman"
-      :args '("start")
-      :cwd "~/dev/fm_insurance"
-      :tags '(rails))))
+      :cwd "~")))
 
 
 ;; automagically tail log files

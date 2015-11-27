@@ -38,10 +38,6 @@
     (setq tramp-verbose 9)
     ;; This is important, or with fancy shell, tramp will not work
     (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
-    (setq tramp-ssh-controlmaster-options
-          (concat
-           "-o ControlPath=~/.ssh/sockets/%%r@%%h:%%p "
-           "-o ControlMaster=auto -o ControlPersist=yes"))
 
     (defvar find-file-root-prefix (if (featurep 'xemacs) "/[sudo/root@localhost]" "/sudo:root@localhost:" )
       "*The filename prefix used to open a file with `find-file-root'.")
@@ -58,7 +54,6 @@
    maybe accessed via the corresponding tramp method."
 
       (interactive)
-      (require 'tramp)
       (let* ( ;; We bind the variable `file-name-history' locally so we can
              ;; use a separate history list for "root" files.
              (file-name-history find-file-root-history)
