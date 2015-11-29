@@ -99,3 +99,47 @@
     (global-set-key (kbd "C-s-f") 'spacemacs/toggle-frame-fullscreen)
     ;; Emacs sometimes registers C-s-f as this weird keycode
     (global-set-key (kbd "<C-s-268632070>") 'spacemacs/toggle-frame-fullscreen)))
+
+;; Helm
+(global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-c h i") 'helm-semantic-or-imenu)
+(global-set-key (kbd "C-c h f")	'helm-find-files)
+(global-set-key (kbd "C-c h m")	'helm-man-woman)
+(global-set-key (kbd "C-c h /") 'helm-find)
+(global-set-key (kbd "C-c h o") 'helm-occur)
+(global-set-key (kbd "C-c h a") 'helm-apropos)
+(global-set-key (kbd "C-c h h g") 'helm-info-gnus)
+(global-set-key (kbd "C-c h h i") 'helm-info-at-point)
+(global-set-key (kbd "C-c h h r") 'helm-info-emacs)
+(global-set-key (kbd "C-c h <tab>") 'helm-lisp-completion-at-point)
+(global-set-key (kbd "C-c h b") 'helm-resume)
+(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+(global-set-key (kbd "C-c h r") 'helm-regexp)
+(global-set-key (kbd "C-c h x") 'helm-register)
+(global-set-key (kbd "C-c h t") 'helm-top)
+(global-set-key (kbd "C-c h s") 'helm-surfraw)
+(global-set-key (kbd "C-c h g") 'helm-google-suggest)
+(global-set-key (kbd "C-c h e") 'helm-eval-expression-with-eldoc)
+(global-set-key (kbd "C-c h c") 'helm-calcul-expression)
+(global-set-key (kbd "C-c C-l") 'helm-eshell-history)
+(global-set-key (kbd "C-c C-l") 'helm-comint-input-ring)
+(global-set-key (kbd "C-c C-h") 'helm-minibuffer-history)
+
+(evil-leader/set-key
+  "hs" 'helm-semantic-or-imenu
+  "hf" 'helm-find-files
+  "hb" 'helm-resume
+  "h/" 'helm-find
+  "ho" 'helm-occur
+  "hb" 'helm-buffers-list
+  "ha" 'helm-all-mark-rings
+
+  "hA" 'spacemacs/helm-files-do-ag
+  "hB" 'spacemacs/helm-buffers-do-ag
+  "hr" 'helm-regexp
+  "hx" 'helm-register
+  "hg" 'helm-google-suggest
+  "he" 'helm-eval-expression-with-eldoc
+  "hc" 'helm-calcul-expression
+  "hm" 'helm-mini)

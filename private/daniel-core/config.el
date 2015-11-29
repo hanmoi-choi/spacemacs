@@ -162,3 +162,7 @@
 
 (add-hook 'log-view-mode-hook 'log-view-handler)
 (setq x-select-enable-clipboard t)
+
+;; Helm
+(setq helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+      helm-ff-file-name-history-use-recentf t)

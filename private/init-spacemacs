@@ -33,6 +33,7 @@ values."
 
                                        (ibuffer
                                         :variables ibuffer-group-buffers-by 'projects)
+                                       themes-megapack
                                        colors
                                        dash
                                        git
@@ -42,6 +43,7 @@ values."
                                        syntax-checking
                                        restclient
                                        deft
+                                       shell
                                        ;; vim-powerline
 
                                         ;Language
@@ -100,8 +102,9 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
-                         monokai)
+   dotspacemacs-themes '(
+			solarized
+                         zenburn)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
 
@@ -199,7 +202,7 @@ values."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters `current
+   dotspacemacs-highlight-delimiters nil
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
    ;; List of search tool executable names. Spacemacs uses the first installed
@@ -339,32 +342,5 @@ layers configuration. You are free to put any user code."
 
     ;; Only for GUI mode
     (when (display-graphic-p)
-      (setq dotspacemacs-persistent-server t))))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
- '(emamux:completing-read-type (quote helm))
- '(emamux:use-nearest-pane t)
- '(evil-shift-width 2)
- '(org-agenda-files
-   (quote
-    ("~/Dropbox/org/notes/practical_vim.org" "~/Dropbox/org/todo/todo.org" "~/Dropbox/org/todo/notes.org" "~/Dropbox/org/todo/refile.org" "~/Dropbox/org/todo/code.org" "~/Dropbox/org/todo/work.org")))
- '(package-selected-packages
-   (quote
-    (markdown-mode haml-mode gitignore-mode git-commit company auto-complete swiper helm helm-core f web-mode spacemacs-theme projectile-rails paradox flycheck-pos-tip flycheck find-file-in-project evil-nerd-commenter avy smartparens projectile magit which-key use-package zenburn-theme yard-mode yaml-mode window-numbering web-beautify w3m volatile-highlights vlf vimish-fold vi-tilde-fringe toc-org tagedit tabbar-ruler symon spray spinner smooth-scrolling smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-hash-syntax rubocop rspec-mode robe restclient rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa powerline popwin pkg-info pcre2el page-break-lines org-present org-pomodoro org-plus-contrib org-bullets open-junk-file neotree multiple-cursors move-text mmm-mode markdown-toc magit-gitflow macrostep linum-relative leuven-theme less-css-mode json-mode js2-mode jade-mode info+ inflections indent-guide ido-vertical-mode ibuffer-projectile hydra hungry-delete htmlize highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-ls-git helm-gtags helm-gitignore helm-flyspell helm-descbinds helm-dash helm-css-scss helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gmail2bbdb gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-terminal-cursor-changer evil-surround evil-search-highlight-persist evil-numbers evil-matchit evil-lisp-state evil-jumper evil-indent-textobject evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu enh-ruby-mode emmet-mode emamux elisp-slime-nav diminish diff-hl deft define-word dash-at-point cyberpunk-theme company-web company-tern company-statistics company-quickhelp coffee-mode cliphist clean-aindent-mode buffer-move bind-key bbdb auto-yasnippet auto-highlight-symbol auto-dictionary aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
- '(smeargle-colors
-   (quote
-    ((older-than-1day . "red")
-     (older-than-3day . "green")
-     (older-than-1week . "yellow")
-     (older-than-2week)
-     (older-than-1month . "orange")
-     (older-than-3month . "pink")
-     (older-than-6month . "cyan")
-     (older-than-1year . "grey50")))))
+      (setq dotspacemacs-persistent-server t))
+    ))

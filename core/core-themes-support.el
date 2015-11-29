@@ -164,7 +164,7 @@ package name does not match theme name + `-theme' suffix.")
             (eq 'zonokai-red theme)
             (eq 'solarized-light theme)
             (eq 'solarized-dark theme))
-        (spacemacs/load-or-install-package 'dash))
+    (spacemacs/load-or-install-package 'dash))
   ;; Unless Emacs stock themes
   (unless (memq theme (custom-available-themes))
     (cond
@@ -178,16 +178,21 @@ package name does not match theme name + `-theme' suffix.")
       (deftheme spacemacs-dark "Spacemacs theme, the dark version")
       (deftheme spacemacs-light "Spacemacs theme, the light version"))
      ;; solarized theme
-     ((or (eq 'solarized-light theme)
-          (eq 'solarized-dark theme))
+     ((eq 'solarized theme)
+
+      ;; solarized theme
       (add-to-list 'load-path
-                   (concat configuration-layer-directory
-                           "+distribution/spacemacs/local/solarized-theme/"))
-      (require 'solarized)
-      (deftheme solarized-dark
-        "The dark variant of the Solarized colour theme")
-      (deftheme solarized-light
-        "The light variant of the Solarized colour theme"))
+                   (concat vendor-directory "emacs-color-theme-solarized/"))
+      (add-to-list 'load-path
+                   (concat vendor-directory
+                           "color-theme/"))
+
+      (require 'color-theme)
+      (require 'color-theme-solarized)
+      (if (display-graphic-p)
+          (set-frame-parameter nil 'background-mode 'dark)
+        (set-terminal-parameter nil 'background-mode 'dark)))
+
      ;; themes with explicitly declared package names
      ((assq theme spacemacs-theme-name-to-package)
       (let* ((pkg (spacemacs//get-theme-package theme))

@@ -43,6 +43,10 @@
   (expand-file-name (concat user-emacs-directory "tests/"))
   "Spacemacs tests directory.")
 
+(defconst vendor-directory
+  (expand-file-name (concat user-emacs-directory "vendor/"))
+  "Spacemacs tests directory.")
+
 (defconst pcache-directory
   (concat spacemacs-cache-directory "pcache"))
 (unless (file-exists-p spacemacs-cache-directory)
