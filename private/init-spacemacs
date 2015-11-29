@@ -117,7 +117,7 @@ values."
                                    :width normal
                                    :powerline-scale 1.1)
 
-                               '("Source Code Pro for Powerline Medium"
+                               '("Source Code Pro for Powerline Regular"
                                  :size 13
                                  :weight normal
                                  :width normal
