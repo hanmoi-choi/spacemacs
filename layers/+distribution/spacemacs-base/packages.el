@@ -43,7 +43,7 @@
         recentf
         savehist
         saveplace
-        spacemacs-theme
+        ;; spacemacs-theme
         subword
         undo-tree
         (uniquify :location built-in)
@@ -162,9 +162,9 @@
             do
             (eval `(defface ,(intern (format "spacemacs-%s-face" state))
                      `((t (:background ,color
-                                      :foreground ,(face-background 'mode-line)
-                                      :box ,(face-attribute 'mode-line :box)
-                                      :inherit 'mode-line)))
+                                       :foreground ,(face-background 'mode-line)
+                                       :box ,(face-attribute 'mode-line :box)
+                                       :inherit 'mode-line)))
                      (format "%s state face." state)
                      :group 'spacemacs))
             (eval `(setq ,(intern (format "evil-%s-state-cursor" state))
@@ -212,6 +212,7 @@
       ;; Make the current definition and/or comment visible.
       (define-key evil-normal-state-map "zf" 'reposition-window)
       ;; toggle maximize buffer
+
       (define-key evil-window-map (kbd "o") 'spacemacs/toggle-maximize-buffer)
       (define-key evil-window-map (kbd "C-o") 'spacemacs/toggle-maximize-buffer)
       ;; make cursor keys work
@@ -382,10 +383,7 @@ Example: (evil-map visual \"<\" \"<gv\")"
       (when (configuration-layer/package-usedp 'smartparens)
         (defadvice evil-delete-backward-char-and-join
             (around spacemacs/evil-delete-backward-char-and-join activate)
-          (defvar smartparens-strict-mode)
-          ;; defadvice compiles this sexp generating a compiler warning for a
-          ;; free variable reference. The line above fixes this
-          (if smartparens-strict-mode
+          (if (bound-and-true-p smartparens-strict-mode)
               (call-interactively 'sp-backward-delete-char)
             ad-do-it))))))
 
@@ -474,8 +472,8 @@ Example: (evil-map visual \"<\" \"<gv\")"
     :config
     (progn
       (when (and dotspacemacs-helm-resize
-                  (or (eq dotspacemacs-helm-position 'bottom)
-                      (eq dotspacemacs-helm-position 'top)))
+                 (or (eq dotspacemacs-helm-position 'bottom)
+                     (eq dotspacemacs-helm-position 'top)))
         (setq helm-autoresize-min-height 10)
         (helm-autoresize-mode 1))
 
@@ -509,14 +507,14 @@ Example: (evil-map visual \"<\" \"<gv\")"
 Removes the automatic guessing of the initial value based on thing at point. "
         (interactive "P")
         (let* ((hist          (and arg helm-ff-history (helm-find-files-history)))
-                (default-input hist )
-                (input         (cond ((and (eq major-mode 'dired-mode) default-input)
-                                    (file-name-directory default-input))
+               (default-input hist )
+               (input         (cond ((and (eq major-mode 'dired-mode) default-input)
+                                     (file-name-directory default-input))
                                     ((and (not (string= default-input ""))
-                                            default-input))
+                                          default-input))
                                     (t (expand-file-name (helm-current-directory))))))
-            (set-text-properties 0 (length input) nil input)
-            (helm-find-files-1 input ))))
+          (set-text-properties 0 (length input) nil input)
+          (helm-find-files-1 input ))))
     :init
     (progn
       (setq helm-prevent-escaping-from-minibuffer t
@@ -559,23 +557,23 @@ Removes the automatic guessing of the initial value based on thing at point. "
              ((symbol-function 'helm-do-grep-1)
               (lambda (targets &optional recurse zgrep exts default-input region-or-symbol-p)
                 (let* ((new-input (when region-or-symbol-p
-                                   (if (region-active-p)
-                                       (buffer-substring-no-properties
-                                        (region-beginning) (region-end))
-                                     (thing-at-point 'symbol t))))
-                      (quoted-input (when new-input (rxt-quote-pcre new-input))))
+                                    (if (region-active-p)
+                                        (buffer-substring-no-properties
+                                         (region-beginning) (region-end))
+                                      (thing-at-point 'symbol t))))
+                       (quoted-input (when new-input (rxt-quote-pcre new-input))))
                   (this-fn targets recurse zgrep exts default-input quoted-input))))
              (preselection (or (dired-get-filename nil t)
                                (buffer-file-name (current-buffer))))
              (targets   (if targs
                             targs
                           (helm-read-file-name
-                          "Search in file(s): "
-                          :marked-candidates t
-                          :preselect (and helm-do-grep-preselect-candidate
-                                          (if helm-ff-transformer-show-only-basename
-                                              (helm-basename preselection)
-                                            preselection))))))
+                           "Search in file(s): "
+                           :marked-candidates t
+                           :preselect (and helm-do-grep-preselect-candidate
+                                           (if helm-ff-transformer-show-only-basename
+                                               (helm-basename preselection)
+                                             preselection))))))
           (helm-do-grep-1 targets nil nil nil nil use-region-or-symbol-p)))
 
       (defun spacemacs/helm-file-do-grep ()
@@ -621,9 +619,9 @@ Removes the automatic guessing of the initial value based on thing at point. "
         (interactive)
         (if (get-buffer "*helm ag results*")
             (switch-to-buffer-other-window "*helm ag results*")
-            (if (get-buffer "*hgrep*")
-                (switch-to-buffer-other-window "*hgrep*")
-                (message "No previous search buffer found"))))
+          (if (get-buffer "*hgrep*")
+              (switch-to-buffer-other-window "*hgrep*")
+            (message "No previous search buffer found"))))
 
       ;; use helm by default for M-x
       (unless (configuration-layer/package-usedp 'smex)
@@ -1368,8 +1366,8 @@ ARG non nil means that the editing style is `vim'."
                 which-key-description-replacement-alist)))
       (dolist (leader-key `(,dotspacemacs-leader-key ,dotspacemacs-emacs-leader-key))
         (which-key-add-key-based-replacements
-         (concat leader-key " m")    "major mode commands"
-         (concat leader-key " " dotspacemacs-command-key) "M-x"))
+          (concat leader-key " m")    "major mode commands"
+          (concat leader-key " " dotspacemacs-command-key) "M-x"))
       (if (fboundp 'which-key-declare-prefixes)
           (which-key-declare-prefixes
             dotspacemacs-leader-key '("root" . "Spacemacs root")
@@ -1448,6 +1446,11 @@ ARG non nil means that the editing style is `vim'."
       (add-hook 'diff-mode-hook 'spacemacs//set-whitespace-style-for-diff))
     :config
     (progn
+
+      (setq whitespace-style '(face
+                               tabs
+                               trailing
+                               newline))
       (set-face-attribute 'whitespace-space nil
                           :background nil
                           :foreground (face-attribute 'font-lock-warning-face

@@ -43,6 +43,7 @@
       "gm" 'git-messenger:popup-message)
     :config
     (define-key git-messenger-map [escape] 'git-messenger:popup-close)
+    (setq git-messenger:show-detail t)
     ))
 
 (defun git/init-git-timemachine ()

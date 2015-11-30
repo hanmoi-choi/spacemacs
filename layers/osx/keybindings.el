@@ -1,8 +1,4 @@
-<<<<<<< HEAD:contrib/osx/keybindings.el
-(when (system-is-mac)
-=======
 (when (spacemacs/system-is-mac)
->>>>>>> 9f3b249e274139640a508e4ca7099abb646be36c:layers/osx/keybindings.el
   (evil-leader/set-key "bf" 'reveal-in-osx-finder)
 
   ;; this is only applicable to GUI mode

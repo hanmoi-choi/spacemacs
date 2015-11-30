@@ -15,7 +15,7 @@
     coffee-mode
     ;; company
     company-tern
-    ;; flycheck
+    flycheck
     ;; js-doc
     js2-mode
     ;; js2-refactor
