@@ -55,7 +55,8 @@
 
     :config
     (progn
-
+      (evil-make-overriding-map git-timemachine-mode-map 'normal)
+      (add-hook 'git-timemachine-mode-hook #'evil-normalize-keymaps)
       (defun spacemacs//time-machine-ms-on-enter ()
         "Initiate git-timemachine properly with goden-ratio support."
         (let ((golden-ratio (when (boundp 'golden-ratio-mode)
