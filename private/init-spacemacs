@@ -338,9 +338,4 @@ layers configuration. You are free to put any user code."
           '((space-mark   ?\    [?\xB7]     [?.]); space
             (space-mark   ?\xA0 [?\xA4]     [?_]); hard space
             (newline-mark ?\n   [?\xB6 ?\n] [?$ ?\n]); end-of-line
-            ))
-
-    ;; Only for GUI mode
-    (when (display-graphic-p)
-      (setq dotspacemacs-persistent-server t))
-    ))
+            ))))

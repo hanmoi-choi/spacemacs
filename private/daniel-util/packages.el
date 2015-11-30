@@ -15,8 +15,8 @@
   (use-package multiple-cursors
     :init
     (progn
-      (global-set-key [M-down] 'mc/mark-next-like-this)
-      (global-set-key [M-up] 'mc/mark-previous-like-this)
+      (global-set-key [C-S-down] 'mc/mark-next-like-this)
+      (global-set-key [C-S-up] 'mc/mark-previous-like-this)
       (global-set-key (kbd "C-M-g") 'mc/delete-region-overlay))))
 
 (defun daniel-util/init-cliphist()
@@ -86,10 +86,10 @@
       (setq tabbar-ruler-global-tabbar t)
 
       ;; Set nil
-      (define-key tabbar-mode-map [S-left] 'tabbar-backward-tab)
-      (define-key tabbar-mode-map [S-right] 'tabbar-forward-tab)
-      (define-key tabbar-mode-map [S-down] 'tabbar-backward-group)
-      (define-key tabbar-mode-map [S-up] 'tabbar-forward-group)
+      (define-key tabbar-mode-map [M-left] 'tabbar-backward-tab)
+      (define-key tabbar-mode-map [M-right] 'tabbar-forward-tab)
+      (define-key tabbar-mode-map [M-down] 'tabbar-backward-group)
+      (define-key tabbar-mode-map [M-up] 'tabbar-forward-group)
 
       ;; Add a buffer modification state indicator in the tab label, and place a
       ;; space around the label to make it looks less crowd.

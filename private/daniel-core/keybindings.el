@@ -143,3 +143,6 @@
   "he" 'helm-eval-expression-with-eldoc
   "hc" 'helm-calcul-expression
   "hm" 'helm-mini)
+
+(require 'calendar)
+(evil-set-initial-state 'calendar-mode 'emacs)

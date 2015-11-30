@@ -60,6 +60,7 @@
             org-startup-indented t
             org-cycle-include-plain-lists t
             org-clone-delete-id t
+            org-yank-adjusted-subtrees t
             org-agenda-window-setup 'current-window)
 
       (setq mail-setup-hook
@@ -183,8 +184,18 @@ Will work on both org-mode and any mode that accepts plain html."
           "mxu" (spacemacs|org-emphasize spacemacs/org-underline ?_)
           "mxv" (spacemacs|org-emphasize spacemacs/org-verbose ?=))
 
+
+      (defun my/org-agenda-new ()
+        "Create a new note or task at the current agenda item.
+Creates it at the same level as the previous task, so it's better to use
+this with to-do items than with projects or headings."
+        (interactive)
+        (org-agenda-switch-to)
+        (org-capture 0))
+
       (eval-after-load "org-agenda"
         '(progn
+           (define-key org-agenda-mode-map "N" 'my/org-agenda-new)
            (define-key org-agenda-mode-map "j" 'org-agenda-next-line)
            (define-key org-agenda-mode-map "k" 'org-agenda-previous-line)
            ;; Since we override SPC, let's make RET do that functionality
@@ -196,6 +207,8 @@ Will work on both org-mode and any mode that accepts plain html."
     (progn
       (add-hook 'org-after-todo-state-change-hook 'bh/mark-parent-tasks-started 'append)
       (spacemacs/declare-prefix "O" "org-mode")
+
+      (bind-key "C-c k" 'org-cut-subtree org-mode-map)
       (evil-leader/set-key
         "Oa" 'org-agenda
         "Ol" 'org-store-link
@@ -331,21 +344,17 @@ If not found return RETURN-VALUE or something that would ask the user."
             return-value
             (concat "%^{" org-contacts-email-property "}p")))
 
-      (defvar my/org-basic-task-template "* TODO %^{Task}
-SCHEDULED: %^t
-:PROPERTIES:
-:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}
-:END:
-%<%Y-%m-%d %H:%M>
-%?
-" "Basic task data")
 
       (setq org-capture-templates
             (quote (("t" "TODO" entry
                      (file "~/Dropbox/org/todo/refile.org")
-                     ,my/org-basic-task-template)
+                     "* TODO %^{Task}
+SCHEDULED: %^t
+ADDED: %<%Y-%m-%d %H:%M>
+%?
+")
                     ("i" "Interrupting task" entry
-                     (file+headline "~/personal/organizer.org" "Tasks")
+                     (file+headline "~/Dropbox/org/todo/organizer.org" "Tasks")
                      "* STARTED %^{Task}"
                      :clock-in :clock-resume)
                     ("n" "NOTE" entry (file "~/Dropbox/org/todo/refile.org")
@@ -463,6 +472,7 @@ A prefix arg forces clock in of the default task."
 
       (setq org-refile-target-verify-function 'bh/verify-refile-target)
 
+      ;; New key assignment
       (setq org-agenda-dim-blocked-tasks nil
             org-agenda-compact-blocks t
             org-agenda-sticky nil
