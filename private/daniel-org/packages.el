@@ -21,7 +21,7 @@
         ;; org-mime is installed by `org-plus-contrib'
         (org-mime :location built-in)
         org-pomodoro
-        puml-mode
+        plantuml-mode
         toc-org))
 
 (when (configuration-layer/layer-usedp 'auto-completion)
@@ -29,11 +29,12 @@
     (spacemacs|add-company-hook org-mode)
     (push 'company-capf company-backends-org-mode)))
 
-(defun daniel-org/init-puml-mode ()
-  (use-package puml-mode
-    :mode ("\\.\\(puml|plantuml\\)$" . puml-mode)
-    )
-  )
+(defun daniel-org/init-plantuml-mode ()
+  (use-package plantuml-mode
+    :defer t
+    :mode ("\\.\\(plantuml\\)$" . puml-mode)
+    :init
+    (setq plantuml-jar-path "~/Dropbox/Apps/spacemacs/private/bin/plantuml.jar")))
 
 (defun daniel-org/init-gnuplot ()
   (use-package gnuplot
@@ -46,11 +47,12 @@
 
 (defun daniel-org/init-org ()
   (use-package org
+    :ensure t
     :mode ("\\.\\(org|org_archive|txt\\)$" . org-mode)
-    :defer t
     :init
     (progn
       (setq org-directory "~/Dropbox/org")
+      (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 
       ;; GOTO
       (setq org-goto-interface 'outline-path-completion
@@ -92,6 +94,18 @@
       ;; Global
       ;;;;;;;;;;;;;;
       ;; Separate drawers for clocking and logs
+      (setq org-list-demote-modify-bullet (quote (("+" . "-")
+                                                  ("*" . "-")
+                                                  ("1." . "-")
+                                                  ("1)" . "-")
+                                                  ("A)" . "-")
+                                                  ("B)" . "-")
+                                                  ("a)" . "-")
+                                                  ("b)" . "-")
+                                                  ("A." . "-")
+                                                  ("B." . "-")
+                                                  ("a." . "-")
+                                                  ("b." . "-"))))
       (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
       (add-to-list 'org-global-properties
                    '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
@@ -178,7 +192,7 @@ SCHEDULED: %^t
                      "* NEXT %^{Task}"
                      :clock-in :clock-resume)
 
-                    ("n" "NOTE" entry (file "~/Dropbox/org/todo/refile.org")
+                    ("n" "NOTE" entry (file "~/Dropbox/org/todo/note.org")
                      "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                     )))
 
@@ -317,8 +331,8 @@ SCHEDULED: %^t
             org-agenda-inhibit-startup t
             org-agenda-use-tag-inheritance t
             org-agenda-show-log t
-            org-agenda-skip-scheduled-if-done t
-            org-agenda-skip-deadline-if-done t
+            ;; org-agenda-skip-scheduled-if-done t
+            ;; org-agenda-skip-deadline-if-done t
             org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
       (setq org-agenda-time-grid
             '((daily today require-timed)

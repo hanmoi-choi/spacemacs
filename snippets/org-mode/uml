@@ -2,6 +2,6 @@
 # name: uml
 # key: uml_
 # --
-#+begin_uml
-$0
-#+end_uml
+#+begin_src plantuml :file $0
+$1
+#+end_src

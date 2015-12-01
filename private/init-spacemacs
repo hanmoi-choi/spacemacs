@@ -255,7 +255,6 @@ user code."
     ;; (define-key input-decode-map "\e[1;10B" [S-M-down])
     ;; (define-key input-decode-map "\e[1;10C" [S-M-right])
     ;; (define-key input-decode-map "\e[1;10D" [S-M-left])
-
     ))
 
 
@@ -265,6 +264,7 @@ user code."
 layers configuration. You are free to put any user code."
   (progn
     (global-company-mode)
+    (setq powerline-default-separator 'arrow)
     ;; Make sparse keymap for not using packages, it's annoying with which-key
     (setq js2-mode-map (make-sparse-keymap))
     (setq ggtags-mode-map (make-sparse-keymap))

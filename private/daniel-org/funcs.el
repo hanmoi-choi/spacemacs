@@ -1,13 +1,20 @@
-;; These are from http://gitwiki.org/Tests/org-mode.org
-(defun my/org-agenda-new ()
-  "Create a new note or task at the current agenda item.
-Creates it at the same level as the previous task, so it's better to use
-this with to-do items than with projects or headings."
-  (interactive)
-  (org-agenda-switch-to)
-  (org-capture 0))
-
+;; These are from http://doc.norang.ca/org-mode.html
 (setq bh/keep-clock-running nil)
+(defun bh/prepare-meeting-notes ()
+  "Prepare meeting notes for email
+   Take selected region and convert tabs to spaces, mark TODOs with leading >>>, and copy to kill ring for pasting"
+  (interactive)
+  (let (prefix)
+    (save-excursion
+      (save-restriction
+        (narrow-to-region (region-beginning) (region-end))
+        (untabify (point-min) (point-max))
+        (goto-char (point-min))
+        (while (re-search-forward "^\\( *-\\\) \\(TODO\\|DONE\\): " (point-max) t)
+          (replace-match (concat (make-string (length (match-string 1)) ?>) " " (match-string 2) ": ")))
+        (goto-char (point-min))
+        (kill-ring-save (point-min) (point-max))))))
+
 (defun bh/org-todo (arg)
   (interactive "p")
   (if (equal arg 4)
@@ -929,3 +936,12 @@ this with to-do items than with projects or headings."
    (org-cmp-todo-state a b)
    (org-cmp-priority a b)
    (org-cmp-effort a b)))
+
+;; These are from http://gitwiki.org/Tests/org-mode.org
+(defun my/org-agenda-new ()
+  "Create a new note or task at the current agenda item.
+Creates it at the same level as the previous task, so it's better to use
+this with to-do items than with projects or headings."
+  (interactive)
+  (org-agenda-switch-to)
+  (org-capture 0))
