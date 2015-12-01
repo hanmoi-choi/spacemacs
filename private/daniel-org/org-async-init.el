@@ -8,5 +8,5 @@
 (require 'ox-latex)
 (require 'cl)
 (require 'org-capture)
-
+(require 'org-id)
 (setq org-export-async-debug nil)

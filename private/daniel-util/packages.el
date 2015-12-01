@@ -86,10 +86,10 @@
       (setq tabbar-ruler-global-tabbar t)
 
       ;; Set nil
-      (define-key tabbar-mode-map [M-left] 'tabbar-backward-tab)
-      (define-key tabbar-mode-map [M-right] 'tabbar-forward-tab)
-      (define-key tabbar-mode-map [M-down] 'tabbar-backward-group)
-      (define-key tabbar-mode-map [M-up] 'tabbar-forward-group)
+      (define-key tabbar-mode-map [C-M-left] 'tabbar-backward-tab)
+      (define-key tabbar-mode-map [C-M-right] 'tabbar-forward-tab)
+      (define-key tabbar-mode-map [C-M-down] 'tabbar-backward-group)
+      (define-key tabbar-mode-map [C-M-up] 'tabbar-forward-group)
 
       ;; Add a buffer modification state indicator in the tab label, and place a
       ;; space around the label to make it looks less crowd.

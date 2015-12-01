@@ -320,8 +320,6 @@ layers configuration. You are free to put any user code."
     (setq global-hl-line-mode nil)
     (setq show-smartparens-global-mode nil)
 
-    (require 'smartparens )
-
     ;; I want to see all filename
     (setq ibuffer-formats
           '((mark modified read-only " "
@@ -331,14 +329,14 @@ layers configuration. You are free to put any user code."
             (mark " " (name 16 -1) " " filename)))
 
     ;; Persist Undo
-    (setq undo-tree-auto-save-history t
-          undo-tree-history-directory-alist
-          `(("." . ,(concat spacemacs-cache-directory "emacs-undo"))))
-    (unless (file-exists-p (concat spacemacs-cache-directory "emacs-undo"))
-      (make-directory (concat spacemacs-cache-directory "emacs-undo")))
-
-    (setq whitespace-display-mappings
-          '((space-mark   ?\    [?\xB7]     [?.]); space
-            (space-mark   ?\xA0 [?\xA4]     [?_]); hard space
-            (newline-mark ?\n   [?\xB6 ?\n] [?$ ?\n]); end-of-line
-            ))))
+    ;; (setq undo-tree-auto-save-history t
+    ;;       undo-tree-history-directory-alist
+    ;;       `(("." . ,(concat spacemacs-cache-directory "emacs-undo"))))
+    ;; (unless (file-exists-p (concat spacemacs-cache-directory "emacs-undo"))
+    ;;   (make-directory (concat spacemacs-cache-directory "emacs-undo")))
+    ;; (setq whitespace-display-mappings
+    ;;       '((space-mark   ?\    [?\xB7]     [?.]); space
+    ;;         (space-mark   ?\xA0 [?\xA4]     [?_]); hard space
+    ;;         (newline-mark ?\n   [?\xB6 ?\n] [?$ ?\n]); end-of-line
+    ;;         ))
+    ))

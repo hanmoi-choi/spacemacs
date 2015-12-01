@@ -1,4 +1,13 @@
 ;; These are from http://gitwiki.org/Tests/org-mode.org
+(defun my/org-agenda-new ()
+  "Create a new note or task at the current agenda item.
+Creates it at the same level as the previous task, so it's better to use
+this with to-do items than with projects or headings."
+  (interactive)
+  (org-agenda-switch-to)
+  (org-capture 0))
+
+(setq bh/keep-clock-running nil)
 (defun bh/org-todo (arg)
   (interactive "p")
   (if (equal arg 4)
@@ -7,6 +16,51 @@
         (org-show-todo-tree nil))
     (bh/narrow-to-org-subtree)
     (org-show-todo-tree nil)))
+
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+(defun bh/clock-in-task-by-id (id)
+  "Clock in a task by id"
+  (org-with-point-at (org-id-find id 'marker)
+    (org-clock-in nil)))
+
+(defun bh/clock-in-last-task (arg)
+  "Clock in the interrupted task if there is one
+Skip the default task and get the next one.
+A prefix arg forces clock in of the default task."
+  (interactive "p")
+  (let ((clock-in-to-task
+         (cond
+          ((eq arg 4) org-clock-default-task)
+          ((and (org-clock-is-active)
+                (equal org-clock-default-task (cadr org-clock-history)))
+           (caddr org-clock-history))
+          ((org-clock-is-active) (cadr org-clock-history))
+          ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
+          (t (car org-clock-history)))))
+    (widen)
+    (org-with-point-at clock-in-to-task
+      (org-clock-in nil))))
+
+;; Insert key for org-mode and markdown a la C-h k
+;; from SE endless http://emacs.stackexchange.com/questions/2206/i-want-to-have-the-kbd-tags-for-my-blog-written-in-org-mode/2208#2208
+(defun spacemacs/insert-keybinding-org (key)
+  "Ask for a key then insert its description.
+Will work on both org-mode and any mode that accepts plain html."
+  (interactive "kType key sequence: ")
+  (let* ((tag "@@html:<kbd>@@ %s @@html:</kbd>@@"))
+    (if (null (equal key "\r"))
+        (insert
+         (format tag (help-key-description key nil)))
+      (insert (format tag ""))
+      (forward-char -8))))
+
+(defmacro spacemacs|org-emphasize (fname char)
+  "Make function for setting the emphasis in org mode"
+  `(defun ,fname () (interactive)
+          (org-emphasize ,char)))
 
 (defun bh/narrow-to-org-subtree ()
   (widen)
