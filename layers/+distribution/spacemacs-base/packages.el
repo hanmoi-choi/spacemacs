@@ -471,6 +471,7 @@ Example: (evil-map visual \"<\" \"<gv\")"
     :commands (spacemacs/helm-find-files)
     :config
     (progn
+
       (when (and dotspacemacs-helm-resize
                  (or (eq dotspacemacs-helm-position 'bottom)
                      (eq dotspacemacs-helm-position 'top)))
@@ -518,6 +519,8 @@ Removes the automatic guessing of the initial value based on thing at point. "
     :init
     (progn
       (setq helm-prevent-escaping-from-minibuffer t
+            helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+            helm-input-idle-delay 0.01  ; this actually updates things
             helm-bookmark-show-location t
             helm-display-header-line nil
             helm-split-window-in-side-p t

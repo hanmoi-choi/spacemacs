@@ -1,4 +1,3 @@
-(require 'org)
 (eval-after-load 'org
   '(progn
     ;;Leader
@@ -100,10 +99,13 @@
       "Os" 'org-iswitchb)
 
     ;; Global
+    (spacemacs/declare-prefix "<f12>" "org-mode")
     (global-set-key (kbd "C-c c") 'org-capture)
     (global-set-key (kbd "C-c l") 'org-store-link)
-    (global-set-key (kbd "<f12>") 'org-agenda)
-    (global-set-key (kbd "<f11>") 'org-clock-goto)
+    (global-set-key (kbd "C-c j") 'org-clock-goto)
+    (global-set-key (kbd "C-c <f10>") 'org-clock-goto)
+    (global-set-key (kbd "C-c <f11>") 'org-agenda-list)
+    (global-set-key (kbd "C-c <f12>") 'org-agenda)
 
     ;; Mode
     (add-hook 'org-mode-hook
@@ -113,15 +115,22 @@
                    (define-key org-mode-map (kbd "C-M-j") 'org-meta-return)))))
 
     (bind-key "C-c k" 'org-cut-subtree org-mode-map)
+
+    (eval-after-load 'org-capture
+      '(progn
+         (define-key org-capture-mode-map (kbd "C-c C-r") 'my/org-capture-refile-and-jump)
+         ))
+
     (define-key org-mode-map (kbd "C-x C-v" ) 'markdown-preview-file-with-marked)))
 
-
-(require 'org-agenda)
 (eval-after-load 'org-agenda
   '(progn
+     (define-key org-agenda-mode-map "x" 'my/org-agenda-done)
+     (define-key org-agenda-mode-map "X" 'my/org-agenda-mark-done-and-add-followup)
      (define-key org-agenda-mode-map "N" 'my/org-agenda-new)
      (define-key org-agenda-mode-map "j" 'org-agenda-next-line)
      (define-key org-agenda-mode-map "k" 'org-agenda-previous-line)
+     (bind-key "Y" 'org-agenda-todo-yesterday org-agenda-mode-map)
      ;; Since we override SPC, let's make RET do that functionality
      (define-key org-agenda-mode-map
        (kbd "RET") 'org-agenda-show-and-scroll-up)

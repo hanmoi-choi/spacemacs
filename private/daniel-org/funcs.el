@@ -146,12 +146,13 @@ Will work on both org-mode and any mode that accepts plain html."
             (when (member (org-get-todo-state) org-not-done-keywords)
               (setq has-subtask t))))
         (when (not has-subtask)
-          "STARTED"))))
+          "NEXT"))))
+
 (defun bh/remove-empty-drawer-on-clock-out ()
   (interactive)
   (save-excursion
     (beginning-of-line 0)
-    (org-remove-empty-drawer-at "CLOCK" (point))))
+    (org-remove-empty-drawer-at (point))))
 
 (defun bh/weekday-p ()
   (let ((wday (nth 6 (decode-time))))
@@ -643,3 +644,288 @@ as the default task."
              (marker-buffer org-clock-default-task)
              (not org-clock-resolving-clocks-due-to-idleness))
     (bh/clock-in-parent-task)))
+
+;; These function is from http://pages.sachachua.com/.emacs.d/Sacha.html#org-files
+(defun my/org-insert-heading-for-next-day ()
+  "Insert a same-level heading for the following day."
+  (interactive)
+  (let ((new-date
+         (seconds-to-time
+          (+ 86400.0
+             (float-time
+              (org-read-date nil 'to-time (elt (org-heading-components) 4)))))))
+    (org-insert-heading-after-current)
+    (insert (format-time-string "%Y-%m-%d\n\n" new-date))))
+
+(defun my/org-contacts-template-email (&optional return-value)
+  "Try to return the contact email for a template.
+If not found return RETURN-VALUE or something that would ask the user."
+  (or (cadr (if (gnus-alive-p)
+                (gnus-with-article-headers
+                 (mail-extract-address-components
+                  (or (mail-fetch-field "Reply-To") (mail-fetch-field "From") "")))))
+      return-value
+      (concat "%^{" org-contacts-email-property "}p")))
+
+  (defun my/helm-org-refile-read-location (tbl)
+    (setq my/helm-org-refile-locations tbl)
+    (helm
+     (list
+      ;; (helm-build-sync-source "Today's tasks"
+      ;;   :candidates (mapcar (lambda (a) (cons (car a) a))
+      ;;                       (my/org-get-todays-items-as-refile-candidates))
+      ;;   :action '(("Select" . identity)
+      ;;             ("Clock in and track" . my/helm-org-clock-in-and-track-from-refile)
+      ;;             ("Draw index card" . my/helm-org-prepare-index-card-for-subtree))
+      ;;   :history 'org-refile-history)
+      (helm-build-sync-source "Refile targets"
+        :candidates (mapcar (lambda (a) (cons (car a) a)) tbl)
+        :action '(("Select" . identity)
+                  ("Clock in and track" . my/helm-org-clock-in-and-track-from-refile)
+                  ("Draw index card" . my/helm-org-prepare-index-card-for-subtree))
+        :history 'org-refile-history)
+      (helm-build-dummy-source "Create task"
+        :action (helm-make-actions
+                 "Create task"
+                 'my/helm-org-create-task)))))
+
+(defun my/org-refile-get-location (&optional prompt default-buffer new-nodes no-exclude)
+    "Prompt the user for a refile location, using PROMPT.
+  PROMPT should not be suffixed with a colon and a space, because
+  this function appends the default value from
+  `org-refile-history' automatically, if that is not empty.
+  When NO-EXCLUDE is set, do not exclude headlines in the current subtree,
+  this is used for the GOTO interface."
+    (let ((org-refile-targets org-refile-targets)
+          (org-refile-use-outline-path org-refile-use-outline-path)
+          excluded-entries)
+      (when (and (derived-mode-p 'org-mode)
+                 (not org-refile-use-cache)
+                 (not no-exclude))
+        (org-map-tree
+         (lambda()
+           (setq excluded-entries
+                 (append excluded-entries (list (org-get-heading t t)))))))
+      (setq org-refile-target-table
+            (org-refile-get-targets default-buffer excluded-entries)))
+    (unless org-refile-target-table
+      (user-error "No refile targets"))
+    (let* ((cbuf (current-buffer))
+           (partial-completion-mode nil)
+           (cfn (buffer-file-name (buffer-base-buffer cbuf)))
+           (cfunc (if (and org-refile-use-outline-path
+                           org-outline-path-complete-in-steps)
+                      'org-olpath-completing-read
+                    'org-icompleting-read))
+           (extra (if org-refile-use-outline-path "/" ""))
+           (cbnex (concat (buffer-name) extra))
+           (filename (and cfn (expand-file-name cfn)))
+           (tbl (mapcar
+                 (lambda (x)
+                   (if (and (not (member org-refile-use-outline-path
+                                         '(file full-file-path)))
+                            (not (equal filename (nth 1 x))))
+                       (cons (concat (car x) extra " ("
+                                     (file-name-nondirectory (nth 1 x)) ")")
+                             (cdr x))
+                     (cons (concat (car x) extra) (cdr x))))
+                 org-refile-target-table))
+           (completion-ignore-case t)
+           cdef
+           (prompt (concat prompt
+                           (or (and (car org-refile-history)
+                                    (concat " (default " (car org-refile-history) ")"))
+                               (and (assoc cbnex tbl) (setq cdef cbnex)
+                                    (concat " (default " cbnex ")"))) ": "))
+           pa answ parent-target child parent old-hist)
+      (setq old-hist org-refile-history)
+      ;; Use Helm's sources instead
+      (setq answ (my/helm-org-refile-read-location tbl))
+      (cond
+       ((and (stringp answ)
+             (setq pa (org-refile--get-location answ tbl)))
+        (org-refile-check-position pa)
+        (when (or (not org-refile-history)
+                  (not (eq old-hist org-refile-history))
+                  (not (equal (car pa) (car org-refile-history))))
+          (setq org-refile-history
+                (cons (car pa) (if (assoc (car org-refile-history) tbl)
+                                   org-refile-history
+                                 (cdr org-refile-history))))
+          (if (equal (car org-refile-history) (nth 1 org-refile-history))
+              (pop org-refile-history)))
+        (setq my/org-refile-last-location pa)
+        pa)
+       ((and (stringp answ) (string-match "\\`\\(.*\\)/\\([^/]+\\)\\'" answ))
+        (setq parent (match-string 1 answ)
+              child (match-string 2 answ))
+        (setq parent-target (org-refile--get-location parent tbl))
+        (when (and parent-target
+                   (or (eq new-nodes t)
+                       (and (eq new-nodes 'confirm)
+                            (y-or-n-p (format "Create new node \"%s\"? "
+                                              child)))))
+          (org-refile-new-child parent-target child)))
+       ((listp answ) answ) ;; Sacha: Helm returned a refile location
+       ((not (equal answ t))
+        (user-error "Invalid target location")))))
+
+(defun my/org-refile-get-location-by-substring (regexp &optional file)
+  "Return the refile location identified by REGEXP."
+  (let ((org-refile-targets org-refile-targets) tbl)
+    (setq org-refile-target-table (org-refile-get-targets)))
+  (unless org-refile-target-table
+    (user-error "No refile targets"))
+  (cl-find regexp org-refile-target-table
+           :test
+           (lambda (a b)
+             (and
+              (string-match a (car b))
+              (or (null file)
+                  (string-match file (elt b 1)))))))
+(defun my/org-refile-subtree-to (name)
+  (org-refile nil nil (my/org-refile-get-location-exact name)))
+
+ (defun my/org-refile-get-location-exact (name &optional file)
+  "Return the refile location identified by NAME."
+  (let ((org-refile-targets org-refile-targets) tbl)
+    (setq org-refile-target-table (org-refile-get-targets)))
+  (unless org-refile-target-table
+    (user-error "No refile targets"))
+  (cl-find name org-refile-target-table
+           :test (lambda (a b)
+                 (and (string-equal a (car b))
+              (or (null file)
+                  (string-match file (elt b 1)))))))
+;; Example: (my/org-clock-in-refile "Off my computer")
+ (defun my/org-clock-in-refile (location &optional file)
+  "Clocks into LOCATION.
+LOCATION and FILE can also be regular expressions for `my/org-refile-get-location-by-substring'."
+  (interactive (list (my/org-refile-get-location)))
+  (save-window-excursion
+    (save-excursion
+      (if (stringp location) (setq location (my/org-refile-get-location-by-substring location file)))
+      (org-refile 4 nil location)
+      (org-clock-in))))
+
+ (defun my/org-finish-previous-task-and-clock-in-new-one (location &optional file)
+  (interactive (list (my/org-refile-get-location)))
+  (save-window-excursion
+    (org-clock-goto)
+    (org-todo 'done))
+  (my/org-clock-in-and-track-by-name location file))
+
+(defun my/org-clock-in-and-track-by-name (location &optional file)
+  (interactive (list (my/org-refile-get-location)))
+  (save-window-excursion
+    (save-excursion
+      (if (stringp location) (setq location (my/org-refile-get-location-exact location file)))
+      (org-refile 4 nil location)
+      (my/org-clock-in-and-track))))
+(defun my/org-off-my-computer (category)
+  (interactive "MCategory: ")
+  (my/org-clock-in-refile "Off my computer")
+  (quantified-track category))
+
+(defun my/org-capture-refile-and-jump ()
+  (interactive)
+  (org-capture-refile)
+  (org-refile-goto-last-stored))
+
+(defun my/org-jump ()
+  (interactive)
+  (let ((current-prefix-arg '(4)))
+    (call-interactively 'org-refile)))
+
+(defun my/org-mode-ask-effort ()
+  "Ask for an effort estimate when clocking in."
+  (unless (org-entry-get (point) "Effort")
+    (let ((effort
+           (completing-read
+            "Effort: "
+            (org-entry-get-multivalued-property (point) "Effort"))))
+      (unless (equal effort "")
+        (org-set-property "Effort" effort)))))
+
+(defun my/org-agenda-done (&optional arg)
+  "Mark current TODO as done.
+This changes the line at point, all other lines in the agenda referring to
+the same tree node, and the headline of the tree node in the Org-mode file."
+  (interactive "P")
+  (org-agenda-todo "DONE"))
+;; Override the key definition for org-exit
+
+(defun my/org-agenda-mark-done-and-add-followup ()
+  "Mark the current TODO as done and add another task after it.
+Creates it at the same level as the previous task, so it's better to use
+this with to-do items than with projects or headings."
+  (interactive)
+  (org-agenda-todo "DONE")
+  (org-agenda-switch-to)
+  (org-capture 0 "t"))
+;; Override the key definition
+
+(require 'cl)
+(defun my/org-get-context (txt)
+  "Find the context."
+  (car (member-if
+        (lambda (item) (string-match "@" item))
+        (get-text-property 1 'tags txt))))
+
+(defun my/org-compare-dates (a b)
+  "Return 1 if A should go after B, -1 if B should go after A, or 0 if a = b."
+  (cond
+   ((and (= a 0) (= b 0)) nil)
+   ((= a 0) 1)
+   ((= b 0) -1)
+   ((> a b) 1)
+   ((< a b) -1)
+   (t nil)))
+
+(defun my/org-complete-cmp (a b)
+  (let* ((state-a (or (get-text-property 1 'todo-state a) ""))
+         (state-b (or (get-text-property 1 'todo-state b) "")))
+    (or
+     (if (member state-a org-done-keywords-for-agenda) 1)
+     (if (member state-b org-done-keywords-for-agenda) -1))))
+
+(defun my/org-date-cmp (a b)
+  (let* ((sched-a (or (get-text-property 1 'org-scheduled a) 0))
+         (sched-b (or (get-text-property 1 'org-scheduled b) 0))
+         (deadline-a (or (get-text-property 1 'org-deadline a) 0))
+         (deadline-b (or (get-text-property 1 'org-deadline b) 0)))
+    (or
+     (my/org-compare-dates
+      (my/org-min-date sched-a deadline-a)
+      (my/org-min-date sched-b deadline-b)))))
+
+(defun my/org-min-date (a b)
+  "Return the smaller of A or B, except for 0."
+  (funcall (if (and (> a 0) (> b 0)) 'min 'max) a b))
+
+(defun my/org-sort-agenda-items-user-defined (a b)
+  ;; compare by deadline, then scheduled date; done tasks are listed at the very bottom
+  (or
+   (my/org-complete-cmp a b)
+   (my/org-date-cmp a b)))
+
+(defun my/org-context-cmp (a b)
+  "Compare CONTEXT-A and CONTEXT-B."
+  (let ((context-a (my/org-get-context a))
+        (context-b (my/org-get-context b)))
+    (cond
+     ((null context-a) +1)
+     ((null context-b) -1)
+     ((string< context-a context-b) -1)
+     ((string< context-b context-a) +1)
+     (t nil))))
+
+(defun my/org-sort-agenda-items-todo (a b)
+  (or
+   (org-cmp-time a b)
+   (my/org-complete-cmp a b)
+   (my/org-context-cmp a b)
+   (my/org-date-cmp a b)
+   (org-cmp-todo-state a b)
+   (org-cmp-priority a b)
+   (org-cmp-effort a b)))

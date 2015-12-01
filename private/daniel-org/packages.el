@@ -50,11 +50,17 @@
     :defer t
     :init
     (progn
-      (setq org-goto-interface 'outline
-            org-goto-max-level 10
-            org-startup-folded 'content
-            org-cycle-include-plain-lists 'integrate
-            org-startup-indented t
+      (setq org-directory "~/Dropbox/org")
+
+      ;; GOTO
+      (setq org-goto-interface 'outline-path-completion
+            org-goto-max-level 10)
+
+      ;; STARTUP
+      (setq org-startup-indented t      ;indent heading at start
+            org-startup-folded 'content) ;folded content
+
+      (setq org-cycle-include-plain-lists 'integrate
             org-log-done t)
 
       (setq org-reverse-note-order t
@@ -64,7 +70,6 @@
       (setq org-clock-persist-file
             (concat spacemacs-cache-directory "org-clock-save.el")
             org-src-fontify-natively t
-            org-cycle-include-plain-lists t
             org-clone-delete-id t
             org-yank-adjusted-subtrees t
             org-agenda-window-setup 'current-window)
@@ -88,13 +93,17 @@
       ;;;;;;;;;;;;;;
       ;; Separate drawers for clocking and logs
       (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
-      (setq org-global-properties (quote (("EFFORT_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 8:00")
-                                          ("STYLE_ALL" . "habit"))))
+      (add-to-list 'org-global-properties
+                   '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
+
       (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
       (setq org-time-clocksum-format
             '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
       (setq org-catch-invisible-edits 'error)
 
+
+      ;; Get this from https://raw.github.com/chenfengyuan/elisp/master/next-spec-day.el
+      (load (concat vendor-directory "next-spec-day.el") t)
       ;;;;;;;;;;;;;;
       ;; HTMLIZE
       ;;;;;;;;;;;;;;
@@ -144,25 +153,35 @@
                (org . t)
                (plantuml . t)
                (latex . t))))
-      (setq org-capture-templates
-            (quote (("t" "TODO" entry
-                     (file "~/Dropbox/org/todo/refile.org")
-                     "* TODO %^{Task}
-CREATED:
-SCHEDULED: %^t
-%? ")
-                    ("i" "Interrupting task" entry
-                     (file+headline "~/Dropbox/org/todo/refile.org" "Tasks")
-                     "* STARTED %^{Task}"
-                     :clock-in :clock-resume)
-                    ("n" "NOTE" entry (file "~/Dropbox/org/todo/refile.org")
-                     "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                    ("h" "HABIT" entry (file "~/Dropbox/org/todo/refile.org")
-                     "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 
       ;;;;;;;;;;;;;;
       ;; Capture
       ;;;;;;;;;;;;;;
+      (setq org-capture-templates
+            (quote (("t" "TODO" entry
+                     (file "~/Dropbox/org/todo/refile.org")
+                     "* TODO %^{Task}
+CREATED: %<%Y-%m-%d %H:%M>
+SCHEDULED: %^t
+%? ")
+                    ("T" "Quick task" entry
+                     (file "~/Dropbox/org/todo/refile.org" "Tasks")
+                     "* TODO %^{Task}\nSCHEDULED: %t\n"
+                     :immediate-finish t)
+
+                    ("m" "Meeting" entry
+                     (file "~/Dropbox/org/todo/refile.org" "Tasks")
+                     "* MEETING %^{Task}\nSCHEDULED: %t\n")
+
+                    ("i" "Interrupting task" entry
+                     (file "~/Dropbox/org/todo/refile.org" "Tasks")
+                     "* NEXT %^{Task}"
+                     :clock-in :clock-resume)
+
+                    ("n" "NOTE" entry (file "~/Dropbox/org/todo/refile.org")
+                     "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                    )))
+
       (add-hook 'org-capture-prepare-finalize-hook 'daniel/org-level1-replace)
       (setq org-default-notes-file "~/Dropbox/org/todo/refile.org")
 
@@ -171,23 +190,21 @@ SCHEDULED: %^t
       ;;;;;;;;;;;;;;
       (setq org-todo-keywords
             (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                    (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+                    (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "MEETING"))))
 
       (setq org-todo-keyword-faces
-            (quote (("TODO" :foreground "red" :weight bold)
-                    ("NEXT" :foreground "blue" :weight bold)
-                    ("DONE" :foreground "forest green" :weight bold)
-                    ("WAITING" :foreground "orange" :weight bold)
+            (quote (("TODO" :foreground "orange red" :weight bold)
+                    ("NEXT" :foreground "cyan3" :weight bold)
+                    ("DONE" :foreground "green yellow" :weight bold)
+                    ("WAITING" :foreground "chocolate" :weight bold)
                     ("HOLD" :foreground "magenta" :weight bold)
-                    ("CANCELLED" :foreground "forest green" :weight bold)
-                    ("MEETING" :foreground "forest green" :weight bold)
-                    ("PHONE" :foreground "forest green" :weight bold))))
+                    ("CANCELLED" :foreground "dark grey" :weight bold)
+                    ("MEETING" :foreground "MediumPurple1" :weight bold))))
 
       (setq org-todo-state-tags-triggers
             (quote (("CANCELLED" ("CANCELLED" . t))
                     ("WAITING" ("WAITING" . t))
                     ("HOLD" ("WAITING") ("HOLD" . t))
-                    (done ("WAITING") ("HOLD"))
                     ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
                     ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
                     ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
@@ -218,14 +235,14 @@ SCHEDULED: %^t
       (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
       ;; Include current clocking task in clock reports
       (setq org-clock-report-include-clocking-task t)
-      (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
-
       (setq org-time-stamp-rounding-minutes (quote (1 1)))
       (setq org-clock-out-remove-zero-time-clocks t)
+      (add-hook 'org-clock-in-prepare-hook
+                'my/org-mode-ask-effort)
+      (setq org-show-notification-handler 'message)
+      (setq org-log-into-drawer "LOGBOOK")
 
-                                        ; Set default column view headings: Task Effort Clock_Summary
-      (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
-                                        ; Tags with fast selection keys
+      ; Tags with fast selection keys
       (setq org-tag-alist (quote ((:startgroup)
                                   ("@errand" . ?e)
                                   ("@work" . ?o)
@@ -239,7 +256,7 @@ SCHEDULED: %^t
                                   ("CANCELLED" . ?c)
                                   ("FLAGGED" . ??))))
 
-      ; Allow setting single tags without the menu
+                                        ; Allow setting single tags without the menu
       (setq org-outline-path-complete-in-steps nil)
       (setq org-fast-tag-selection-single-key (quote expert))
       (setq org-indirect-buffer-display 'current-window)
@@ -247,6 +264,7 @@ SCHEDULED: %^t
       ;;;;;;;;;;;;;;
       ;; Refile
       ;;;;;;;;;;;;;;
+      (fset 'org-refile-get-location 'my/org-refile-get-location)
       (setq org-refile-use-cache nil)
       (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                        (org-agenda-files :maxlevel . 9))))
@@ -257,14 +275,34 @@ SCHEDULED: %^t
       ;;;;;;;;;;;;;;
       ;; Agenda
       ;;;;;;;;;;;;;;
-      ;; Agenda log mode items to display (closed and state changes by default)
-      (setq org-agenda-log-mode-items (quote (closed state)))
       (setq org-agenda-files
             (delq nil
                   (mapcar (lambda (x) (and (file-exists-p x) x))
                           '("~/Dropbox/org/todo/refile.org"
                             "~/Dropbox/org/todo/private.org"
                             "~/Dropbox/org/todo/work.org"))))
+
+      ;; Agenda log mode items to display (closed and state changes by default)
+      (defvar my/org-agenda-limit-items nil "Number of items to show in agenda to-do views; nil if unlimited.")
+      (defadvice org-agenda-finalize-entries (around sacha activate)
+        (if my/org-agenda-limit-items
+            (progn
+              (setq list (mapcar 'org-agenda-highlight-todo list))
+              (setq ad-return-value
+                    (subseq list 0 my/org-agenda-limit-items))
+              (when org-agenda-before-sorting-filter-function
+                (setq list (delq nil (mapcar org-agenda-before-sorting-filter-function list))))
+              (setq ad-return-value
+                    (mapconcat 'identity
+                               (delq nil
+                                     (subseq
+                                      (sort list 'org-entries-lessp)
+                                      0
+                                      my/org-agenda-limit-items))
+                               "\n")))
+          ad-do-it))
+
+      (setq org-agenda-log-mode-items (quote (closed state)))
       (setq org-agenda-clockreport-parameter-plist
             (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
       (setq org-agenda-clock-consistency-checks
@@ -274,10 +312,26 @@ SCHEDULED: %^t
                                   :gap-ok-around ("4:00"))))
       (setq org-agenda-tags-todo-honor-ignore-options t
             org-agenda-dim-blocked-tasks nil
-            org-agenda-compact-blocks t
+            org-agenda-span 14
             org-agenda-sticky nil
             org-agenda-inhibit-startup t
-            org-agenda-show-log t)
+            org-agenda-use-tag-inheritance t
+            org-agenda-show-log t
+            org-agenda-skip-scheduled-if-done t
+            org-agenda-skip-deadline-if-done t
+            org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+      (setq org-agenda-time-grid
+            '((daily today require-timed)
+              "----------------"
+              (900 1100 1300 1500 1700 1900)))
+
+      (setq org-columns-default-format "%80ITEM %12SCHEDULED %TODO %3PRIORITY %Effort{:} %TAGS %10CLOCKSUM")
+      (setq org-agenda-sorting-strategy
+            '((agenda time-up priority-down tag-up effort-up category-keep)
+              (todo user-defined-up todo-state-up priority-down effort-up)
+              (tags user-defined-up)
+              (search category-keep)))
+      (setq org-agenda-cmp-user-defined 'my/org-sort-agenda-items-user-defined)
 
       (setq org-agenda-custom-commands
             (quote (("w" "Tasks waiting on something" tags "WAITING/!"

@@ -251,10 +251,12 @@ user code."
     (define-key input-decode-map "\e[1;8C" [C-M-right])
     (define-key input-decode-map "\e[1;8D" [C-M-left])
 
-    (define-key input-decode-map "\e[1;10A" [S-M-up])
-    (define-key input-decode-map "\e[1;10B" [S-M-down])
-    (define-key input-decode-map "\e[1;10C" [S-M-right])
-    (define-key input-decode-map "\e[1;10D" [S-M-left])))
+    ;; (define-key input-decode-map "\e[1;10A" [S-M-up])
+    ;; (define-key input-decode-map "\e[1;10B" [S-M-down])
+    ;; (define-key input-decode-map "\e[1;10C" [S-M-right])
+    ;; (define-key input-decode-map "\e[1;10D" [S-M-left])
+
+    ))
 
 
 (defun dotspacemacs/user-config ()
