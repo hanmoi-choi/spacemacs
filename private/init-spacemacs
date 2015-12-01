@@ -222,6 +222,9 @@ user code."
     ;; Fix issue <TAB> with org-mode
     (setq evil-want-C-i-jump nil)
 
+    ;; USE TCP for daemon
+    (setq server-use-tcp t)
+
     ;; ITerm2 Key Remappping
     (define-key input-decode-map "\e[1;2A" [S-up])
     (define-key input-decode-map "\e[1;2B" [S-down])

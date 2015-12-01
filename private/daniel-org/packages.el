@@ -22,7 +22,7 @@
         ;; org-mime is installed by `org-plus-contrib'
         (org-mime :location built-in)
         org-pomodoro
-        (org-jira :location local)
+        ;; (org-jira :location local)
         toc-org))
 
 (when (configuration-layer/layer-usedp 'auto-completion)
