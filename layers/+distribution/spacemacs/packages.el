@@ -17,7 +17,7 @@
         ace-window
         adaptive-wrap
         aggressive-indent
-        ;; auto-dictionary
+        auto-dictionary
         auto-highlight-symbol
         avy
         ;; buffer-move
@@ -30,7 +30,7 @@
         evil-anzu
         evil-args
         evil-exchange
-        ;; evil-iedit-state
+        evil-iedit-state
         (evil-indent-textobject :location (recipe :fetcher github :repo "TheBB/evil-indent-textobject"))
         evil-jumper
         (evil-lisp-state :location local)
@@ -379,7 +379,7 @@
         ("e" nil
          :post (if (configuration-layer/package-usedp 'evil-iedit-state)
                    (evil-iedit-state/iedit-mode)
-                 (ahs-edit-mode))
+                 (ahs-edit-mode t))
          :exit t)
         ("n" spacemacs/quick-ahs-forward)
         ("N" spacemacs/quick-ahs-backward)
