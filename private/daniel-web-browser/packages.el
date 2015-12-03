@@ -38,7 +38,7 @@
       (setq browse-url-browser-function 'w3m-browse-url)
       (setq w3m-default-desplay-inline-images t)
       ;; optional keyboard short-cut
-      (global-set-key "\C-xm" 'browse-url-at-point)
+      (global-set-key (kbd "C-x C-m") 'browse-url-at-point)
       (setq w3m-use-cookies t)
       (standard-display-ascii ?\225 [?+])
       (standard-display-ascii ?\227 [?-])
@@ -60,7 +60,6 @@
 
       (setq w3m-home-page "http://www.google.com")
 
-      (setq browse-url-browser-function 'w3m-browse-url-new-tab)
       (defun hn ()
         (interactive)
         (browse-url "http://news.ycombinator.com"))

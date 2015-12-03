@@ -78,6 +78,7 @@
                       (and
                        (> (length bn) 7)
                        (not (string= "*magit:" (substring bn 0 7)))
+                       (not (string= "*rails*" (substring bn 0 7)))
                        (not (string= "*prodigy" (substring bn 0 8)))
                        ))))
                  (buffer-list))))

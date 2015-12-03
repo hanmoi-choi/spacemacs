@@ -49,7 +49,7 @@
         (uniquify :location built-in)
         use-package
         which-key
-        ;; whitespace
+        whitespace
         winner))
 
 ;; Initialization of packages

@@ -114,7 +114,7 @@
 (global-set-key (kbd "C-c h h r") 'helm-info-emacs)
 (global-set-key (kbd "C-c h <tab>") 'helm-lisp-completion-at-point)
 (global-set-key (kbd "C-c h b") 'helm-resume)
-(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+(global-set-key (kbd "C-c h SPC") 'helm-all-mark-rings)
 (global-set-key (kbd "C-c h r") 'helm-regexp)
 (global-set-key (kbd "C-c h x") 'helm-register)
 (global-set-key (kbd "C-c h t") 'helm-top)
@@ -130,6 +130,7 @@
   "hs" 'helm-semantic-or-imenu
   "hf" 'helm-find-files
   "hb" 'helm-resume
+  "hl" 'helm-resume
   "h/" 'helm-find
   "ho" 'helm-occur
   "hb" 'helm-buffers-list
@@ -146,3 +147,5 @@
 
 (require 'calendar)
 (evil-set-initial-state 'calendar-mode 'emacs)
+
+(global-set-key (kbd "C-c <f2>") 'show-file-name)

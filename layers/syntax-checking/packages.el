@@ -13,7 +13,7 @@
 (setq syntax-checking-packages
   '(
     flycheck
-    flycheck-pos-tip
+    ;; flycheck-pos-tip
     popwin
     ))
 

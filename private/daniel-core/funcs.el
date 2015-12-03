@@ -195,3 +195,7 @@ This functions should be added to the hooks of major modes for programming."
           (neotree-dir project-dir)
           (neotree-find file-name))
       (message "Could not find git project root."))))
+(defun show-file-name ()
+  "Show the full path file name in the minibuffer."
+  (interactive)
+  (message (buffer-file-name)))

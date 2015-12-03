@@ -33,7 +33,6 @@ values."
 
                                        (ibuffer
                                         :variables ibuffer-group-buffers-by 'projects)
-                                       themes-megapack
                                        colors
                                        dash
                                        git
@@ -44,7 +43,7 @@ values."
                                        restclient
                                        deft
                                        shell
-                                       ;; vim-powerline
+                                       react
 
                                         ;Language
                                        javascript
@@ -57,7 +56,9 @@ values."
                                        daniel-org
                                        daniel-ruby
                                        daniel-util
-                                       daniel-tramp))
+                                       daniel-tramp
+                                       daniel-web-browser
+                                       daniel-email))
 
 
   ;; List of additional packages that will be installed without being
@@ -222,6 +223,10 @@ user code."
     ;; Fix issue <TAB> with org-mode
     (setq evil-want-C-i-jump nil)
 
+    (setq frame-title-format
+          (list (format "%s %%S: %%j " (system-name))
+                '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+
     ;; USE TCP for daemon
     (setq server-use-tcp t)
 
@@ -257,7 +262,6 @@ user code."
     ;; (define-key input-decode-map "\e[1;10D" [S-M-left])
     ))
 
-
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
@@ -272,6 +276,7 @@ layers configuration. You are free to put any user code."
     (add-hook 'prog-mode-hook (lambda ()
                                 (progn
                                   (helm-gtags-mode)
+                                  (smartparens-mode)
                                   (linum-mode))))
 
     (add-hook 'web-mode-hook (lambda ()
@@ -290,6 +295,25 @@ layers configuration. You are free to put any user code."
                                (progn
                                  (show-smartparens-mode)
                                  (highlight-indentation-current-column-mode))))
+
+    (add-hook 'message-mode-hook
+              (lambda ()
+                (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
+
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (local-set-key "\C-c\M-o" 'org-mime-org-buffer-htmlize)))
+
+    (add-hook 'org-mime-html-hook
+              (lambda ()
+                (org-mime-change-element-style
+                 "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
+                               "#E6E1DC" "#232323"))))
+
+    (add-hook 'org-mime-html-hook
+              (lambda ()
+                (org-mime-change-element-style
+                 "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
 
     (require 'sgml-mode)
     (add-to-list 'hs-special-modes-alist
@@ -342,3 +366,30 @@ layers configuration. You are free to put any user code."
     ;;         (newline-mark ?\n   [?\xB6 ?\n] [?$ ?\n]); end-of-line
     ;;         ))
     ))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(emamux:completing-read-type (quote helm))
+ '(emamux:use-nearest-pane t)
+ '(evil-shift-width 2)
+ '(send-mail-function (quote smtpmail-send-it))
+ '(smeargle-colors
+   (quote
+    ((older-than-1day . "red")
+     (older-than-3day . "green")
+     (older-than-1week . "yellow")
+     (older-than-2week)
+     (older-than-1month . "orange")
+     (older-than-3month . "pink")
+     (older-than-6month . "cyan")
+     (older-than-1year . "grey50")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

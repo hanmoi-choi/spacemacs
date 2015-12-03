@@ -1,6 +1,8 @@
 (setq daniel-ruby-packages
       '(
         ;; bundler
+        evil-matchit
+        flycheck
         company
         rvm
         rspec-mode
@@ -10,7 +12,6 @@
         projectile-rails
         yaml-mode
         rubocop
-        ruby-hash-syntax
         yard-mode
         ))
 
@@ -21,20 +22,6 @@
     :init
     (progn
       (add-hook 'enh-ruby-mode-hook 'rubocop-mode))))
-
-(defun daniel-ruby/init-ruby-end ()
-  (use-package ruby-end
-    :diminish ""
-    :defer t
-    :init
-    (progn
-      (add-hook 'enh-ruby-mode-hook 'ruby-end-mode)
-      )
-    ))
-
-(defun daniel-ruby/init-ruby-hash-syntax ()
-  (use-package ruby-hash-syntax
-    ))
 
 (defun daniel-ruby/init-yard-mode ()
   (use-package yard-mode
@@ -49,16 +36,27 @@
   (use-package rvm
     :defer t
     :init (rvm-use-default)
-    ))
+    :config (add-hook 'enh-ruby-mode-hook
+                      (lambda () (rvm-activate-corresponding-ruby)))))
 
 (defun daniel-ruby/init-rspec-mode ()
   (use-package rspec-mode
+    :init
+    (progn
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtf" 'rspec-run-last-failed)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtv" 'rspec-verify)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtr" 'rspec-rerun)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtS" 'rspec-run-single-file)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtm" 'rspec-run-multiple-files)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mts" 'rspec-verify-single))
     :config
     (progn
+      (spacemacs|diminish rspec-mode "")
       (defadvice rspec-compile (around rspec-compile-around)
         "Use BASH shell for running the specs because of ZSH issues."
         (let ((shell-file-name "/bin/bash"))
           ad-do-it))
+
       ;; From Sacha
       (defun sacha/rspec-verify-single ()
         "Runs the specified example at the point of the current buffer."
@@ -85,33 +83,15 @@
     :init (setq enh-ruby-mode-map (make-sparse-keymap))
     :config
     (progn
+      (setq enh-ruby-deep-indent-paren nil
+            enh-ruby-hanging-paren-deep-indent-level 2)
       (add-hook 'after-init-hook 'inf-ruby-switch-setup)
       (add-hook 'enh-ruby-mode-hook
                 (lambda ()
                   (hs-minor-mode 1) ;; Enables folding
                   (modify-syntax-entry ?: ".")
                   (modify-syntax-entry ?_ "w"))) ;; Adds ":" to the word definition
-
-      (require 'smartparens)
-      (sp-local-pair 'enh-ruby-mode "def" "end")
-      (sp-local-pair 'enh-ruby-mode "do" "end")
-
-      (setq enh-ruby-deep-indent-paren nil
-            enh-ruby-hanging-paren-deep-indent-level 2)
-      (add-hook 'enh-ruby-mode-hook 'company-mode)
-
-      (setq flyspell-issue-message-flg nil)
-      (add-hook 'enh-ruby-mode-hook
-                (lambda () (flyspell-prog-mode)))
       )))
-
-(defun daniel-ruby/init-ruby-tools ()
-  (use-package ruby-tools
-    :defer t
-    :init
-    (add-hook 'enh-ruby-mode-hook 'ruby-tools-mode)
-    :config
-    ))
 
 (defun daniel-ruby/init-bundler ()
   (use-package bundler
@@ -132,6 +112,8 @@
       (add-hook 'projectile-mode-hook 'projectile-rails-on))
     :config
     (progn
+      (setq projectile-rails-expand-snippet nil)
+      (setq projectile-rails-server-mode-ansi-colors nil)
       (spacemacs|diminish projectile-rails-mode " ⇋" " RoR")
       ;; Start projectile-rails
       (require 'enh-ruby-mode)
@@ -200,7 +182,8 @@
         "mrRx" 'projectile-rails-extract-region)
       ;; Ex-commands
 
-      (evil-ex-define-cmd "A" 'projectile-toggle-between-implementation-and-test))))
+      (evil-ex-define-cmd "T" 'projectile-toggle-between-implementation-and-test))))
+
 
 (defun daniel-ruby/init-robe ()
   "Initialize Robe mode"
@@ -208,15 +191,17 @@
     :defer t
     :init
     (progn
+      (setq robe-mode-map (make-sparse-keymap))
       (add-hook 'enh-ruby-mode-hook 'robe-mode)
-      (setq robe-mode-map (make-sparse-keymap)))
+      (when (configuration-layer/layer-usedp 'auto-completion)
+        (push 'company-robe company-backends)))
     :config
     (progn
-      (spacemacs|hide-lighter robe-mode)
-      ;; robe mode specific
-      (spacemacs|diminish robe-mode "")
       (defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
         (rvm-activate-corresponding-ruby))
+
+      (spacemacs|hide-lighter robe-mode)
+      ;; robe mode specific
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mgg" 'robe-jump)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mhd" 'robe-doc)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mrsr" 'robe-rails-refresh)
@@ -245,3 +230,38 @@
 (defun daniel-ruby/init-haml-mode ()
   (use-package haml-mode
     :defer t))
+
+(defun daniel-ruby/post-init-evil-matchit ()
+  (add-hook `enh-ruby-mode-hook `turn-on-evil-matchit-mode))
+
+(defun daniel-ruby/post-init-flycheck ()
+  (add-hook 'enh-ruby-mode-hook 'flycheck-mode))
+
+(defun daniel-ruby/init-ruby-tools ()
+  (use-package ruby-tools
+    :defer t
+    :init
+    (add-hook 'enh-ruby-mode-hook 'ruby-tools-mode)
+    :config
+    (progn
+      (spacemacs|hide-lighter ruby-tools-mode)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mx\'" 'ruby-tools-to-single-quote-string)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mx\"" 'ruby-tools-to-double-quote-string)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mx:" 'ruby-tools-to-symbol))))
+
+(defun ruby/init-ruby-test-mode ()
+  "Define keybindings for ruby test mode"
+  (use-package ruby-test-mode
+    :defer t
+    :init (add-hook 'enh-ruby-mode-hook 'ruby-test-mode)
+    :config
+    (progn
+      (spacemacs|hide-lighter ruby-test-mode)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtb" 'ruby-test-run)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtt" 'ruby-test-run-at-point))))
+
+(when (configuration-layer/layer-usedp 'auto-completion)
+  (defun ruby/post-init-company ()
+    (spacemacs|add-company-hook enh-ruby-mode)
+    (eval-after-load 'company-dabbrev-code
+      '(push 'enh-ruby-mode company-dabbrev-code-modes))))

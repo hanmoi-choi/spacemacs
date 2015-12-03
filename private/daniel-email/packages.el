@@ -24,6 +24,7 @@
 
 (defun daniel-email/init-gmail2bbdb ()
   (use-package gmail2bbdb
+    :defer t
     :init
     (progn
       (setq gmail2bbdb-bbdb-file "~/Dropbox/Apps/bbdb.db"))))
@@ -31,7 +32,6 @@
 (defun daniel-email/init-gnus ()
   "Initialize my package"
   (use-package gnus
-    :defer t
     :commands gnus
     :init
     (evil-leader/set-key "ag" 'gnus)
@@ -156,15 +156,20 @@
                 (signature-file "~/.signature-private"))
                (expiry-wait . never))))
 
-      (setq message-send-mail-function 'message-send-mail-with-sendmail)
+      (setq message-send-mail-function 'smtpmail-send-it
+            smtpmail-default-smtp-server "smtp.gmail.com"
+            smtpmail-smtp-service 587
+            smtpmail-local-domain "work")
+
       (setq sendmail-program "/usr/local/bin/msmtp")
       (setq gnus-permanently-visible-groups ".*")
-      (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+      ;; (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
       (setq gnus-thread-hide-subtree t)
       (setq gnus-thread-ignore-subject t)
 
       (setq user-full-name "Hanmoi Daniel Choi"
             user-mail-address "forhim185@gmail.com")
+
       (setq gnus-use-correct-string-widths nil)
 
       (require 'browse-url)
@@ -189,7 +194,6 @@
     :init
     (progn
       (setq bbdb-file "~/Dropbox/Apps/bbdb.db")
-      (bbdb-initialize 'message 'gnus 'sendmail)
       (setq
        bbdb-offer-save 1                        ;; 1 means save-without-asking
        bbdb-use-pop-up t                        ;; allow popups for addresses
@@ -218,6 +222,11 @@
          (bbdb-record-putprop record 'timestamp (format-time-string
                                                  bbdb-time-internal-format
                                                  (current-time))))
+       (add-hook 'message-mode-hook
+                 '(lambda ()
+                    (bbdb-initialize 'message)
+                    (bbdb-initialize 'gnus)
+                    (local-set-key "<TAB>" 'bbdb-complete-name)))
        (add-hook 'message-mode-hook
                  '(lambda ()
                     (flyspell-mode t)

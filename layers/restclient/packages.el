@@ -1,8 +1,18 @@
 (setq restclient-packages
-  '(
-    restclient
-    )
-  )
+      '(
+        restclient
+        company-restclient
+        )
+      )
+
+(defun restclient/init-company-restclient ()
+  (use-package company-restclient
+    :init
+    (eval-after-load 'company
+      '(progn
+         (when (configuration-layer/layer-usedp 'auto-completion)
+           (add-to-list 'company-backends 'company-restclient))
+         ))))
 
 (defun restclient/init-restclient ()
   (use-package restclient

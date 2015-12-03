@@ -88,6 +88,8 @@
          "mxv" (spacemacs|org-emphasize spacemacs/org-verbose ?=))
      (spacemacs/declare-prefix "O" "org-mode")
      (evil-leader/set-key
+       "Ot" 'org-toggle-inline-images
+       "OT" 'org-toggle-link-display
        "Oc" 'org-capture
        "Of" 'org-mobile-pull
        "Op" 'org-mobile-push
@@ -100,7 +102,6 @@
        "Os" 'org-iswitchb)
 
      ;; Global
-     (spacemacs/declare-prefix "<f12>" "org-mode")
      (global-set-key (kbd "C-c c") 'org-capture)
      (global-set-key (kbd "C-c l") 'org-store-link)
      (global-set-key (kbd "C-c j") 'org-clock-goto)

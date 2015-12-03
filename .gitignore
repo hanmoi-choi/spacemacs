@@ -48,3 +48,4 @@ python-*-docs-html
 /.projectile
 /network-security.data
 /recentf
+*.cache
