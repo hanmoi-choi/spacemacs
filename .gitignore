@@ -49,3 +49,4 @@ python-*-docs-html
 /network-security.data
 /recentf
 *.cache
+/.org-id-locations
