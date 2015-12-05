@@ -127,7 +127,6 @@ is achieved by adding the relevant text properties."
       (mapc (lambda (x) (push x eshell-visual-commands))
             '("el" "elinks" "htop" "less" "ssh" "tmux" "top"))
 
-
       ;; automatically truncate buffer after output
       (when (boundp 'eshell-output-filter-functions)
         (push 'eshell-truncate-buffer eshell-output-filter-functions)))))
@@ -150,11 +149,13 @@ is achieved by adding the relevant text properties."
     :post-init
     (progn
       ;; eshell
-      (defun spacemacs/helm-eshell-history ()
-        "Correctly revert to insert state after selection."
+      (defun eshell-clear-buffer ()
+        "Clear terminal"
         (interactive)
-        (helm-eshell-history)
-        (evil-insert-state))
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (eshell-send-input)))
+
       (defun spacemacs/helm-shell-history ()
         "Correctly revert to insert state after selection."
         (interactive)
@@ -167,6 +168,8 @@ is achieved by adding the relevant text properties."
         (evil-leader/set-key-for-mode 'eshell-mode
           "mH" 'spacemacs/helm-eshell-history)
         (define-key eshell-mode-map [tab] 'helm-esh-pcomplete)
+        (define-key eshell-mode-map (kbd "C-l") 'eshell-clear-buffer)
+
         (define-key eshell-mode-map
           (kbd "M-l") 'spacemacs/helm-eshell-history))
 

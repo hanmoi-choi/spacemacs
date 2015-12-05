@@ -148,3 +148,106 @@
 (evil-set-initial-state 'calendar-mode 'emacs)
 
 (global-set-key (kbd "C-c <f2>") 'show-file-name)
+
+;;smartparens
+(eval-after-load 'smartparens
+  '(progn
+
+     (spacemacs|define-micro-state smartparens
+       :doc "[a]^ [e]$ [u]up [d]down [h](<- [j](-> [k])-> [l])<- [f]fwd [b]bwd
+              [k]kill sexp [K]kill word
+              [u]unwrap [s]splice [S]split
+              [q]Quit"
+       :persistent t
+       :bindings
+       ("a" sp-beginning-of-sexp)
+       ("e" sp-end-of-sexp)
+       ("u" sp-up-sexp)
+       ("d" sp-down-sexp)
+       ("h" sp-backward-slurp-sexp)
+       ("j" sp-backward-barf-sexp)
+       ("k" sp-forward-barf-sexp)
+       ("l" sp-forward-slurp-sexp)
+       ("b" sp-backward-sexp)
+       ("u" sp-unwrap-sexp)
+       ("s" sp-splice-sexp)
+       ("S" sp-split-sexp)
+       ("q" nil :exit t)
+       )
+
+     (define-key smartparens-mode-map (kbd "C-x p") 'spacemacs/smartparens-micro-state)
+
+     (define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
+     (define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-splice-sexp)
+     (define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)
+     (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
+     (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
+     (define-key smartparens-mode-map (kbd "C-S-<left>") 'sp-backward-slurp-sexp)
+     (define-key smartparens-mode-map (kbd "C-S-<right>") 'sp-backward-barf-sexp)
+     (define-key smartparens-mode-map (kbd "C-}") 'sp-select-next-thing)
+     (define-key smartparens-mode-map (kbd "C-{") 'sp-select-previous-thing-exchange)
+
+     ;;;;;;;;;;;;;;;;;;
+     ;; pair management
+     (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+     (bind-key "C-(" 'lisp-state-wrap minibuffer-local-map)
+     ;;; markdown-mode
+     (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+       (sp-local-pair "*" "*"
+                      :wrap "C-*"
+                      :unless '(sp-point-after-word-p sp-point-at-bol-p)
+                      :post-handlers '(("[d1]" "SPC"))
+                      :skip-match 'sp--gfm-skip-asterisk)
+       (sp-local-pair "**" "**")
+       (sp-local-pair "_" "_" :wrap "C-_" :unless '(sp-point-after-word-p)))
+     (defun sp--gfm-skip-asterisk (ms mb me)
+       (save-excursion
+         (goto-char mb)
+         (save-match-data (looking-at "^\\* "))))
+     ;;; lisp modes
+     (sp-with-modes sp--lisp-modes
+       (sp-local-pair "(" nil
+                      :wrap "C-("
+                      :pre-handlers '(my-add-space-before-sexp-insertion)
+                      :post-handlers '(my-add-space-after-sexp-insertion)))
+     (sp-with-modes sp--lisp-modes
+       (sp-local-pair "(" nil
+                      :wrap "C-("
+                      :pre-handlers '(my-add-space-before-sexp-insertion)
+                      :post-handlers '(my-add-space-after-sexp-insertion)))
+     (defun my-add-space-after-sexp-insertion (id action _context)
+       (when (eq action 'insert)
+         (save-excursion
+           (forward-char (sp-get-pair id :cl-l))
+           (when (or (eq (char-syntax (following-char)) ?w)
+                     (looking-at (sp--get-opening-regexp)))
+             (insert " ")))))
+
+     (defun my-add-space-before-sexp-insertion (id action _context)
+       (when (eq action 'insert)
+         (save-excursion
+           (backward-char (length id))
+           (when (or (eq (char-syntax (preceding-char)) ?w)
+                     (and (looking-back (sp--get-closing-regexp))
+                          (not (eq (char-syntax (preceding-char)) ?'))))
+             (insert " ")))))
+
+
+     ;;; org-mode
+     (eval-after-load 'org
+       '(progn
+          (sp-with-modes 'org-mode
+            (sp-local-pair "*" "*" :actions '(insert wrap) :unless '(sp-point-after-word-p sp-point-at-bol-p) :wrap "C-*" :skip-match 'sp--org-skip-asterisk)
+            (sp-local-pair "_" "_" :unless '(sp-point-after-word-p) :wrap "C-_")
+            (sp-local-pair "/" "/" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
+            (sp-local-pair "~" "~" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
+            (sp-local-pair "=" "=" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
+            (sp-local-pair "«" "»"))
+          (defun sp--org-skip-asterisk (ms mb me)
+            (or (and (= (line-beginning-position) mb)
+                     (eq 32 (char-after (1+ mb))))
+                (and (= (1+ (line-beginning-position)) me)
+                     (eq 32 (char-after me)))))
+
+          ))
+     ))
