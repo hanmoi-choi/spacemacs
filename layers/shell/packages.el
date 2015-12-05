@@ -75,6 +75,7 @@ the user activate the completion manually."
                    (not (eq (line-end-position) (point-max))))
           (end-of-buffer)))
 
+
       (when shell-protect-eshell-prompt
         (defun spacemacs//protect-eshell-prompt ()
           "Protect Eshell's prompt like Comint's prompts.
@@ -86,10 +87,10 @@ is achieved by adding the relevant text properties."
              (point-at-bol)
              (point)
              '(rear-nonsticky t
-               inhibit-line-move-field-capture t
-               field output
-               read-only t
-               front-sticky (field inhibit-line-move-field-capture)))))
+                              inhibit-line-move-field-capture t
+                              field output
+                              read-only t
+                              front-sticky (field inhibit-line-move-field-capture)))))
         (add-hook 'eshell-after-prompt-hook 'spacemacs//protect-eshell-prompt))
 
       (defun spacemacs//init-eshell ()
@@ -125,6 +126,7 @@ is achieved by adding the relevant text properties."
       (require 'em-term)
       (mapc (lambda (x) (push x eshell-visual-commands))
             '("el" "elinks" "htop" "less" "ssh" "tmux" "top"))
+
 
       ;; automatically truncate buffer after output
       (when (boundp 'eshell-output-filter-functions)
@@ -164,8 +166,10 @@ is achieved by adding the relevant text properties."
         ;; (define-key eshell-mode-map (kbd "<tab>") 'helm-esh-pcomplete)
         (evil-leader/set-key-for-mode 'eshell-mode
           "mH" 'spacemacs/helm-eshell-history)
+        (define-key eshell-mode-map [tab] 'helm-esh-pcomplete)
         (define-key eshell-mode-map
           (kbd "M-l") 'spacemacs/helm-eshell-history))
+
       (add-hook 'eshell-mode-hook 'spacemacs/init-helm-eshell)
       ;;shell
       (evil-leader/set-key-for-mode 'shell-mode

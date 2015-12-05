@@ -14,9 +14,8 @@
 (global-set-key [C-down] 'private/move-text-down)
 
 (define-key global-map (kbd "C-c C-l" ) 'helm-buffers-list)
-(define-key global-map "\C-c\C-n" 'private/indent-buffer)
-(define-key global-map "\C-c\C-y" 'bury-buffer)
-(define-key global-map "\C-c\C-r" 'revert-buffer)
+(define-key global-map (kbd "C-c C-n") 'private/indent-buffer)
+(define-key global-map (kbd "C-c C-r") 'revert-buffer)
 
 (global-set-key (kbd "C-c C-v") 'helm-show-kill-ring)
 

@@ -47,6 +47,7 @@ values."
 
                                         ;Language
                                        javascript
+                                       ess
                                        html
                                        emacs-lisp
                                        markdown
@@ -230,6 +231,7 @@ user code."
     ;; USE TCP for daemon
     (setq server-use-tcp t)
 
+
     ;; ITerm2 Key Remappping
     (define-key input-decode-map "\e[1;2A" [S-up])
     (define-key input-decode-map "\e[1;2B" [S-down])
@@ -295,6 +297,10 @@ layers configuration. You are free to put any user code."
                                (progn
                                  (show-smartparens-mode)
                                  (highlight-indentation-current-column-mode))))
+
+     ; Ignore list
+    ;; (dolist (ignore-dir '("log" "tmp" "target" "mbfsau_spec" "java" "stories" "bfs_spec" "nfsnz_spec" "stories" "obsolete_views", "mbfs_test_cases" "mbfs_test_cases" "coverage"))
+    ;;   (add-to-list 'projectile-globally-ignored-directories ignore-dir))
 
     (add-hook 'message-mode-hook
               (lambda ()
