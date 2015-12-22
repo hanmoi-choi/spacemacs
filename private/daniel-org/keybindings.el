@@ -117,6 +117,9 @@
 
      (bind-key "C-c k" 'org-cut-subtree org-mode-map)
 
+    (define-key org-mode-map [(control meta shift right)] nil)
+    (define-key org-mode-map [(control meta shift left)] nil)
+
      (eval-after-load 'org-capture
        '(progn
           (define-key org-capture-mode-map (kbd "C-c C-r") 'my/org-capture-refile-and-jump)

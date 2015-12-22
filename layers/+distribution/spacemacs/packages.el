@@ -65,7 +65,7 @@
         ;; open-junk-file
         ;; leuven-theme
         linum-relative
-        ;; move-text
+        move-text
         neotree
         pcre2el
         powerline

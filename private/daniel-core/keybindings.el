@@ -179,27 +179,31 @@
 
      (define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
      (define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-splice-sexp)
+     (define-key smartparens-mode-map (kbd "C-M-d") 'sp-splice-sexp)
+
      (define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)
      (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
      (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
      (define-key smartparens-mode-map (kbd "C-S-<left>") 'sp-backward-slurp-sexp)
      (define-key smartparens-mode-map (kbd "C-S-<right>") 'sp-backward-barf-sexp)
      (define-key smartparens-mode-map (kbd "C-}") 'sp-select-next-thing)
+     (define-key smartparens-mode-map (kbd "C-M-n") 'sp-select-next-thing)
      (define-key smartparens-mode-map (kbd "C-{") 'sp-select-previous-thing-exchange)
+     (define-key smartparens-mode-map (kbd "C-M-p") 'sp-select-previous-thing-exchange)
 
      ;;;;;;;;;;;;;;;;;;
      ;; pair management
      (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-     (bind-key "C-(" 'lisp-state-wrap minibuffer-local-map)
+     (bind-key "M-(" 'lisp-state-wrap minibuffer-local-map)
      ;;; markdown-mode
      (sp-with-modes '(markdown-mode gfm-mode rst-mode)
        (sp-local-pair "*" "*"
-                      :wrap "C-*"
+                      :wrap "M-*"
                       :unless '(sp-point-after-word-p sp-point-at-bol-p)
                       :post-handlers '(("[d1]" "SPC"))
                       :skip-match 'sp--gfm-skip-asterisk)
        (sp-local-pair "**" "**")
-       (sp-local-pair "_" "_" :wrap "C-_" :unless '(sp-point-after-word-p)))
+       (sp-local-pair "_" "_" :wrap "M-_" :unless '(sp-point-after-word-p)))
      (defun sp--gfm-skip-asterisk (ms mb me)
        (save-excursion
          (goto-char mb)
@@ -207,12 +211,7 @@
      ;;; lisp modes
      (sp-with-modes sp--lisp-modes
        (sp-local-pair "(" nil
-                      :wrap "C-("
-                      :pre-handlers '(my-add-space-before-sexp-insertion)
-                      :post-handlers '(my-add-space-after-sexp-insertion)))
-     (sp-with-modes sp--lisp-modes
-       (sp-local-pair "(" nil
-                      :wrap "C-("
+                      :wrap "M-("
                       :pre-handlers '(my-add-space-before-sexp-insertion)
                       :post-handlers '(my-add-space-after-sexp-insertion)))
      (defun my-add-space-after-sexp-insertion (id action _context)

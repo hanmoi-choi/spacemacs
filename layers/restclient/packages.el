@@ -20,7 +20,6 @@
     :defer t
     :init
     (progn
-
       (defun restclient-http-send-current-raw-stay-in-window ()
         (interactive)
         (restclient-http-send-current t t))
@@ -31,5 +30,13 @@
         "mr" 'restclient-http-send-current-raw-stay-in-window
         "mR" 'restclient-http-send-current-raw
         ))
+    :config
+    (progn
+      (defun my/load-restclient-file ()
+        (interactive)
+        (if (file-exists-p "~/Dropbox/restclient.http")
+           (find-file "~/Dropbox/restclient.http")))
+      (global-set-key (kbd "C-c <f1>") 'my/load-restclient-file)
+      )
     )
   )
