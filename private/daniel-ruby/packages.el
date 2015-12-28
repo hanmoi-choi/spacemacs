@@ -43,12 +43,15 @@
   (use-package rspec-mode
     :init
     (progn
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtt" 'rspec-toggle-spec-and-target)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtf" 'rspec-run-last-failed)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtv" 'rspec-verify)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtr" 'rspec-rerun)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtS" 'rspec-run-single-file)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtm" 'rspec-run-multiple-files)
-      (evil-leader/set-key-for-mode 'enh-ruby-mode "mts" 'rspec-verify-single))
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mts" 'rspec-verify-single)
+      (evil-ex-define-cmd "T" 'rspec-toggle-spec-and-target)
+      )
     :config
     (progn
       (spacemacs|diminish rspec-mode "")
@@ -180,9 +183,7 @@
         "mrS" 'projectile-rails-server
         ;; Refactoring 'projectile-rails-mode
         "mrRx" 'projectile-rails-extract-region)
-      ;; Ex-commands
-
-      (evil-ex-define-cmd "T" 'projectile-toggle-between-implementation-and-test))))
+      ;; Ex-commands)))
 
 
 (defun daniel-ruby/init-robe ()
