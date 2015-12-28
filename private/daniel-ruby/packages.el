@@ -183,7 +183,7 @@
         "mrS" 'projectile-rails-server
         ;; Refactoring 'projectile-rails-mode
         "mrRx" 'projectile-rails-extract-region)
-      ;; Ex-commands)))
+      )))
 
 
 (defun daniel-ruby/init-robe ()
