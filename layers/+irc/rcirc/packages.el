@@ -3,6 +3,8 @@
     company
     company-emoji
     emoji-cheat-sheet-plus
+    flyspell
+    persp-mode
     rcirc
     rcirc-color
     rcirc-notify
@@ -19,13 +21,26 @@
 (defun rcirc/post-init-emoji-cheat-sheet-plus ()
   (add-hook 'rcirc-mode-hook 'emoji-cheat-sheet-plus-display-mode))
 
+(defun rcirc/post-init-flyspell ()
+  (spell-checking/add-flyspell-hook 'rcirc-mode-hook))
+
+(defun rcirc/post-init-persp-mode ()
+  (spacemacs|define-custom-layout "@RCIRC"
+    :binding "i"
+    :body
+    (call-interactively 'spacemacs/rcirc))
+  ;; do not save rcirc buffers
+  (spacemacs|use-package-add-hook persp-mode
+    :post-config
+    (push (lambda (b) (with-current-buffer b (eq major-mode 'rcirc-mode)))
+          persp-filter-save-buffers-functions)))
+
 (defun rcirc/init-rcirc ()
   (use-package rcirc
     :defer t
     :init
     (progn
-      (spacemacs/add-to-hook 'rcirc-mode-hook '(flyspell-mode
-                                                rcirc-omit-mode
+      (spacemacs/add-to-hook 'rcirc-mode-hook '(rcirc-omit-mode
                                                 rcirc-track-minor-mode))
 
       (defun spacemacs//rcirc-with-authinfo (arg)
@@ -33,7 +48,7 @@
         (unless arg
           (if (file-exists-p "~/.authinfo.gpg")
               (spacemacs//rcirc-authinfo-config)
-            (spacemacs/warning "Cannot find file ~/.authinfo.gpg")))
+            (message "Cannot find file ~/.authinfo.gpg")))
         (rcirc arg))
 
       (defun spacemacs//rcirc-with-znc (arg)
@@ -47,7 +62,7 @@
                  rcirc-server-alist))
           (spacemacs//znc-rcirc-connect)))
 
-      (evil-leader/set-key "air" 'spacemacs/rcirc)
+      (spacemacs/set-leader-keys "air" 'spacemacs/rcirc)
       (defun spacemacs/rcirc (arg)
         "Launch rcirc."
         (interactive "P")
@@ -57,7 +72,7 @@
          (rcirc-enable-authinfo-support (spacemacs//rcirc-with-authinfo arg))
          (rcirc-enable-znc-support (spacemacs//rcirc-with-znc arg))
          (t (rcirc arg))))
-      (push 'rcirc-mode evil-insert-state-modes))
+      (evil-set-initial-state 'rcirc-mode 'insert))
     :config
     (progn
       ;; (set-input-method "latin-1-prefix")

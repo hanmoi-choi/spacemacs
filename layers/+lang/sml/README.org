@@ -1,13 +1,14 @@
-#+TITLE: SML contribution layer for Spacemacs
+#+TITLE: SML layer
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="../../../css/readtheorg.css" />
 
 [[file:img/sml.png]]
 
-* Table of Contents                                                   :TOC@4:
- - [[#description][Description]]
- - [[#install][Install]]
- - [[#key-bindings][Key Bindings]]
-     - [[#form-completion][Form Completion]]
-     - [[#repl][REPL]]
+* Table of Contents                                         :TOC_4_org:noexport:
+ - [[Description][Description]]
+ - [[Install][Install]]
+ - [[Key Bindings][Key Bindings]]
+   - [[Form Completion][Form Completion]]
+   - [[REPL][REPL]]
 
 * Description
 

@@ -1,16 +1,17 @@
-#+TITLE: evil-snipe contribution layer for Spacemacs
+#+TITLE: Evil-snipe layer
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="../../../css/readtheorg.css" />
 
 [[file:img/Cat_With_Rifle.jpg]]
 
-* Table of Contents                                                   :TOC@4:
- - [[#description][Description]]
- - [[#install][Install]]
-     - [[#layer][Layer]]
-     - [[#improved-f-and-t-search-behavior][Improved f and t search behavior]]
-     - [[#two-character-search-with-s][Two-character search with s]]
-     - [[#more-scopes][More scopes]]
-     - [[#symbol-groups][Symbol groups]]
- - [[#todo-key-bindings][TODO Key bindings]]
+* Table of Contents                                         :TOC_4_org:noexport:
+ - [[Description][Description]]
+ - [[Install][Install]]
+   - [[Layer][Layer]]
+   - [[Improved f and t search behavior][Improved f and t search behavior]]
+   - [[Two-character search with s][Two-character search with s]]
+   - [[More scopes][More scopes]]
+   - [[Symbol groups][Symbol groups]]
+ - [[Key bindings][Key bindings]]
 
 * Description
 The package [[https://github.com/hlissner/evil-snipe][evil-snipe]]
@@ -46,7 +47,7 @@ layer variable =evil-snipe-enable-alternate-f-and-t-behaviors= to =t=:
 
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-configuration-layers
-    '(evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t ))
+    '((evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)))
 #+END_SRC
 
 ** Two-character search with s

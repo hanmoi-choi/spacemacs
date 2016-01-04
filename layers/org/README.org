@@ -1,27 +1,33 @@
-#+TITLE: Org contribution layer for Spacemacs
+#+TITLE: Org layer
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="../../css/readtheorg.css" />
 
 [[file:img/org.png]]
 
-* Table of Contents                                                   :TOC@4:
- - [[#description][Description]]
-   - [[#features][Features:]]
- - [[#install][Install]]
-   - [[#layer][Layer]]
-   - [[#github-support][Github support]]
-   - [[#gnuplot-support][Gnuplot support]]
-   - [[#different-bullets][Different bullets]]
- - [[#key-bindings][Key bindings]]
-   - [[#org-with-evil-org-mode][Org with evil-org-mode]]
-     - [[#element-insertion][Element insertion]]
-     - [[#org-emphasize][Org emphasize]]
-     - [[#tagging][Tagging]]
-   - [[#pomodoro][Pomodoro]]
-   - [[#presentation][Presentation]]
-   - [[#org-repo-todo][Org-repo-todo]]
-   - [[#org-mime][Org-MIME]]
+* Table of Contents                                         :TOC_4_org:noexport:
+ - [[Description][Description]]
+   - [[Features:][Features:]]
+   - [[Important Note][Important Note]]
+ - [[Install][Install]]
+   - [[Layer][Layer]]
+   - [[Github support][Github support]]
+   - [[Gnuplot support][Gnuplot support]]
+   - [[Different bullets][Different bullets]]
+ - [[Key bindings][Key bindings]]
+   - [[Org][Org]]
+   - [[Org with evil-org-mode][Org with evil-org-mode]]
+     - [[Tables][Tables]]
+     - [[Tree ][Tree ]]
+     - [[Element insertion][Element insertion]]
+     - [[Links][Links]]
+     - [[Emphasis][Emphasis]]
+     - [[Tagging][Tagging]]
+   - [[Org agenda][Org agenda]]
+   - [[Pomodoro][Pomodoro]]
+   - [[Presentation][Presentation]]
+   - [[Org-repo-todo][Org-repo-todo]]
+   - [[Org-MIME][Org-MIME]]
 
 * Description
-
 This layer enables  [[http://orgmode.org/][org mode]] for Spacemacs.
 
 ** Features:
@@ -31,10 +37,26 @@ This layer enables  [[http://orgmode.org/][org mode]] for Spacemacs.
 - TODO capture via [[https://github.com/waymondo/org-repo-todo][org-repo-todo]]
 - presentation mode via [[https://github.com/rlister/org-present][org-present]]
 
+** Important Note
+Since version 0.104, spacemacs uses the =org= version from the org ELPA
+repository instead of the one shipped with emacs. Then, any =org= related code
+should not be loaded before =dotspacemacs/user-config=, otherwise both versions
+will be loaded and will conflict.
+
+Because of autoloading, calling to =org= functions will trigger the loading up
+of the =org= shipped with emacs wich will induce conflicts.
+One way to avoid conflict is to wrap your =org= config code in a
+=with-eval-after-load= block like this:
+
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'org
+    ;; here goes your Org config :)
+    ;; ....
+    )
+#+END_SRC
+
 * Install
-
 ** Layer
-
 To use this contribution add it to your =~/.spacemacs=
 
 #+BEGIN_SRC emacs-lisp
@@ -42,7 +64,6 @@ To use this contribution add it to your =~/.spacemacs=
 #+END_SRC
 
 ** Github support
-
 To install Github related extensions like [[https://github.com/larstvei/ox-gfm][ox-gfm]] to export to Github
 flavored markdown set the variable =org-enable-github-support= to =t=.
 
@@ -53,7 +74,6 @@ flavored markdown set the variable =org-enable-github-support= to =t=.
 #+END_SRC
 
 ** Gnuplot support
-
 Org-mode support the plotting of data within tables through [[http://www.gnuplot.info/][Gnuplot]] as
 demonstrated [[http://orgmode.org/worg/org-tutorials/org-plot.html][here]]; unfortunately, this is [[https://github.com/bruceravel/gnuplot-mode/issues/15][not terribly well supported]] on Windows
 at this stage.  It is possible to disable the configuration of gnuplot support
@@ -61,7 +81,6 @@ as usual by adding the package =gnuplot= to your =dotspacemacs-excluded-packages
 variable.
 
 ** Different bullets
-
 You can tweak the bullets displayed in the org buffer in the function
 =dotspacemacs/user-config= of your dotfile by setting the variable
 =org-bullets-bullet-list=. By default the list is set to =("◉" "○" "✸" "✿")=.
@@ -71,27 +90,53 @@ You can tweak the bullets displayed in the org buffer in the function
 #+END_SRC
 
 * Key bindings
+** Org
+
+| Key Binding | Description                    |
+|-------------+--------------------------------|
+| ~SPC a o #~ | org agenda list stuck projects |
+| ~SPC a o /~ | org occur in agenda files      |
+| ~SPC a o a~ | org agenda list                |
+| ~SPC a o c~ | org capture                    |
+| ~SPC a o e~ | org store agenda views         |
+| ~SPC a o l~ | org store link                 |
+| ~SPC a o m~ | org tags view                  |
+| ~SPC a o o~ | org agenda                     |
+| ~SPC a o O~ | org clock out                  |
+| ~SPC a o s~ | org search view                |
+| ~SPC a o t~ | org todo list                  |
+| ~SPC C c~   | org-capture                    |
+| ~SPC C t~   | ort/capture-todo               |
+| ~SPC C T~   | ort/capture-checkitem          |
 
 ** Org with evil-org-mode
 
 | Key Binding                                  | Description                                  |
 |----------------------------------------------+----------------------------------------------|
+| ~SPC m <dotspacemacs-major-mode-leader-key>~ | org-ctrl-c-ctrl-c                            |
+| ~SPC m *~                                    | org-ctrl-c-star                              |
+| ~SPC m RET~                                  | org-ctrl-c-ret                               |
+| ~SPC m -~                                    | org-ctrl-c-minus                             |
 | ~SPC m '~                                    | org-edit-special                             |
+| ~SPC m ^~                                    | org-sort                                     |
+| ~SPC m /~                                    | org-sparse-tree                              |
 | ~SPC m .~                                    | org-time-stamp                               |
+| ~SPC m !~                                    | org-time-stamp-inactive                      |
 | ~SPC m a~                                    | org-agenda                                   |
 | ~SPC m b~                                    | org-tree-to-indirect-buffer                  |
 | ~SPC m A~                                    | org-archive-subtree                          |
 | ~SPC m c~                                    | org-capture                                  |
 | ~SPC m C~                                    | evil-org-recompute-clocks                    |
 | ~SPC m d~                                    | org-deadline                                 |
+| ~SPC m D~                                    | org-insert-drawer                            |
 | ~SPC m e~                                    | org-export-dispatch                          |
 | ~SPC m f~                                    | org-set-effort                               |
 | ~SPC m I~                                    | org-clock-in                                 |
 | ~SPC m l~                                    | org-open-at-point                            |
 | ~SPC m n~                                    | org-narrow-to-subtree                        |
 | ~SPC m N~                                    | widen                                        |
-| ~SPC m <dotspacemacs-major-mode-leader-key>~ | org-ctrl-c-ctrl-c                            |
 | ~SPC m O~                                    | org-clock-out                                |
+| ~SPC m P~                                    | org-set-property                             |
 | ~SPC m q~                                    | org-clock-cancel                             |
 | ~SPC m R~                                    | org-refile                                   |
 | ~SPC m s~                                    | org-schedule                                 |
@@ -104,10 +149,9 @@ You can tweak the bullets displayed in the org buffer in the function
 | ~SPC m C-S-h~                                | org-shiftcontrolleft                         |
 | ~SPC m C-S-j~                                | org-shiftcontroldown                         |
 | ~SPC m C-S-k~                                | org-shiftcontrolup                           |
-| ~SPC s l~                                    | spacemacs/jump-in-buffer (jump to a heading) |
+| ~SPC s j~                                    | spacemacs/jump-in-buffer (jump to a heading) |
 
-
-Table-related shortcuts:
+*** Tables
 
 | Key Binding   | Description                                                                |
 |---------------+----------------------------------------------------------------------------|
@@ -139,7 +183,7 @@ Table-related shortcuts:
 | ~SPC m t t o~ | Toggle the display of Row/Column numbers in tables                         |
 | ~SPC m t w~   | Wrap several fields in a column like a paragraph                           |
 
-Tree related shorcuts: 
+*** Tree 
 
 | Key Binding | Description           |
 |-------------+-----------------------|
@@ -147,7 +191,6 @@ Tree related shorcuts:
 | ~SPC m S h~ | org-promote-subtree   |
 | ~SPC m S k~ | org-move-subtree-up   |
 | ~SPC m S j~ | org-move-subtree-down |
-
 
 | Key Binding | Description                     |
 |-------------+---------------------------------|
@@ -189,7 +232,13 @@ Tree related shorcuts:
 | ~SPC m i f~ | org-insert-footnote              |
 | ~SPC m i l~ | org-insert-link                  |
 
-*** Org emphasize
+*** Links
+
+| Key Binding | Description       |
+|-------------+-------------------|
+| ~RET~       | org-open-at-point |
+
+*** Emphasis
 
 | Key Binding | Description                |
 |-------------+----------------------------|
@@ -206,6 +255,20 @@ Tree related shorcuts:
 | Key Binding | Description  |
 |-------------+--------------|
 | ~SPC m :~   | org-set-tags |
+
+** Org agenda
+The evilified org agenda supports, among others, the following bindings:
+
+| Key Binding | Description   |
+|-------------+---------------|
+| ~M-j~       | next item     |
+| ~M-k~       | previous item |
+| ~M-h~       | earlier view  |
+| ~M-l~       | later view    |
+| ~gr~        | refresh       |
+| ~gd~        | toggle grid   |
+| ~C-v~       | change view   |
+
 ** Pomodoro
 
 | Key Binding | Description       |
@@ -213,7 +276,6 @@ Tree related shorcuts:
 | ~SPC m p~   | starts a pomodoro |
 
 ** Presentation
-
 org-present must be activated explicitly by typing: ~SPC : org-present~
 
 | Key Binding | Description    |
@@ -224,16 +286,13 @@ org-present must be activated explicitly by typing: ~SPC : org-present~
 
 ** Org-repo-todo
 
-| Key Binding | Description           |
-|-------------+-----------------------|
-| ~SPC C c~   | org-capture           |
-| ~SPC C t~   | ort/capture-todo      |
-| ~SPC C T~   | ort/capture-checkitem |
-| ~SPC m g t~ | ort/goto-todos        |
+| Key Binding | Description    |
+|-------------+----------------|
+| ~SPC m g t~ | ort/goto-todos |
 
 ** Org-MIME
 
-| Key Binding | Description                                        |
-|-------------+----------------------------------------------------|
-| ~SPC m M~   | in =message-mode= buffersm convert into html email |
-| ~SPC m m~   | send current buffer as HTML email message          |
+| Key Binding | Description                                       |
+|-------------+---------------------------------------------------|
+| ~SPC m M~   | in =message-mode= buffers convert into html email |
+| ~SPC m m~   | send current buffer as HTML email message         |

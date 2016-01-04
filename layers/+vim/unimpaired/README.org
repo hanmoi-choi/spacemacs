@@ -1,8 +1,9 @@
-#+TITLE: Unimpaired port contribution layer for Spacemacs
+#+TITLE: Unimpaired port layer
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="../../../css/readtheorg.css" />
 
-* Table of Contents                                                   :TOC@4:
- - [[#description][Description]]
- - [[#key-bindings][Key bindings]]
+* Table of Contents                                         :TOC_4_org:noexport:
+ - [[Description][Description]]
+ - [[Key bindings][Key bindings]]
 
 * Description
 

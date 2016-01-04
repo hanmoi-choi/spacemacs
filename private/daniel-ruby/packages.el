@@ -89,6 +89,13 @@
       (setq enh-ruby-deep-indent-paren nil
             enh-ruby-hanging-paren-deep-indent-level 2)
       (add-hook 'after-init-hook 'inf-ruby-switch-setup)
+
+      (eval-after-load "hideshow"
+        '(add-to-list 'hs-special-modes-alist
+                      '(enh-ruby-mode
+                        "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
+                        (lambda (arg) (ruby-end-of-block)) nil)))
+
       (add-hook 'enh-ruby-mode-hook
                 (lambda ()
                   (hs-minor-mode 1) ;; Enables folding

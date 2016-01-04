@@ -1,9 +1,10 @@
-#+TITLE: Evil-commentary contribution layer for Spacemacs
+#+TITLE: Evil-commentary layer
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="../../../css/readtheorg.css" />
 
-* Table of Contents                                                   :TOC@4:
- - [[#description][Description]]
- - [[#install][Install]]
- - [[#key-bindings][Key bindings]]
+* Table of Contents                                         :TOC_4_org:noexport:
+ - [[Description][Description]]
+ - [[Install][Install]]
+ - [[Key bindings][Key bindings]]
 
 * Description
 This layer replaces [[https://github.com/redguardtoo/evil-nerd-commenter][evil-nerd-commenter]] with [[https://github.com/linktohack/evil-commentary][evil-commentary]] for those
@@ -29,5 +30,5 @@ To use this contribution add it to your =~/.spacemacs=.
 | ~SPC ;~     | comment operator              |
 | ~gcc~       | comment current line          |
 | ~gcap~      | comment paragraphs            |
-| ~gc SPC l~  | comment up to a line with avy |
+| ~gc SPC y~  | comment up to a line with avy |
 | ~gy~        | comment and yank              |

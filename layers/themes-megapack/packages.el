@@ -20,6 +20,7 @@
     anti-zenburn-theme
     ;; contains errors
     ; badger-theme
+    badwolf-theme
     birds-of-paradise-plus-theme
     bubbleberry-theme
     busybee-theme
@@ -35,6 +36,7 @@
     darktooth-theme
     django-theme
     espresso-theme
+    farmhouse-theme
     firebelly-theme
     flatland-theme
     flatui-theme
@@ -49,6 +51,7 @@
     inkpot-theme
     ir-black-theme
     jazz-theme
+    jbeans-theme
     light-soap-theme
     lush-theme
     material-theme

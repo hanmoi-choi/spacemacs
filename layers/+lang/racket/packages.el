@@ -1,7 +1,7 @@
 (setq racket-packages
   '(
     company
-    company-quickhelp-mode
+    company-quickhelp
     racket-mode
     ))
 
@@ -25,11 +25,11 @@
     :config
     (progn
       ;; smartparens configuration
-      (eval-after-load 'smartparens
-        '(progn (add-to-list 'sp--lisp-modes 'racket-mode)
-                (when (fboundp 'sp-local-pair)
-                  (sp-local-pair 'racket-mode "'" nil :actions nil)
-                  (sp-local-pair 'racket-mode "`" nil :actions nil))))
+      (with-eval-after-load 'smartparens
+        (add-to-list 'sp--lisp-modes 'racket-mode)
+        (when (fboundp 'sp-local-pair)
+          (sp-local-pair 'racket-mode "'" nil :actions nil)
+          (sp-local-pair 'racket-mode "`" nil :actions nil)))
 
       (defun spacemacs/racket-test-with-coverage ()
         "Call `racket-test' with universal argument."
@@ -67,31 +67,31 @@
         (racket-repl)
         (evil-insert-state))
 
-      (evil-leader/set-key-for-mode 'racket-mode
+      (spacemacs/set-leader-keys-for-major-mode 'racket-mode
         ;; navigation
-        "mg`" 'racket-unvisit
-        "mgg" 'racket-visit-definition
-        "mgm" 'racket-visit-module
-        "mgr" 'racket-open-require-path
+        "g`" 'racket-unvisit
+        "gg" 'racket-visit-definition
+        "gm" 'racket-visit-module
+        "gr" 'racket-open-require-path
         ;; doc
-        "mhd" 'racket-describe
-        "mhh" 'racket-doc
+        "hd" 'racket-describe
+        "hh" 'racket-doc
         ;; insert
-        "mil" 'racket-insert-lambda
+        "il" 'racket-insert-lambda
         ;; REPL
-        "msb" 'racket-run
-        "msB" 'spacemacs/racket-run-and-switch-to-repl
-        "mse" 'racket-send-last-sexp
-        "msE" 'spacemacs/racket-send-last-sexp-focus
-        "msf" 'racket-send-definition
-        "msF" 'spacemacs/racket-send-definition-focus
-        "msi" 'racket-repl
-        "msr" 'racket-send-region
-        "msR" 'spacemacs/racket-send-region-focus
-        "mss" 'racket-repl
+        "sb" 'racket-run
+        "sB" 'spacemacs/racket-run-and-switch-to-repl
+        "se" 'racket-send-last-sexp
+        "sE" 'spacemacs/racket-send-last-sexp-focus
+        "sf" 'racket-send-definition
+        "sF" 'spacemacs/racket-send-definition-focus
+        "si" 'racket-repl
+        "sr" 'racket-send-region
+        "sR" 'spacemacs/racket-send-region-focus
+        "ss" 'racket-repl
         ;; Tests
-        "mtb" 'racket-test
-        "mtB" 'spacemacs/racket-test-with-coverage)
+        "tb" 'racket-test
+        "tB" 'spacemacs/racket-test-with-coverage)
       (define-key racket-mode-map (kbd "H-r") 'racket-run)
       ;; remove racket auto-insert of closing delimiter
       ;; see https://github.com/greghendershott/racket-mode/issues/140

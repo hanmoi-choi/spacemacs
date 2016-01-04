@@ -25,6 +25,8 @@
         erc-social-graph
         erc-view-log
         erc-yt
+        persp-mode
+        smooth-scrolling
         ))
 
 (when (spacemacs/system-is-mac)
@@ -46,7 +48,7 @@
   (use-package erc
     :defer t
     :init
-    (evil-leader/set-key
+    (spacemacs/set-leader-keys
       "aie" 'erc
       "aiE" 'erc-tls
       "aii" 'erc-track-switch-buffer)
@@ -88,7 +90,7 @@
         (notifications-notify
          :title nick
          :body message
-         :app-icon "/home/io/.emacs.d/assets/spacemacs.svg"
+         :app-icon (concat spacemacs-assets-directory "spacemacs.svg")
          :urgency 'low))
 
       ;; osx doesn't have dbus support
@@ -96,13 +98,13 @@
         (add-hook 'erc-text-matched-hook 'erc-global-notify))
 
       ;; keybindings
-      (evil-leader/set-key-for-mode 'erc-mode
-        "md" 'erc-input-action
-        "mj" 'erc-join-channel
-        "mn" 'erc-channel-names
-        "ml" 'erc-list-command
-        "mp" 'erc-part-from-channel
-        "mq" 'erc-quit-server))))
+      (spacemacs/set-leader-keys-for-major-mode 'erc-mode
+        "d" 'erc-input-action
+        "j" 'erc-join-channel
+        "n" 'erc-channel-names
+        "l" 'erc-list-command
+        "p" 'erc-part-from-channel
+        "q" 'erc-quit-server))))
 
 (defun erc/init-erc-gitter ()
   (use-package erc-gitter
@@ -123,18 +125,18 @@
       ;; does not exist ?
       ;; (erc-social-graph-enable)
       (setq erc-social-graph-dynamic-graph t)
-      (evil-leader/set-key-for-mode 'erc-mode
-        "mD" 'erc-social-graph-draw))))
+      (spacemacs/set-leader-keys-for-major-mode 'erc-mode
+        "D" 'erc-social-graph-draw))))
 
 (defun erc/init-erc-yt ()
   (use-package erc-yt
-    :init (eval-after-load 'erc '(add-to-list 'erc-modules 'youtube))))
+    :init (with-eval-after-load 'erc (add-to-list 'erc-modules 'youtube))))
 
 (defun erc/init-erc-view-log ()
   (use-package erc-view-log
     :init
     (progn
-      (eval-after-load 'erc '(add-to-list 'erc-modules 'log))
+      (with-eval-after-load 'erc (add-to-list 'erc-modules 'log))
       (setq erc-log-channels-directory
             (expand-file-name
              (concat spacemacs-cache-directory
@@ -164,7 +166,7 @@
       (spacemacs|define-micro-state erc-log
         :doc (spacemacs//erc-log-ms-documentation)
         :use-minibuffer t
-        :evil-leader "m."
+        :evil-leader-for-mode (erc-mode . ".")
         :bindings
         ("r" erc-view-log-reload-file)
         (">" erc-view-log-next-mention)
@@ -172,6 +174,20 @@
 
 (defun erc/init-erc-image ()
   (use-package erc-image
-    :init (eval-after-load 'erc '(add-to-list 'erc-modules 'image))))
+    :init (with-eval-after-load 'erc (add-to-list 'erc-modules 'image))))
 
 (defun erc/init-erc-terminal-notifier ())
+
+(defun erc/post-init-persp-mode ()
+  (spacemacs|define-custom-layout "@ERC"
+    :binding "E"
+    :body
+    (call-interactively 'erc))
+  ;; do not save erc buffers
+  (spacemacs|use-package-add-hook persp-mode
+    :post-config
+    (push (lambda (b) (with-current-buffer b (eq major-mode 'erc-mode)))
+          persp-filter-save-buffers-functions)))
+
+(defun erc/post-init-smooth-scrolling ()
+  (add-hook 'erc-mode-hook 'spacemacs//unset-scroll-margin))
