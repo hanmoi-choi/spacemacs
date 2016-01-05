@@ -399,6 +399,7 @@
       (spacemacs/set-leader-keys
         "SPC" 'avy-goto-word-or-subword-1
         "y" 'avy-goto-line
+        "o" 'avy-goto-char-2
         "xo" 'spacemacs/avy-open-url))
     :config
     (progn

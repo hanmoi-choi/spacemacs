@@ -64,23 +64,30 @@ values."
                                        daniel-util
                                        daniel-tramp
                                        daniel-web-browser
-                                       daniel-email))
+                                       daniel-email)
 
 
   ;; List of additional packages that will be installed without being
   ;; wrapped in a layer. If you need some configuration for these
   ;; packages then consider to create a layer, you can also put the
   ;; configuration in `dotspacemacs/config'.
-  dotspacemacs-additional-packages '()
+  dotspacemacs-additional-packages '(
+                                     evil-terminal-cursor-changer
+                                     )
 
   ;; A list of packages and/or extensions that will not be install and loaded.
   dotspacemacs-excluded-packages '(
+                                   evil-numbers
+                                   buffer-move
+                                   doc-view
+                                   evil-mc
                                    auto-complete
+                                   leuven-theme
                                    )
   ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
   ;; are declared in a layer which is not a member of
   ;; the list `dotspacemacs-configuration-layers'. (default t)
-  dotspacemacs-delete-orphan-packages t)
+  dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -386,7 +393,8 @@ layers configuration. You are free to put any user code."
  '(emamux:completing-read-type (quote helm))
  '(emamux:use-nearest-pane t)
  '(evil-emacs-state-modes
-   '(shell-mode term-mode magit-popup-mode magit-popup-sequence-mode eshell-mode slime-repl-mode cider-mode ielm-mode))
+   '(shell-mode calendar-mode ansi-term-mode term-mode magit-popup-mode magit-popup-sequence-mode eshell-mode slime-repl-mode cider-mode ielm-mode))
+
  '(evil-insert-state-modes
    (quote
     (geiser-repl-mode gud-mode inferior-apl-mode inferior-caml-mode inferior-j-mode inferior-python-mode inferior-scheme-mode inferior-sml-mode internal-ange-ftp-mode prolog-inferior-mode reb-mode shell-mode term-mode wdired-mode)))
