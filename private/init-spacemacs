@@ -72,8 +72,11 @@ values."
   ;; packages then consider to create a layer, you can also put the
   ;; configuration in `dotspacemacs/config'.
   dotspacemacs-additional-packages '()
+
   ;; A list of packages and/or extensions that will not be install and loaded.
-  dotspacemacs-excluded-packages '(auto-complete)
+  dotspacemacs-excluded-packages '(
+                                   auto-complete
+                                   )
   ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
   ;; are declared in a layer which is not a member of
   ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -281,7 +284,6 @@ layers configuration. You are free to put any user code."
     (setq ggtags-mode-map (make-sparse-keymap))
 
     (setq jsx-indent-level 2)
-
     (add-hook 'prog-mode-hook (lambda ()
                                 (progn
                                   (helm-gtags-mode)
@@ -384,7 +386,7 @@ layers configuration. You are free to put any user code."
  '(emamux:completing-read-type (quote helm))
  '(emamux:use-nearest-pane t)
  '(evil-emacs-state-modes
-   '(shell-mode term-mode eshell-mode slime-repl-mode cider-mode ielm-mode))
+   '(shell-mode term-mode magit-popup-mode magit-popup-sequence-mode eshell-mode slime-repl-mode cider-mode ielm-mode))
  '(evil-insert-state-modes
    (quote
     (geiser-repl-mode gud-mode inferior-apl-mode inferior-caml-mode inferior-j-mode inferior-python-mode inferior-scheme-mode inferior-sml-mode internal-ange-ftp-mode prolog-inferior-mode reb-mode shell-mode term-mode wdired-mode)))
