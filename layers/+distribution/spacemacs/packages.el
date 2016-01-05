@@ -582,7 +582,17 @@
     :init
     (progn
       (setq evil-jumper-auto-save-interval 600)
-      (evil-jumper-mode t))))
+      ;; Move keybindings into global motion state map
+      (add-hook 'evil-jumper-mode-hook
+                (lambda ()
+                  (if evil-jumper-mode
+                      (progn
+                        (define-key evil-motion-state-map (kbd "TAB") 'evil-jumper/forward)
+                        (define-key evil-motion-state-map (kbd "C-o") 'evil-jumper/backward))
+                    (define-key evil-motion-state-map (kbd "TAB") 'evil-jump-forward)
+                    (define-key evil-motion-state-map (kbd "C-o") 'evil-jump-backward))))
+      (evil-jumper-mode t)
+      (setcdr evil-jumper-mode-map nil))))
 
 (defun spacemacs/init-evil-lisp-state ()
   (use-package evil-lisp-state
@@ -1735,8 +1745,9 @@ Open junk file using helm, with `prefix-arg' search in junk files"
   (use-package spaceline-config
     :init
     (progn
-      (setq-default powerline-default-separator (if (display-graphic-p) 'wave 'utf-8))
-
+      (spacemacs|do-after-display-system-init
+       (setq-default powerline-default-separator
+                     (if (display-graphic-p) 'wave 'utf-8)))
       (defun spacemacs//set-powerline-for-startup-buffers ()
         "Set the powerline for buffers created when Emacs starts."
         (unless configuration-layer-error-count
@@ -1746,7 +1757,6 @@ Open junk file using helm, with `prefix-arg' search in junk files"
               (spacemacs//restore-powerline buffer)))))
       (add-hook 'emacs-startup-hook
                 'spacemacs//set-powerline-for-startup-buffers))
-
     :config
     (progn
       (defun spacemacs/customize-powerline-faces ()
@@ -1800,8 +1810,7 @@ Open junk file using helm, with `prefix-arg' search in junk files"
                                (format (concat "Do you want to update to the newest "
                                                "version %s ?") spacemacs-new-version))
                               (progn
-                                (spacemacs/switch-to-version spacemacs-new-version)
-                                (setq spacemacs-mode-line-new-version-lighterp nil))
+                                (spacemacs/switch-to-version spacemacs-new-version))
                             (message "Update aborted."))))
                       map)))
 
@@ -1809,8 +1818,7 @@ Open junk file using helm, with `prefix-arg' search in junk files"
         (spacemacs-powerline-new-version
          (spacemacs/get-new-version-lighter-face
           spacemacs-version spacemacs-new-version))
-        :when (and spacemacs-new-version
-                   spacemacs-mode-line-new-version-lighterp))
+        :when spacemacs-new-version)
 
       (spaceline-spacemacs-theme '(new-version :when active))
       (spaceline-helm-mode t)
