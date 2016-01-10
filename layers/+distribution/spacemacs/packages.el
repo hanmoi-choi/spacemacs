@@ -588,9 +588,9 @@
                 (lambda ()
                   (if evil-jumper-mode
                       (progn
-                        (define-key evil-motion-state-map (kbd "TAB") 'evil-jumper/forward)
+                        (define-key evil-motion-state-map (kbd "<C-i>") 'evil-jumper/forward)
                         (define-key evil-motion-state-map (kbd "C-o") 'evil-jumper/backward))
-                    (define-key evil-motion-state-map (kbd "TAB") 'evil-jump-forward)
+                    (define-key evil-motion-state-map (kbd "<C-i>") 'evil-jump-forward)
                     (define-key evil-motion-state-map (kbd "C-o") 'evil-jump-backward))))
       (evil-jumper-mode t)
       (setcdr evil-jumper-mode-map nil))))
