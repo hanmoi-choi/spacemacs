@@ -42,6 +42,7 @@ python-*-docs-html
 /.cask/
 
 # Private directory
+/private/
 /games/
 /GPATH
 /.mc-lists.el

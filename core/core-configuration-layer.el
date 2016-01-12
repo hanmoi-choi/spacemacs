@@ -1,7 +1,6 @@
 ;;; core-configuration-layer.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -284,9 +283,9 @@ layer directory."
                        "this layer already exists.") name))
      (t
       (make-directory layer-dir t)
-      (configuration-layer//copy-template name "extensions.el" layer-dir)
       (configuration-layer//copy-template name "packages.el" layer-dir)
-      (configuration-layer//copy-template name "README.org" layer-dir)
+      (when (y-or-n-p "Create readme?")
+        (configuration-layer//copy-template name "README.org" layer-dir))
       (message "Configuration layer \"%s\" successfully created." name)))))
 
 (defun configuration-layer/make-layer (layer)
@@ -475,20 +474,28 @@ Properties that can be copied are `:location', `:step' and `:excluded'."
 (defun configuration-layer//copy-template (name template &optional layer-dir)
   "Copy and replace special values of TEMPLATE to layer string NAME.
 If LAYER_DIR is nil, the private directory is used."
-  (let ((src (concat configuration-layer-template-directory
-                     (format "%s.template" template)))
-        (dest (if layer-dir
-                  (concat layer-dir "/" (format "%s" template))
-                (concat (configuration-layer//get-private-layer-dir name)
-                        (format "%s" template)))))
-    (copy-file src dest)
-    (find-file dest)
-    (save-excursion
-      (goto-char (point-min))
-      (let ((case-fold-search nil))
-        (while (re-search-forward "%LAYERNAME%" nil t)
-          (replace-match name t))))
-    (save-buffer)))
+  (cl-flet ((substitute (old new) (let ((case-fold-search nil))
+                                    (save-excursion
+                                      (goto-char (point-min))
+                                      (while (search-forward old nil t)
+                                        (replace-match new t))))))
+    (let ((src (concat configuration-layer-template-directory
+                       (format "%s.template" template)))
+          (dest (if layer-dir
+                    (concat layer-dir "/" (format "%s" template))
+                  (concat (configuration-layer//get-private-layer-dir name)
+                          (format "%s" template)))))
+      (copy-file src dest)
+      (find-file dest)
+      (substitute "%LAYER_NAME%" name)
+      (cond
+       (user-full-name
+        (substitute "%USER_FULL_NAME%" user-full-name)
+        (substitute "%USER_MAIL_ADDRESS%" user-mail-address))
+       (t
+        (substitute "%USER_FULL_NAME%" "Sylvain Benner & Contributors")
+        (substitute "%USER_MAIL_ADDRESS%" "sylvain.benner@gmail.com")))
+      (save-buffer))))
 
 (defun configuration-layer//directory-type (path)
   "Return the type of directory pointed by PATH.
@@ -622,7 +629,7 @@ path."
             (condition-case err
                 (set-default var (eval (pop variables)))
               ('error
-               (configuration-layer//set-error)
+               (configuration-layer//increment-error-count)
                (spacemacs-buffer/append
                 (format (concat "\nAn error occurred while setting layer "
                                 "variable %s "
@@ -726,7 +733,7 @@ path."
                  (t (spacemacs-buffer/warning "Cannot install package %S."
                                               pkg-name)))
               ('error
-               (configuration-layer//set-error)
+               (configuration-layer//increment-error-count)
                (spacemacs-buffer/append
                 (format (concat "\nAn error occurred while installing %s "
                                 "(error: %s)\n") pkg-name err))))))
@@ -893,7 +900,7 @@ path."
               (condition-case err
                   (funcall (intern (format "%S/pre-init-%S" layer pkg-name)))
                 ('error
-                 (configuration-layer//set-error)
+                 (configuration-layer//increment-error-count)
                  (spacemacs-buffer/append
                   (format
                    (concat "\nAn error occurred while pre-configuring %S "
@@ -913,7 +920,7 @@ path."
               (condition-case err
                   (funcall (intern (format "%S/post-init-%S" layer pkg-name)))
                 ('error
-                 (configuration-layer//set-error)
+                 (configuration-layer//increment-error-count)
                  (spacemacs-buffer/append
                   (format
                    (concat "\nAn error occurred while post-configuring %S "
@@ -1273,12 +1280,10 @@ to select one."
           (spacemacs-buffer/append "\n"))
       (spacemacs-buffer/message "No orphan package to delete."))))
 
-(defun configuration-layer//set-error ()
-  "Set the error flag and change the mode-line color to red."
+(defun configuration-layer//increment-error-count ()
+  "Increment the error counter."
   (if configuration-layer-error-count
-      (setq configuration-layer-error-count
-            (1+ configuration-layer-error-count))
-    (face-remap-add-relative 'mode-line '((:background "red") mode-line))
+      (setq configuration-layer-error-count (1+ configuration-layer-error-count))
     (setq configuration-layer-error-count 1)))
 
 (provide 'core-configuration-layer)

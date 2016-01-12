@@ -1,7 +1,6 @@
 ;;; core-dotspacemacs.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -283,7 +282,7 @@ are caught and signalled to user in spacemacs buffer."
        (condition-case-unless-debug err
            (,func)
          (error
-          (configuration-layer//set-error)
+          (configuration-layer//increment-error-count)
           (spacemacs-buffer/append (format "Error in %s: %s\n"
                                            ',(symbol-name func)
                                            (error-message-string err))

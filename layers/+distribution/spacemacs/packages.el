@@ -1,7 +1,6 @@
 ;;; packages.el --- Spacemacs Layer packages File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -1751,11 +1750,10 @@ Open junk file using helm, with `prefix-arg' search in junk files"
                      (if (display-graphic-p) 'wave 'utf-8)))
       (defun spacemacs//set-powerline-for-startup-buffers ()
         "Set the powerline for buffers created when Emacs starts."
-        (unless configuration-layer-error-count
-          (dolist (buffer '("*Messages*" "*spacemacs*" "*Compile-Log*"))
-            (when (and (get-buffer buffer)
-                       (configuration-layer/package-usedp 'spaceline))
-              (spacemacs//restore-powerline buffer)))))
+        (dolist (buffer '("*Messages*" "*spacemacs*" "*Compile-Log*"))
+          (when (and (get-buffer buffer)
+                     (configuration-layer/package-usedp 'spaceline))
+            (spacemacs//restore-powerline buffer))))
       (add-hook 'emacs-startup-hook
                 'spacemacs//set-powerline-for-startup-buffers))
     :config
