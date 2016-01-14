@@ -7,7 +7,7 @@
 (global-set-key (kbd "M-k") 'er/expand-region)
 (global-set-key (kbd "M-j") 'er/contract-region)
 
-(global-set-key (kbd "C-c t") 'toggle-camelcase-underscores)
+(global-set-key (kbd "C-x t") 'toggle-camelcase-underscores)
 (global-set-key (kbd "M-d") 'private/duplicate-current-line-or-region)
 
 (global-set-key [C-up] 'private/move-text-up)
@@ -16,8 +16,13 @@
 (define-key global-map (kbd "C-c C-l" ) 'helm-buffers-list)
 (define-key global-map (kbd "C-c C-n") 'private/indent-buffer)
 (define-key global-map (kbd "C-c C-r") 'revert-buffer)
+(define-key global-map (kbd "C-c R") 'revert-buffer)
+(define-key global-map (kbd "C-c B") 'bury-buffer)
 
-(global-set-key (kbd "C-c C-v") 'helm-show-kill-ring)
+(define-key global-map (kbd "C-c g") 'helm-ls-git-ls)
+(define-key global-map (kbd "C-x g") 'helm-ls-git-ls)
+
+(global-set-key (kbd "C-c C-o") 'ibuffer)
 
 (global-set-key (kbd "C-c d") 'dash-at-point)
 (global-set-key (kbd "C-c D") 'dash-at-point-with-docset)
@@ -28,7 +33,7 @@
 (global-set-key (kbd "C-9") '(lambda()(interactive)(djcb-opacity-modify t)))
 (global-set-key (kbd "C-0") '(lambda()(interactive)
                                (modify-frame-parameters nil `((alpha . 100)))))
-
+(global-set-key (kbd "M-.") 'helm-gtags-dwim)
 (global-set-key (kbd "M-w") 'kill-this-buffer)
 
 (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
@@ -38,7 +43,6 @@
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 (global-set-key (kbd "C-c f") 'helm-projectile-find-file)
-(global-set-key (kbd "C-c b") 'helm-projectile-switch-to-buffer)
 (global-set-key (kbd "M-e") 'helm-projectile-recentf)
 (global-set-key (kbd "C-M-e") 'helm-recentf)
 
@@ -102,7 +106,7 @@
 ;; Helm
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-c h i") 'helm-semantic-or-imenu)
+(global-set-key (kbd "C-c h s") 'helm-semantic-or-imenu)
 (global-set-key (kbd "C-c h f")	'helm-find-files)
 (global-set-key (kbd "C-c h m")	'helm-man-woman)
 (global-set-key (kbd "C-c h /") 'helm-find)
@@ -117,12 +121,9 @@
 (global-set-key (kbd "C-c h r") 'helm-regexp)
 (global-set-key (kbd "C-c h x") 'helm-register)
 (global-set-key (kbd "C-c h t") 'helm-top)
-(global-set-key (kbd "C-c h s") 'helm-surfraw)
 (global-set-key (kbd "C-c h g") 'helm-google-suggest)
 (global-set-key (kbd "C-c h e") 'helm-eval-expression-with-eldoc)
 (global-set-key (kbd "C-c h c") 'helm-calcul-expression)
-(global-set-key (kbd "C-c C-l") 'helm-eshell-history)
-(global-set-key (kbd "C-c C-l") 'helm-comint-input-ring)
 (global-set-key (kbd "C-c C-h") 'helm-minibuffer-history)
 
 (evil-leader/set-key
@@ -144,12 +145,8 @@
   "hc" 'helm-calcul-expression
   "hm" 'helm-mini)
 
-(require 'calendar)
-(evil-set-initial-state 'calendar-mode 'emacs)
-
 (global-set-key (kbd "C-c <f2>") 'show-file-name)
 
-;;smartparens
 (eval-after-load 'smartparens
   '(progn
 
@@ -172,8 +169,7 @@
        ("u" sp-unwrap-sexp)
        ("s" sp-splice-sexp)
        ("S" sp-split-sexp)
-       ("q" nil :exit t)
-       )
+       ("q" nil :exit t))
 
      (define-key smartparens-mode-map (kbd "C-x p") 'spacemacs/smartparens-micro-state)
 
@@ -230,23 +226,4 @@
                      (and (looking-back (sp--get-closing-regexp))
                           (not (eq (char-syntax (preceding-char)) ?'))))
              (insert " ")))))
-
-
-     ;;; org-mode
-     (eval-after-load 'org
-       '(progn
-          (sp-with-modes 'org-mode
-            (sp-local-pair "*" "*" :actions '(insert wrap) :unless '(sp-point-after-word-p sp-point-at-bol-p) :wrap "C-*" :skip-match 'sp--org-skip-asterisk)
-            (sp-local-pair "_" "_" :unless '(sp-point-after-word-p) :wrap "C-_")
-            (sp-local-pair "/" "/" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
-            (sp-local-pair "~" "~" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
-            (sp-local-pair "=" "=" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
-            (sp-local-pair "«" "»"))
-          (defun sp--org-skip-asterisk (ms mb me)
-            (or (and (= (line-beginning-position) mb)
-                     (eq 32 (char-after (1+ mb))))
-                (and (= (1+ (line-beginning-position)) me)
-                     (eq 32 (char-after me)))))
-
-          ))
      ))

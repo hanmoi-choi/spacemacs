@@ -139,6 +139,4 @@
      ;; Since we override SPC, let's make RET do that functionality
      (define-key org-agenda-mode-map
        (kbd "RET") 'org-agenda-show-and-scroll-up)
-     (define-key org-agenda-mode-map
-       (kbd "SPC") evil-leader--default-map)
      ))
