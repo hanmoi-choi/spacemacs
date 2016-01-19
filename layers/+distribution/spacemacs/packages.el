@@ -19,6 +19,7 @@
         aggressive-indent
         auto-highlight-symbol
         avy
+        bracketed-paste
         buffer-move
         (centered-cursor :location local)
         clean-aindent-mode
@@ -415,6 +416,13 @@
       (spacemacs/set-leader-keys "`" 'avy-pop-mark))
       ))
 
+(defun spacemacs/init-bracketed-paste ()
+  (use-package bracketed-paste
+    :defer t
+    :init
+    ;; Enable bracketed-paste for tty
+    (add-hook 'tty-setup-hook 'bracketed-paste-enable)))
+
 (defun spacemacs/init-buffer-move ()
   (use-package buffer-move
     :defer t
@@ -475,10 +483,6 @@
     :init
     (spacemacs/set-leader-keys
       "xwd" 'define-word-at-point)))
-
-(defun spacemacs/init-dired+ ()
-  (use-package dired+
-    :defer t))
 
 (defun spacemacs/init-doc-view ()
   (use-package doc-view
@@ -582,17 +586,7 @@
     :init
     (progn
       (setq evil-jumper-auto-save-interval 600)
-      ;; Move keybindings into global motion state map
-      (add-hook 'evil-jumper-mode-hook
-                (lambda ()
-                  (if evil-jumper-mode
-                      (progn
-                        (define-key evil-motion-state-map (kbd "<C-i>") 'evil-jumper/forward)
-                        (define-key evil-motion-state-map (kbd "C-o") 'evil-jumper/backward))
-                    (define-key evil-motion-state-map (kbd "<C-i>") 'evil-jump-forward)
-                    (define-key evil-motion-state-map (kbd "C-o") 'evil-jump-backward))))
-      (evil-jumper-mode t)
-      (setcdr evil-jumper-mode-map nil))))
+      (evil-jumper-mode t))))
 
 (defun spacemacs/init-evil-lisp-state ()
   (use-package evil-lisp-state
