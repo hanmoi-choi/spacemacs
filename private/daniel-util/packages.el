@@ -1,15 +1,46 @@
 (setq daniel-util-packages
       '(
         vlf
-        emamux
+        ;; emamux
         find-file-in-project
         tabbar-ruler
         multiple-cursors
-        vimish-fold
+        ;; vimish-fold
+        emr
         cliphist
+        ;; airline-themes
+        ;; js2-refactor
+
         helm-ls-git))
 
 (setq daniel-util-excluded-packages '())
+
+(defun daniel-util/init-js2-refactor ()
+  (use-package js2-refactor
+    :init
+    (progn
+      (add-hook 'js2-mode-hook #'js2-refactor-mode)
+      )))
+
+(defun daniel-util/init-airline-themes ()
+  (use-package airline-themes
+    :config
+    (progn
+      (setq airline-utf-glyph-separator-left      #xe0b0
+            airline-utf-glyph-separator-right     #xe0b2
+            airline-utf-glyph-subseparator-left   #xe0b1
+            airline-utf-glyph-subseparator-right  #xe0b3
+            airline-utf-glyph-branch              #xe0a0
+            airline-utf-glyph-readonly            #xe0a2
+            airline-utf-glyph-linenumber          #xe0a1)
+      (airline-themes-set-modeline))))
+
+(defun daniel-util/init-emr ()
+  (use-package emr
+    :init
+    (progn
+      (add-hook 'prog-mode-hook 'emr-initialize)
+      (global-set-key [C-return] 'emr-show-refactor-menu))))
 
 (defun daniel-util/init-multiple-cursors ()
   (use-package multiple-cursors
@@ -49,8 +80,7 @@
         "Ei" 'emamux:interrupt-runner)
       (custom-set-variables
        '(emamux:completing-read-type 'helm)
-       '(emamux:use-nearest-pane t))
-      )))
+       '(emamux:use-nearest-pane t)))))
 
 (defun daniel-util/init-vimish-fold ()
   (use-package vimish-fold
@@ -86,23 +116,17 @@
 
       (setq tabbar-ruler-global-tabbar t)
 
-      ;; Set nil
+      ;; ;; Set nil
       (define-key tabbar-mode-map [C-M-left] 'tabbar-backward-tab)
       (define-key tabbar-mode-map [C-M-right] 'tabbar-forward-tab)
       (define-key tabbar-mode-map [C-M-down] 'tabbar-backward-group)
       (define-key tabbar-mode-map [C-M-up] 'tabbar-forward-group)
 
-      ;; Add a buffer modification state indicator in the tab label, and place a
-      ;; space around the label to make it looks less crowd.
-      (defadvice tabbar-buffer-tab-label (after fixup_tab_label_space_and_flag activate)
-        (setq ad-return-value
-              (if (and (buffer-modified-p (tabbar-tab-value tab))
-                       (buffer-file-name (tabbar-tab-value tab)))
-                  (concat " + " (concat ad-return-value " "))
-                (concat " " (concat ad-return-value " ")))))
-
-      (setq tabbar-use-images nil)
-      (tabbar-ruler-group-by-projectile-project))))
+      (tabbar-ruler-group-by-projectile-project)
+      (add-to-list 'mode-icons '("EnhRuby" "ruby" xpm))
+      (add-to-list 'mode-icons '("Javascript-IDE" "js" xpm))
+      (mode-icons-mode)
+      )))
 
 (defun daniel-util/init-helm-ls-git ()
   "Initialize my package"

@@ -13,7 +13,25 @@
         yaml-mode
         rubocop
         yard-mode
+        ruby-refactor
+        ruby-hash-syntax
         ))
+
+(defun daniel-ruby/init-ruby-hash-syntax ()
+  (use-package ruby-hash-syntax
+    :diminish ""
+    :init
+    (progn
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mx{" 'ruby-toggle-hash-syntax)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mxb" 'ruby-toggle-block))))
+
+(defun daniel-ruby/init-ruby-refactor ()
+  (use-package ruby-refactor
+    :diminish ""
+    :defer t
+    :init
+    (progn
+      (add-hook 'enh-ruby-mode-hook 'ruby-refactor-mode-launch))))
 
 (defun daniel-ruby/init-rubocop ()
   (use-package rubocop
@@ -43,12 +61,13 @@
   (use-package rspec-mode
     :init
     (progn
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtT" 'rspec-find-spec-or-target-other-window)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtt" 'rspec-toggle-spec-and-target)
+      (evil-leader/set-key-for-mode 'enh-ruby-mode "mta" 'rspec-verify-all)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtf" 'rspec-run-last-failed)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtv" 'rspec-verify)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtr" 'rspec-rerun)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mtS" 'rspec-run-single-file)
-      (evil-leader/set-key-for-mode 'enh-ruby-mode "mtm" 'rspec-run-multiple-files)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mts" 'rspec-verify-single)
       (evil-ex-define-cmd "T" 'rspec-toggle-spec-and-target)
       )

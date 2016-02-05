@@ -45,6 +45,7 @@ values."
                                        shell
                                        react
                                        unimpaired
+                                       eyebrowse
 
                                         ;Language
                                        clojure
@@ -58,36 +59,42 @@ values."
                                        markdown
                                        spell-checking
 
+                                       daniel-osx
                                        daniel-core
                                        daniel-org
                                        daniel-ruby
                                        daniel-util
                                        daniel-tramp
                                        daniel-web-browser
-                                       daniel-email)
+                                       daniel-ui
+                                       )
 
 
-  ;; List of additional packages that will be installed without being
-  ;; wrapped in a layer. If you need some configuration for these
-  ;; packages then consider to create a layer, you can also put the
-  ;; configuration in `dotspacemacs/config'.
-  dotspacemacs-additional-packages '(
-                                     evil-terminal-cursor-changer
-                                     )
+   ;; List of additional packages that will be installed without being
+   ;; wrapped in a layer. If you need some configuration for these
+   ;; packages then consider to create a layer, you can also put the
+   ;; configuration in `dotspacemacs/config'.
+   dotspacemacs-additional-packages '(
+                                      evil-terminal-cursor-changer
+                                      )
 
-  ;; A list of packages and/or extensions that will not be install and loaded.
-  dotspacemacs-excluded-packages '(
-                                   evil-numbers
-                                   buffer-move
-                                   doc-view
-                                   evil-mc
-                                   auto-complete
-                                   leuven-theme
-                                   )
-  ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
-  ;; are declared in a layer which is not a member of
-  ;; the list `dotspacemacs-configuration-layers'. (default t)
-  dotspacemacs-delete-orphan-packages t))
+   ;; A list of packages and/or extensions that will not be install and loaded.
+   dotspacemacs-excluded-packages '(
+                                    git-gutter
+                                    git-gutter-fringe
+                                    git-gutter-fringe+
+
+                                    evil-numbers
+                                    ;; spaceline
+                                    doc-view
+                                    evil-mc
+                                    auto-complete
+                                    leuven-theme
+                                    )
+   ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
+   ;; are declared in a layer which is not a member of
+   ;; the list `dotspacemacs-configuration-layers'. (default t)
+   dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -119,26 +126,26 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
-                         solarized
-                         zenburn)
+   dotspacemacs-themes '(
+                         ;; monokai
+                         spacemacs-dark
+                         zenburn
+                         monokai)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font (if (eq system-type 'darwin)
-                                 '("Source Code Pro for Powerline"
-                                   :size 13
+                                 '("SourceCodePro+Powerline+Awesome Regular"
+                                   :size 14
                                    :weight normal
-                                   :width normal
-                                   :powerline-scale 1.1)
+                                   :width normal)
 
                                '("Source Code Pro for Powerline Regular"
                                  :size 13
                                  :weight normal
-                                 :width normal
-                                 :powerline-scale 1.1))
+                                 :width normal))
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -146,7 +153,7 @@ values."
    dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
-   dotspacemacs-major-mode-leader-key ","
+   dotspacemacs-major-mode-leader-key "m"
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m)
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
@@ -222,6 +229,9 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
+   dotspacemacs-persistent-server (if window-system
+                                      t
+                                    nil)
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -244,7 +254,7 @@ user code."
                 '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
     ;; USE TCP for daemon
-    (setq server-use-tcp t)
+    ;; (setq server-use-tcp t)
 
     ;; ITerm2 Key Remappping
     (define-key input-decode-map "\e[1;2A" [S-up])
@@ -283,26 +293,41 @@ user code."
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (progn
+    (define-key evil-normal-state-map (kbd "M-.") nil)
     (setq helm-ag-use-agignore t)
     (global-company-mode)
-    (setq powerline-default-separator 'arrow)
+    (global-diff-hl-mode)
+
+    (setq powerline-default-separator nil)
     ;; Make sparse keymap for not using packages, it's annoying with which-key
     (setq js2-mode-map (make-sparse-keymap))
     (setq ggtags-mode-map (make-sparse-keymap))
 
     (setq jsx-indent-level 2)
+
+    (defvar emmet-mode-keymap
+      (let
+          ((map (make-sparse-keymap)))
+        (define-key map (kbd "C-j") 'emmet-expand-line)
+        (define-key map (kbd "<C-return>") 'emmet-expand-line)
+        map)
+      "Keymap for emmet minor mode.")
     (add-hook 'prog-mode-hook (lambda ()
                                 (progn
                                   (helm-gtags-mode)
                                   (smartparens-mode)
                                   (linum-mode))))
+    (spacemacs/set-leader-keys
+      "ghr" 'diff-hl-revert-hunk
+      "ghp" 'diff-hl-previous-hunk
+      "ghn" 'diff-hl-next-hunk
+      "ghg" 'diff-hl-diff-goto-hunk)
 
     (add-hook 'web-mode-hook (lambda ()
                                (progn
+                                 (emmet-mode)
                                  (show-smartparens-mode)
-                                 (highlight-indentation-current-column-mode)
                                  )))
-
 
     (add-hook 'emacs-lisp-mode-hook (lambda ()
                                       (progn
@@ -312,7 +337,7 @@ layers configuration. You are free to put any user code."
     (add-hook 'js2-mode-hook (lambda ()
                                (progn
                                  (show-smartparens-mode)
-                                 (highlight-indentation-current-column-mode))))
+                                 )))
 
     (add-hook 'message-mode-hook
               (lambda ()
@@ -372,12 +397,10 @@ layers configuration. You are free to put any user code."
                   (mode 16 16 :left :elide) " " filename-and-process)
             (mark " " (name 16 -1) " " filename)))
 
-    ;; Persist Undo
-    ;; (setq undo-tree-auto-save-history t
-    ;;       undo-tree-history-directory-alist
-    ;;       `(("." . ,(concat spacemacs-cache-directory "emacs-undo"))))
-    ;; (unless (file-exists-p (concat spacemacs-cache-directory "emacs-undo"))
-    ;;   (make-directory (concat spacemacs-cache-directory "emacs-undo")))
+    (add-to-list 'evil-emacs-state-modes 'ibuffer-mode)
+    (add-to-list 'evil-emacs-state-modes 'ielm-mode)
+    (add-to-list 'evil-emacs-state-modes 'calendar-mode)
+    (add-to-list 'evil-emacs-state-modes 'finder-mode)
     ;; (setq whitespace-display-mappings
     ;;       '((space-mark   ?\    [?\xB7]     [?.]); space
     ;;         (space-mark   ?\xA0 [?\xA4]     [?_]); hard space
@@ -390,15 +413,11 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(emamux:completing-read-type (quote helm))
- '(emamux:use-nearest-pane t)
- '(evil-emacs-state-modes
-   '(shell-mode calendar-mode ansi-term-mode term-mode magit-popup-mode magit-popup-sequence-mode eshell-mode slime-repl-mode cider-mode ielm-mode))
-
- '(evil-insert-state-modes
+ '(custom-safe-themes
    (quote
-    (geiser-repl-mode gud-mode inferior-apl-mode inferior-caml-mode inferior-j-mode inferior-python-mode inferior-scheme-mode inferior-sml-mode internal-ange-ftp-mode prolog-inferior-mode reb-mode shell-mode term-mode wdired-mode)))
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
  '(evil-shift-width 2)
+ '(helm-ag-use-agignore t)
  '(ibuffer-saved-filter-groups nil)
  '(ibuffer-saved-filters
    (quote
@@ -410,22 +429,22 @@ layers configuration. You are free to put any user code."
         (mode . java-mode)
         (mode . idl-mode)
         (mode . lisp-mode)))))))
- '(send-mail-function (quote smtpmail-send-it))
- '(smeargle-colors
-   (quote
-    ((older-than-1day . "red")
-     (older-than-3day . "green")
-     (older-than-1week . "yellow")
-     (older-than-2week)
-     (older-than-1month . "orange")
-     (older-than-3month . "pink")
-     (older-than-6month . "cyan")
-     (older-than-1year . "grey50")))))
+ '(send-mail-function (quote smtpmail-send-it)))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(sp-show-pair-match-face ((t (:background nil :foreground "red" :weight extra-bold :underline t :inverse-video nil))))
+ '(helm-selection ((t (:background "blue"))))
+ '(helm-match ((t (:foreground "orange"))))
+ '(region ((t (:background "dark cyan" :foreground "white"))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+ )
