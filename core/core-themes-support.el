@@ -9,7 +9,7 @@
 ;;
 ;;; License: GPLv3
 
-(defconst emacs-built-in-themes (custom-available-themes)
+(defconst emacs-built-in-themes (cons 'default (custom-available-themes))
   "List of emacs built-in themes")
 
 (defface org-kbd
@@ -36,16 +36,26 @@
     (base16-apathy-light . base16-theme)
     (base16-ashes-dark . base16-theme)
     (base16-ashes-light . base16-theme)
+    (base16-ateliercave-dark . base16-theme)
+    (base16-ateliercave-light . base16-theme)
     (base16-atelierdune-dark . base16-theme)
     (base16-atelierdune-light . base16-theme)
+    (base16-atelierestuary-dark . base16-theme)
+    (base16-atelierestuary-light . base16-theme)
     (base16-atelierforest-dark . base16-theme)
     (base16-atelierforest-light . base16-theme)
     (base16-atelierheath-dark . base16-theme)
     (base16-atelierheath-light . base16-theme)
     (base16-atelierlakeside-dark . base16-theme)
     (base16-atelierlakeside-light . base16-theme)
+    (base16-atelierplateau-dark . base16-theme)
+    (base16-atelierplateau-light . base16-theme)
+    (base16-ateliersavanna-dark . base16-theme)
+    (base16-ateliersavanna-light . base16-theme)
     (base16-atelierseaside-dark . base16-theme)
     (base16-atelierseaside-light . base16-theme)
+    (base16-ateliersulphurpool-dark . base16-theme)
+    (base16-ateliersulphurpool-light . base16-theme)
     (base16-bespin-dark . base16-theme)
     (base16-bespin-light . base16-theme)
     (base16-brewer-dark . base16-theme)
@@ -58,6 +68,8 @@
     (base16-codeschool-light . base16-theme)
     (base16-colors-dark . base16-theme)
     (base16-colors-light . base16-theme)
+    (base16-darktooth-dark . base16-theme)
+    (base16-darktooth-light . base16-theme)
     (base16-default-dark . base16-theme)
     (base16-default-light . base16-theme)
     (base16-eighties-dark . base16-theme)
@@ -76,6 +88,8 @@
     (base16-harmonic16-light . base16-theme)
     (base16-hopscotch-dark . base16-theme)
     (base16-hopscotch-light . base16-theme)
+    (base16-irblack-dark . base16-theme)
+    (base16-irblack-light . base16-theme)
     (base16-isotope-dark . base16-theme)
     (base16-isotope-light . base16-theme)
     (base16-londontube-dark . base16-theme)
@@ -88,12 +102,18 @@
     (base16-monokai-light . base16-theme)
     (base16-ocean-dark . base16-theme)
     (base16-ocean-light . base16-theme)
+    (base16-oceanicnext-dark . base16-theme)
+    (base16-oceanicnext-light . base16-theme)
     (base16-paraiso-dark . base16-theme)
     (base16-paraiso-light . base16-theme)
+    (base16-phd-dark . base16-theme)
+    (base16-phd-light . base16-theme)
     (base16-pop-dark . base16-theme)
     (base16-pop-light . base16-theme)
     (base16-railscasts-dark . base16-theme)
     (base16-railscasts-light . base16-theme)
+    (base16-setiui-dark . base16-theme)
+    (base16-setiui-light . base16-theme)
     (base16-shapeshifter-dark . base16-theme)
     (base16-shapeshifter-light . base16-theme)
     (base16-solarized-dark . base16-theme)
@@ -104,6 +124,12 @@
     (base16-tomorrow-light . base16-theme)
     (base16-twilight-dark . base16-theme)
     (base16-twilight-light . base16-theme)
+    (base16-yesterday-dark . base16-theme)
+    (base16-yesterday-light . base16-theme)
+    (base16-yesterdaybright-dark . base16-theme)
+    (base16-yesterdaybright-light . base16-theme)
+    (base16-yesterdaynight-dark . base16-theme)
+    (base16-yesterdaynight-light . base16-theme)
     (sanityinc-solarized-dark    . color-theme-sanityinc-solarized)
     (sanityinc-solarized-light   . color-theme-sanityinc-solarized)
     (sanityinc-tomorrow-blue     . color-theme-sanityinc-tomorrow)
@@ -119,6 +145,8 @@
     (colorsarenice-light . colorsarenice-theme)
     (hemisu-dark  . hemisu-theme)
     (hemisu-light . hemisu-theme)
+    (majapahit-dark . majapahit-theme)
+    (majapahit-light . majapahit-theme)
     (material-light . material-theme)
     (minimal-light . minimal-theme)
     (moe-dark  . moe-theme)
@@ -161,33 +189,49 @@ package name does not match theme name + `-theme' suffix.")
 (defun spacemacs/load-theme (theme)
   "Load THEME."
   ;; Required dependencies for some themes
-  (when (or (eq 'zonokai-blue theme)
-            (eq 'zonokai-red theme)
-            (eq 'solarized-light theme)
-            (eq 'solarized-dark theme))
-        (spacemacs/load-or-install-package 'dash))
-  ;; Unless Emacs stock themes
-  (unless (memq theme (custom-available-themes))
-    (cond
-     ;; themes with explicitly declared package names
-     ((assq theme spacemacs-theme-name-to-package)
-      (let* ((pkg (spacemacs//get-theme-package theme))
-             (pkg-dir (spacemacs/load-or-install-package pkg)))
-        (when (or (eq 'moe-light theme)
-                  (eq 'moe-dark theme))
-          (load-file (concat pkg-dir "moe-light-theme.el"))
-          (load-file (concat pkg-dir "moe-dark-theme.el")))
-        (add-to-list 'custom-theme-load-path pkg-dir)))
-     (t
-      ;; other themes
-      ;; we assume that the package name is suffixed with `-theme'
-      ;; if not we will handle the special themes as we get issues in the tracker.
-      (let ((pkg (spacemacs//get-theme-package theme)))
-        (spacemacs/load-or-install-package pkg)))))
-  (load-theme theme t)
-  ;; explicitly reload the theme for the first GUI client
-  (eval `(spacemacs|do-after-display-system-init
-          (load-theme ',theme t))))
+  (condition-case err
+      (progn
+        (when (or (eq 'zonokai-blue theme)
+                  (eq 'zonokai-red theme)
+                  (eq 'solarized-light theme)
+                  (eq 'solarized-dark theme))
+          (spacemacs/load-or-install-package 'dash))
+        ;; Unless Emacs stock themes
+        (unless (or (memq theme (custom-available-themes))
+                    (eq 'default theme))
+          (cond
+           ;; themes with explicitly declared package names
+           ((assq theme spacemacs-theme-name-to-package)
+            (let* ((pkg (spacemacs//get-theme-package theme))
+                   (pkg-dir (spacemacs/load-or-install-package pkg)))
+              (when (or (eq 'moe-light theme)
+                        (eq 'moe-dark theme))
+                (load-file (concat pkg-dir "moe-light-theme.el"))
+                (load-file (concat pkg-dir "moe-dark-theme.el")))
+              (add-to-list 'custom-theme-load-path pkg-dir)))
+           (t
+            ;; other themes
+            ;; we assume that the package name is suffixed with `-theme'
+            ;; if not we will handle the special themes as we get issues
+            ;; in the tracker.
+            (let ((pkg (spacemacs//get-theme-package theme)))
+              (spacemacs/load-or-install-package pkg))))))
+    ('error
+     (setq theme 'default)
+     (display-warning 'spacemacs
+                      (format (concat "An error occurred while retrieving the "
+                                      "theme, using default theme. (error: %s)")
+                              err)
+                      :warning)))
+  (mapc 'disable-theme custom-enabled-themes)
+  (if (eq 'default theme)
+      (progn
+        (setq spacemacs--cur-theme 'default)
+        (spacemacs/post-theme-init 'default))
+    (load-theme theme t)
+    ;; explicitly reload the theme for the first GUI client
+    (eval `(spacemacs|do-after-display-system-init
+            (load-theme ',theme t)))))
 
 (defun spacemacs/cycle-spacemacs-theme ()
   "Cycle through themes defined in `dotspacemacs-themes.'"

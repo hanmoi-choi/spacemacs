@@ -216,15 +216,24 @@ refreshed during the current session."
                    (car archive) i count) t))
         (spacemacs//redisplay)
         (setq i (1+ i))
-        (unless (eq 'error (with-timeout
-                               (dotspacemacs-elpa-timeout
-                                (progn
-                                  (spacemacs-buffer/append
-                                   (format
-                                    "\nError while contacting %s repository!"
-                                    (car archive)))
-                                  'error))
-                             (url-retrieve-synchronously (cdr archive))))
+        (unless (eq 'error
+                    (with-timeout
+                        (dotspacemacs-elpa-timeout
+                         (progn
+                           (display-warning
+                            'spacemacs
+                            (format
+                             "\nError connection time out for %s repository!"
+                             (car archive)) :warning)
+                           'error))
+                      (condition-case err
+                          (url-retrieve-synchronously (cdr archive))
+                        ('error
+                         (display-warning 'spacemacs
+                          (format
+                           "\nError while contacting %s repository!"
+                           (car archive)) :warning)
+                         'error))))
           (let ((package-archives (list archive)))
             (package-refresh-contents))))
       (package-read-all-archive-contents)
@@ -626,7 +635,7 @@ path."
     (while variables
       (let ((var (pop variables)))
         (if (consp variables)
-            (condition-case err
+            (condition-case-unless-debug err
                 (set-default var (eval (pop variables)))
               ('error
                (configuration-layer//increment-error-count)
@@ -897,7 +906,7 @@ path."
                  (format "  -> ignored pre-init (%S)..." layer))
               (spacemacs-buffer/message
                (format "  -> pre-init (%S)..." layer))
-              (condition-case err
+              (condition-case-unless-debug err
                   (funcall (intern (format "%S/pre-init-%S" layer pkg-name)))
                 ('error
                  (configuration-layer//increment-error-count)
@@ -917,7 +926,7 @@ path."
                  (format "  -> ignored post-init (%S)..." layer))
               (spacemacs-buffer/message
                (format "  -> post-init (%S)..." layer))
-              (condition-case err
+              (condition-case-unless-debug err
                   (funcall (intern (format "%S/post-init-%S" layer pkg-name)))
                 ('error
                  (configuration-layer//increment-error-count)
@@ -1031,7 +1040,8 @@ If called with a prefix argument ALWAYS-UPDATE, assume yes to update."
       (reverse
        (delq nil (mapcar
                   (lambda (x)
-                    (when (not (or (string= "." x) (string= ".." x)))
+                    (when (and (file-directory-p (concat rolldir x))
+                               (not (or (string= "." x) (string= ".." x))))
                       (let ((p (length (directory-files (file-name-as-directory
                                                          (concat rolldir x))))))
                         ;; -3 for . .. and rollback-info
