@@ -191,6 +191,9 @@ SCHEDULED: %^t
                      "* TODO %^{Task}\nSCHEDULED: %t\n"
                      :immediate-finish t)
 
+                    ("m" "Mail todo" entry (file+headline "~/Dropbox/org/todo/refile.org" "Tasks")
+                     "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")
+
                     ("m" "Meeting" entry
                      (file "~/Dropbox/org/todo/refile.org" "Tasks")
                      "* MEETING %^{Task}\nSCHEDULED: %t\n")

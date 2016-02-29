@@ -35,12 +35,9 @@
     (require 'tramp)
     (setq explicit-shell-file-name "/bin/bash")
     (setq tramp-default-method "ssh")
-    (setq tramp-verbose 9)
+    (setq tramp-verbose 1)
     ;; This is important, or with fancy shell, tramp will not work
     (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
-
-    (defvar find-file-root-prefix (if (featurep 'xemacs) "/[sudo/root@localhost]" "/sudo:root@localhost:" )
-      "*The filename prefix used to open a file with `find-file-root'.")
 
     (defvar find-file-root-history nil
       "History list for files found using `find-file-root'.")

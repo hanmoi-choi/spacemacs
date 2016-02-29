@@ -34,7 +34,7 @@
   (use-package gnus
     :commands gnus
     :init
-    (evil-leader/set-key "ag" 'gnus)
+    (evil-leader/set-key "am" 'gnus)
     :config
     (progn
       (setq gnus-select-method '(nnnil ""))

@@ -1,20 +1,30 @@
 (setq daniel-util-packages
       '(
         vlf
-        ;; emamux
         find-file-in-project
         tabbar-ruler
         multiple-cursors
-        ;; vimish-fold
         emr
-        cliphist
-        ;; airline-themes
-        ;; js2-refactor
-
+        ;; cliphist
+        pdf-tools
+        sx
+        ;; slack
+        ;; esqlite
+        ;; pscv
         helm-ls-git))
 
 (setq daniel-util-excluded-packages '())
 
+;; (defun daniel-util/init-slack ()
+;;   (use-package slack
+;;     :commands (slack-start)
+;;     :init
+;;     (setq slack-enable-emoji t) ;; if you want to enable emoji, default nil
+;;     (setq slack-room-subscription '(_general))
+;;     (setq slack-client-id "3017937356.21762972689")
+;;     (setq slack-client-secret "965f53cf33b019427a44594084124854")
+;;     (setq slack-token "xoxp-3017937356-17614747537-21762232753-1bb41551d5"))
+;;   (setq slack-user-name "Hanmoi"))
 (defun daniel-util/init-js2-refactor ()
   (use-package js2-refactor
     :init
@@ -22,18 +32,30 @@
       (add-hook 'js2-mode-hook #'js2-refactor-mode)
       )))
 
-(defun daniel-util/init-airline-themes ()
-  (use-package airline-themes
+(defun daniel-util/init-pscv ()
+  (use-package pscv
+    ))
+
+(defun daniel-util/init-esqlite ()
+  (use-package esqlite
+    ))
+(defun daniel-util/init-sx ()
+  (use-package sx
     :config
+    (bind-keys :prefix "C-c s"
+               :prefix-map my-sx-map
+               :prefix-docstring "Global keymap for SX."
+               ("q" . sx-tab-all-questions)
+               ("i" . sx-inbox)
+               ("o" . sx-open-link)
+               ("u" . sx-tab-unanswered-my-tags)
+               ("a" . sx-ask)
+               ("s" . sx-search))))
+(defun daniel-util/init-pdf-tools ()
+  (use-package pdf-tools
+    :init
     (progn
-      (setq airline-utf-glyph-separator-left      #xe0b0
-            airline-utf-glyph-separator-right     #xe0b2
-            airline-utf-glyph-subseparator-left   #xe0b1
-            airline-utf-glyph-subseparator-right  #xe0b3
-            airline-utf-glyph-branch              #xe0a0
-            airline-utf-glyph-readonly            #xe0a2
-            airline-utf-glyph-linenumber          #xe0a1)
-      (airline-themes-set-modeline))))
+      )))
 
 (defun daniel-util/init-emr ()
   (use-package emr
@@ -46,9 +68,9 @@
   (use-package multiple-cursors
     :init
     (progn
-      (global-set-key [C-S-down] 'mc/mark-next-like-this)
-      (global-set-key [C-S-up] 'mc/mark-previous-like-this)
-      (global-set-key (kbd "C-M-g") 'mc/delete-region-overlay))))
+      (global-set-key [C-s-down] 'mc/mark-next-like-this)
+      (global-set-key [C-s-up] 'mc/mark-previous-like-this)
+      (global-set-key (kbd "C-s-g") 'mc/delete-region-overlay))))
 
 (defun daniel-util/init-cliphist()
   (use-package cliphist
@@ -63,24 +85,6 @@
   "Initialize my package"
   (use-package vlf
     ))
-
-(defun daniel-util/init-emamux ()
-  "Initialize my package"
-  (use-package emamux
-    :defer t
-    :init
-    (progn
-      (evil-leader/set-key
-        "Es" 'emamux:send-command
-        "Er" 'emamux:run-command
-        "El" 'emamux:run-last-command
-        "Ey" 'emamux:yank-from-list-buffers
-        "Ec" 'emamux:close-runner-pane
-        "EC" 'emamux:copy-kill-ring
-        "Ei" 'emamux:interrupt-runner)
-      (custom-set-variables
-       '(emamux:completing-read-type 'helm)
-       '(emamux:use-nearest-pane t)))))
 
 (defun daniel-util/init-vimish-fold ()
   (use-package vimish-fold
@@ -113,18 +117,15 @@
                        ))))
                  (buffer-list))))
         (tabbar-mode ))
-
       (setq tabbar-ruler-global-tabbar t)
 
       ;; ;; Set nil
-      (define-key tabbar-mode-map [C-M-left] 'tabbar-backward-tab)
-      (define-key tabbar-mode-map [C-M-right] 'tabbar-forward-tab)
-      (define-key tabbar-mode-map [C-M-down] 'tabbar-backward-group)
-      (define-key tabbar-mode-map [C-M-up] 'tabbar-forward-group)
+      (define-key tabbar-mode-map (kbd "C-s-h") 'tabbar-backward-tab)
+      (define-key tabbar-mode-map (kbd "C-s-l") 'tabbar-forward-tab)
+      (define-key tabbar-mode-map (kbd "C-s-k") 'tabbar-backward-group)
+      (define-key tabbar-mode-map (kbd "C-s-j") 'tabbar-forward-group)
 
       (tabbar-ruler-group-by-projectile-project)
-      (add-to-list 'mode-icons '("EnhRuby" "ruby" xpm))
-      (add-to-list 'mode-icons '("Javascript-IDE" "js" xpm))
       (mode-icons-mode)
       )))
 

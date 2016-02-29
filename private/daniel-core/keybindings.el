@@ -1,14 +1,16 @@
 (evil-leader/set-key
   "bl" 'helm-buffers-list)
 
-(global-set-key (kbd "<M-f6>") '(lambda () (interactive) (bookmark-set "SAVED")))
-(global-set-key (kbd "<f6>") '(lambda () (interactive) (bookmark-jump "SAVED")))
+(global-set-key (kbd "<f6>") '(lambda () (interactive) (bookmark-set "SAVED")))
+(global-set-key (kbd "<s-f6>") '(lambda () (interactive) (bookmark-jump "SAVED")))
 
+(global-set-key (kbd "s-k") 'er/expand-region)
+(global-set-key (kbd "s-j") 'er/contract-region)
 (global-set-key (kbd "M-k") 'er/expand-region)
 (global-set-key (kbd "M-j") 'er/contract-region)
 
 (global-set-key (kbd "C-x t") 'toggle-camelcase-underscores)
-(global-set-key (kbd "M-d") 'private/duplicate-current-line-or-region)
+(global-set-key (kbd "s-d") 'private/duplicate-current-line-or-region)
 
 (global-set-key [C-up] 'private/move-text-up)
 (global-set-key [C-down] 'private/move-text-down)
@@ -16,13 +18,16 @@
 (define-key global-map (kbd "C-c C-l" ) 'helm-buffers-list)
 (define-key global-map (kbd "C-c C-n") 'private/indent-buffer)
 (define-key global-map (kbd "C-c C-r") 'revert-buffer)
-(define-key global-map (kbd "C-c R") 'revert-buffer)
-(define-key global-map (kbd "C-c B") 'bury-buffer)
+(define-key global-map (kbd "C-c r") 'revert-buffer)
+(define-key global-map (kbd "C-c b") 'bury-buffer)
 
-(define-key global-map (kbd "C-c g") 'helm-ls-git-ls)
-(define-key global-map (kbd "C-x g") 'helm-ls-git-ls)
+(global-set-key (kbd "C-s-\\") 'indent-region)
 
-(global-set-key (kbd "C-c C-o") 'ibuffer)
+(global-set-key (kbd "s-g") 'helm-ls-git-ls)
+(global-set-key (kbd "s-o") 'ibuffer)
+(global-set-key (kbd "s-i") 'helm-imenu)
+(global-set-key (kbd "s-m") 'woman)
+(global-set-key (kbd "s-y") 'helm-show-kill-ring)
 
 (global-set-key (kbd "C-c d") 'dash-at-point)
 (global-set-key (kbd "C-c D") 'dash-at-point-with-docset)
@@ -34,7 +39,9 @@
 (global-set-key (kbd "C-0") '(lambda()(interactive)
                                (modify-frame-parameters nil `((alpha . 100)))))
 (global-set-key (kbd "M-.") 'helm-gtags-dwim)
-(global-set-key (kbd "M-w") 'kill-this-buffer)
+(global-set-key (kbd "s-.") 'helm-gtags-dwim)
+(global-set-key (kbd "s-,") 'helm-gtags-pop-stack)
+(global-set-key (kbd "s-w") 'kill-this-buffer)
 
 (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
@@ -43,66 +50,22 @@
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 (global-set-key (kbd "C-c f") 'helm-projectile-find-file)
-(global-set-key (kbd "M-e") 'helm-projectile-recentf)
-(global-set-key (kbd "C-M-e") 'helm-recentf)
+(global-set-key (kbd "s-e") 'helm-projectile-recentf)
+(global-set-key (kbd "C-s-e") 'helm-recentf)
 
 ;; Search
-(global-set-key (kbd "M-f") 'helm-swoop)
-(global-set-key (kbd "M-r") 'spacemacs/helm-swoop-region-or-symbol)
+(global-set-key (kbd "s-f") 'helm-swoop)
+(global-set-key (kbd "s-r") 'spacemacs/helm-swoop-region-or-symbol)
 
 ;;;; Opened buffers socpe
 (global-set-key (kbd "C-c o") 'spacemacs/helm-buffers-smart-do-search)
 (global-set-key (kbd "C-c O") 'spacemacs/helm-buffers-smart-do-search-region-or-symbol)
 
 ;;;; Project scope
-(global-set-key (kbd "C-M-f") 'spacemacs/helm-project-smart-do-search)
+(global-set-key (kbd "C-s-f") 'spacemacs/helm-project-smart-do-search)
 (global-set-key (kbd "C-c C-p") 'neotree-project-dir)
 
 (global-unset-key (kbd "M-/"))
-
-(global-set-key (kbd "M-v") 'yank)
-(global-set-key (kbd "M-c") 'evil-yank)
-(global-set-key (kbd "M-a") 'mark-whole-buffer)
-(global-set-key (kbd "M-X") 'kill-region)
-(global-set-key (kbd "M-z") 'undo-tree-undo)
-(global-set-key (kbd "M-s")
-                (lambda ()
-                  (interactive)
-                  (call-interactively (key-binding "\C-x\C-s"))))
-(global-set-key (kbd "M-Z") 'undo-tree-redo)
-
-(when (spacemacs/system-is-mac)
-  ;; this is only applicable to GUI mode
-  (when (display-graphic-p)
-    ;; Treat command as super
-    (setq mac-command-key-is-meta nil)
-    (setq mac-command-modifier 'super)
-
-    (setq mac-option-key-is-meta t)
-    (setq mac-option-modifier 'meta)
-
-    ;; Keybindings
-    (global-set-key (kbd "s-=") 'spacemacs/scale-up-font)
-    (global-set-key (kbd "s--") 'spacemacs/scale-down-font)
-    (global-set-key (kbd "s-0") 'spacemacs/reset-font-size)
-    (global-set-key (kbd "s-q") 'save-buffers-kill-terminal)
-    (global-set-key (kbd "s-v") 'yank)
-    (global-set-key (kbd "s-c") 'evil-yank)
-    (global-set-key (kbd "s-a") 'mark-whole-buffer)
-    (global-set-key (kbd "s-x") 'kill-region)
-    (global-set-key (kbd "s-w") 'delete-window)
-    (global-set-key (kbd "s-W") 'delete-frame)
-    (global-set-key (kbd "s-n") 'make-frame)
-    (global-set-key (kbd "s-z") 'undo-tree-undo)
-    (global-set-key (kbd "s-s")
-                    (lambda ()
-                      (interactive)
-                      (call-interactively (key-binding "\C-x\C-s"))))
-    (global-set-key (kbd "s-Z") 'undo-tree-redo)
-    (global-set-key (kbd "C-s-f") 'spacemacs/toggle-frame-fullscreen)
-    ;; Emacs sometimes registers C-s-f as this weird keycode
-    (global-set-key (kbd "<C-s-268632070>") 'spacemacs/toggle-frame-fullscreen)))
-
 ;; Helm
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
@@ -143,7 +106,7 @@
   "hg" 'helm-google-suggest
   "he" 'helm-eval-expression-with-eldoc
   "hc" 'helm-calcul-expression
-  "HM" 'helm-mini)
+  "hm" 'helm-mini)
 
 (global-set-key (kbd "C-c <f2>") 'show-file-name)
 
@@ -155,8 +118,7 @@
   "Er" 'persp-rename
   "Eh" 'spacemacs/helm-perspectives
   "Es" 'persp-save-state-to-file
-  "El" 'persp-load-state-from-file
-  )
+  "El" 'persp-load-state-from-file)
 
 (eval-after-load 'smartparens
   '(progn
@@ -273,6 +235,15 @@ abort completely with `C-g'."
           (message "\"%s\" now expands to \"%s\" %sally"
                    bef aft (if p "loc" "glob")))
       (user-error "No typo at or before point"))))
-
 (setq save-abbrevs 'silently)
 (setq-default abbrev-mode t)
+
+;; Ace Link
+(eval-after-load 'ace-link
+  '(progn
+     (require 'woman)
+     (global-set-key (kbd "s-l") 'ace-link-addr)
+     (define-key woman-mode-map (kbd "s-l") 'ace-link-woman)
+     (define-key org-mode-map (kbd "s-l") 'ace-link-org)
+     (define-key w3m-mode-map (kbd "s-l") 'ace-link-eww)
+     ))

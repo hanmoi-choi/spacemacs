@@ -26,26 +26,19 @@
 
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
-(custom-set-variables
- '(evil-shift-width 2))
 (setq tab-width 2)
-
 (setq-default js2-basic-offset 4)
 (setq-default elisp-basic-offset 2)
 (setq-default indent-tabs-mode nil)
 
 (add-hook 'prog-mode-hook 'font-lock-comment-annotations)
-
 ;; (flyspell-mode t)
 (spacemacs|diminish flyspell-mode " ✎")
-
 (add-to-list 'load-path "~/.emacs.d/vendor")
 (require 'textmate-links)
-
 (defun private/save-all ()
   (interactive)
   (save-some-buffers t))
-
 (add-hook 'evil-insert-state-exit-hook 'private/save-all)
 
 ;;Dired
@@ -117,7 +110,6 @@
 (defun dired-back-to-start-of-files ()
   (interactive)
   (backward-char (- (current-column) 2)))
-
 (define-key dired-mode-map (kbd "C-a") 'dired-back-to-start-of-files)
 
 (eval-after-load 'git-timemachine
@@ -125,29 +117,9 @@
      (evil-make-overriding-map git-timemachine-mode-map 'normal)
      (add-hook 'git-timemachine-mode-hook #'evil-normalize-keymaps)))
 
-;;Prodigy
-(eval-after-load 'prodigy
-  '(progn
-     (prodigy-define-tag
-      :name 'rails
-      :on-output (lambda (&rest args)
-                   (let ((output (plist-get args :output))
-                         (service (plist-get args :service)))
-                     (when (or (s-matches? "Listening on 0\.0\.0\.0:[0-9]+, CTRL\\+C to stop" output)
-                               (s-matches? "Ctrl-C to shutdown server" output))
-                       (prodigy-set-status service 'ready)))))
-
-     (prodigy-define-service
-      :name "Maid Deamon"
-      :command "maid"
-      :args '("daemon")
-      :cwd "~")))
-
-
 ;; automagically tail log files
 (add-to-list 'auto-mode-alist '("\\.log\\'" . log-view-mode))
 (add-to-list 'auto-mode-alist '("\\.log\\.[0-9]*\\'" . log-view-mode))
-
 (defun log-view-handler ()
   (end-of-buffer)
   (make-variable-buffer-local 'auto-revert-interval)
@@ -161,5 +133,4 @@
     (show-smartparens-mode 0)))
 
 (add-hook 'log-view-mode-hook 'log-view-handler)
-
 (setq x-select-enable-clipboard t)
