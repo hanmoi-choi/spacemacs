@@ -43,14 +43,14 @@ values."
                                        restclient
                                        deft
                                        shell
-                                       react
+                                       ;; react
                                        unimpaired
-                                       jabber
+                                       ;; jabber
                                        osx
 
                                         ;Language
                                        clojure
-                                       scala
+                                       ;; scala
                                        shell-scripts
                                        javascript
                                        html
@@ -65,8 +65,8 @@ values."
                                        daniel-ruby
                                        daniel-util
                                        daniel-tramp
-                                       daniel-web-browser
-                                       daniel-email
+                                       ;; daniel-web-browser
+                                       ;; daniel-email
                                        )
 
 
@@ -84,6 +84,7 @@ values."
                                     git-gutter-fringe
                                     git-gutter-fringe+
 
+                                    smooth-scrolling
                                     evil-numbers
                                     doc-view
                                     evil-mc
@@ -136,13 +137,15 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font (if (eq system-type 'darwin)
-                                 '("SourceCodePro+Powerline+Awesome Regular"
+                                 '("Source Code Pro for Powerline"
+                                   ;;"Consolas"
+                                   ;; "Fira Mono for Powerline"
                                    :size 14
                                    :weight normal
                                    :width normal)
 
                                '("Source Code Pro for Powerline Regular"
-                                 :size 13
+                                 :size 12
                                  :weight normal
                                  :width normal))
    ;; The leader key

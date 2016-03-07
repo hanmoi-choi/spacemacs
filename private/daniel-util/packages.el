@@ -5,7 +5,7 @@
         tabbar-ruler
         multiple-cursors
         emr
-        ;; cliphist
+        cliphist
         pdf-tools
         sx
         ;; slack
