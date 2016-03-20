@@ -1,4 +1,4 @@
-;;-*- MODE: emacs-lisp -*-
+
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -35,6 +35,7 @@ values."
                                        colors
                                        dash
                                        git
+                                       haskell
                                        vagrant
                                        gtags
                                        better-defaults
@@ -289,7 +290,10 @@ user code."
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (progn
-    (setq mode-icons--directory "/Users/danielc/.emacs.d/private")
+    (if (eq system-type 'darwin)
+        (setq mode-icons--directory "/Users/danielc/.emacs.d/private")
+      (setq mode-icons--directory "/home/danielc/.emacs.d/private")
+      )
     (add-to-list 'mode-icons '("EnhRuby" "ruby" tiff))
     (add-to-list 'mode-icons '("Ruby" "ruby" tiff))
     (add-to-list 'mode-icons '("Javascript-IDE" "javascript" tiff))
