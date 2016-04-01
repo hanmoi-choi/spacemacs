@@ -218,7 +218,7 @@ Will work on both org-mode and any mode that accepts plain html."
             (when (member (nth 2 (org-heading-components)) (list "TODO" "NEXT"))
               (org-todo "STARTED"))))))))
 
-(defun markdown-preview-file-with-marked ()
+(defun preview-file-with-marked2 ()
   "run Marked on the current file (convert it to markdown in advance if the file is *.org)."
   (interactive)
   (if (string= (file-name-extension buffer-file-name) "org")

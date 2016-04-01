@@ -14,8 +14,7 @@
         rubocop
         yard-mode
         ruby-refactor
-        ruby-hash-syntax
-        ))
+        ruby-hash-syntax))
 
 (defun daniel-ruby/init-ruby-hash-syntax ()
   (use-package ruby-hash-syntax
@@ -74,11 +73,6 @@
     :config
     (progn
       (spacemacs|diminish rspec-mode "")
-      (defadvice rspec-compile (around rspec-compile-around)
-        "Use BASH shell for running the specs because of ZSH issues."
-        (let ((shell-file-name "/bin/bash"))
-          ad-do-it))
-
       ;; From Sacha
       (defun sacha/rspec-verify-single ()
         "Runs the specified example at the point of the current buffer."
@@ -92,7 +86,6 @@
             (number-to-string (line-number-at-pos))))
          (rspec-core-options)))
 
-      (ad-activate 'rspec-compile)
       (setq compilation-scroll-output t)
       (setq rspec-command-options "--color")
       (fset 'rspec-verify-single 'sacha/rspec-verify-single))))
@@ -148,19 +141,6 @@
       (require 'enh-ruby-mode)
       (define-key enh-ruby-mode-map (kbd "C-c C-g") 'projectile-rails-goto-file-at-point)
 
-      (defun projectile-rails-find-view-model ()
-        (interactive)
-        (projectile-rails-find-resource
-         "view_model: "
-         '(("app/view_models/" "/view_models/\\(.+\\)\\.rb$"))
-         "app/view_models/${filename}.rb"))
-
-      (defun projectile-rails-find-current-view-model ()
-        (interactive)
-        (projectile-rails-find-current-resource "app/view_models/"
-                                                "app/view_models/\\(.*${plural}\\)\\.rb$"
-                                                'projectile-rails-find-view-model))
-
       ;; Find files
       (evil-leader/set-key-for-mode 'enh-ruby-mode
         ;; Find files
@@ -173,7 +153,6 @@
         "mrfj" 'projectile-rails-find-javascript
         "mrfl" 'projectile-rails-find-lib
         "mrfm" 'projectile-rails-find-model
-        "mrfM" 'projectile-rails-find-view-model
         "mrfn" 'projectile-rails-find-migration
         "mrfo" 'projectile-rails-find-log
         "mrfs" 'projectile-rails-find-spec
@@ -181,7 +160,6 @@
         "mrfS" 'projectile-rails-find-stylesheet
         "mrfu" 'projectile-rails-find-fixture
         "mrfv" 'projectile-rails-find-view
-        "mrfV" 'projectile-rails-find-view-model
         "mrfy" 'projectile-rails-find-layout
         "mrf@" 'projectfle-rails-find-mailer
 

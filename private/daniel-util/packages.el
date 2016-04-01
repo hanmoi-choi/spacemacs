@@ -8,29 +8,35 @@
         cliphist
         pdf-tools
         sx
-        ;; slack
+        docker
         ;; esqlite
         ;; pscv
         helm-ls-git))
 
 (setq daniel-util-excluded-packages '())
 
-;; (defun daniel-util/init-slack ()
-;;   (use-package slack
-;;     :commands (slack-start)
-;;     :init
-;;     (setq slack-enable-emoji t) ;; if you want to enable emoji, default nil
-;;     (setq slack-room-subscription '(_general))
-;;     (setq slack-client-id "3017937356.21762972689")
-;;     (setq slack-client-secret "965f53cf33b019427a44594084124854")
-;;     (setq slack-token "xoxp-3017937356-17614747537-21762232753-1bb41551d5"))
-;;   (setq slack-user-name "Hanmoi"))
 (defun daniel-util/init-js2-refactor ()
   (use-package js2-refactor
     :init
     (progn
       (add-hook 'js2-mode-hook #'js2-refactor-mode)
       )))
+
+(defun daniel-util/init-docker ()
+  (use-package docker
+    :init
+    (progn
+      (setenv "DOCKER_TLS_VERIFY" "1")
+      (setenv "DOCKER_HOST" "tcp://192.168.99.100:2376")
+      (setenv "DOCKER_CERT_PATH" "/Users/daniel.choi/.docker/machine/machines/default")
+      (setenv "DOCKER_MACHINE_NAME" "default")
+      )
+    :config
+    (progn
+      (add-to-list 'evil-emacs-state-modes 'docker-containers-mode)
+      (add-to-list 'evil-emacs-state-modes 'docker-images-mode)
+      )
+    ))
 
 (defun daniel-util/init-pscv ()
   (use-package pscv

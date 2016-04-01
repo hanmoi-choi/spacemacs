@@ -123,10 +123,7 @@
      (eval-after-load 'org-capture
        '(progn
           (define-key org-capture-mode-map (kbd "C-c C-r") 'my/org-capture-refile-and-jump)
-          ))
-
-     (define-key org-mode-map (kbd "C-x C-v" ) 'markdown-preview-file-with-marked)
-     ))
+          ))))
 
 (eval-after-load 'org-agenda
   '(progn

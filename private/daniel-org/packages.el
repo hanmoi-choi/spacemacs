@@ -34,7 +34,7 @@
     :defer t
     :mode ("\\.\\(plantuml\\)$" . puml-mode)
     :init
-    (setq plantuml-jar-path "~/Dropbox/Apps/spacemacs/private/bin/plantuml.jar")))
+    (setq plantuml-jar-path "~/.emacs.d/private/bin/plantuml.jar")))
 
 (defun daniel-org/init-gnuplot ()
   (use-package gnuplot
@@ -59,8 +59,8 @@
        '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
        )
 
-      (setq org-directory "~/Dropbox/org")
-      (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+      (setq org-directory "~/Box Sync/org")
+      (setq org-mobile-directory "~/Box Sync/MobileOrg")
 
       ;; GOTO
       (setq org-goto-interface 'outline-path-completion
@@ -157,8 +157,8 @@
       ;; `dotspacemacs-major-mode-emacs-leader-key' to `C-c' and the key binding
       ;; C-c ' is shadowed by `spacemacs/default-pop-shell', effectively making
       ;; the Emacs user unable to exit src block editing.
-      (setq org-ditaa-jar-path "~/Dropbox/Apps/spacemacs/private/bin/ditaa0_9.jar"
-            org-plantuml-jar-path "~/Dropbox/Apps/spacemacs/private/bin/plantuml.jar"
+      (setq org-ditaa-jar-path "~/.emacs.d/private/bin/ditaa.jar"
+            org-plantuml-jar-path "~/.emacs.d/private/bin/plantuml.jar"
             org-babel-results-keyword "results")
       (define-key org-src-mode-map (kbd (concat dotspacemacs-major-mode-emacs-leader-key " '")) 'org-edit-src-exit)
       (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
@@ -181,34 +181,34 @@
       ;;;;;;;;;;;;;;
       (setq org-capture-templates
             (quote (("t" "TODO" entry
-                     (file "~/Dropbox/org/todo/refile.org")
+                     (file "~/Box Sync/org/todo/refile.org")
                      "* TODO %^{Task}
 CREATED: %<%Y-%m-%d %H:%M>
 SCHEDULED: %^t
 %? ")
                     ("T" "Quick task" entry
-                     (file "~/Dropbox/org/todo/refile.org" "Tasks")
+                     (file "~/Box Sync/org/todo/refile.org" "Tasks")
                      "* TODO %^{Task}\nSCHEDULED: %t\n"
                      :immediate-finish t)
 
-                    ("m" "Mail todo" entry (file+headline "~/Dropbox/org/todo/refile.org" "Tasks")
+                    ("m" "Mail todo" entry (file+headline "~/Box Sync/org/todo/refile.org" "Tasks")
                      "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")
 
                     ("m" "Meeting" entry
-                     (file "~/Dropbox/org/todo/refile.org" "Tasks")
+                     (file "~/Box Sync/org/todo/refile.org" "Tasks")
                      "* MEETING %^{Task}\nSCHEDULED: %t\n")
 
                     ("i" "Interrupting task" entry
-                     (file "~/Dropbox/org/todo/refile.org" "Tasks")
+                     (file "~/Box Sync/org/todo/refile.org" "Tasks")
                      "* NEXT %^{Task}"
                      :clock-in :clock-resume)
 
-                    ("n" "NOTE" entry (file "~/Dropbox/org/todo/note.org")
+                    ("n" "NOTE" entry (file "~/Box Sync/org/todo/note.org")
                      "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                     )))
 
       (add-hook 'org-capture-prepare-finalize-hook 'daniel/org-level1-replace)
-      (setq org-default-notes-file "~/Dropbox/org/todo/refile.org")
+      (setq org-default-notes-file "~/Box Sync/org/todo/refile.org")
 
       ;;;;;;;;;;;;;;
       ;; Todo
@@ -303,9 +303,9 @@ SCHEDULED: %^t
       (setq org-agenda-files
             (delq nil
                   (mapcar (lambda (x) (and (file-exists-p x) x))
-                          '("~/Dropbox/org/todo/refile.org"
-                            "~/Dropbox/org/todo/private.org"
-                            "~/Dropbox/org/todo/work.org"))))
+                          '("~/Box Sync/org/todo/refile.org"
+                            "~/Box Sync/org/todo/private.org"
+                            "~/Box Sync/org/todo/work.org"))))
 
       ;; Agenda log mode items to display (closed and state changes by default)
       (defvar my/org-agenda-limit-items nil "Number of items to show in agenda to-do views; nil if unlimited.")

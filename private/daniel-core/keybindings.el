@@ -1,6 +1,7 @@
 (evil-leader/set-key
   "bl" 'helm-buffers-list)
 
+(global-set-key (kbd "C-c C-v" ) 'preview-file-with-marked2)
 (global-set-key (kbd "<f6>") '(lambda () (interactive) (bookmark-set "SAVED")))
 (global-set-key (kbd "<s-f6>") '(lambda () (interactive) (bookmark-jump "SAVED")))
 

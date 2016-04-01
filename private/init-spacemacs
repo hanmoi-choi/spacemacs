@@ -35,8 +35,10 @@ values."
                                        colors
                                        dash
                                        git
+                                       github
                                        haskell
                                        vagrant
+                                       dockerfile
                                        gtags
                                        better-defaults
                                        version-control
@@ -85,7 +87,6 @@ values."
                                     git-gutter-fringe
                                     git-gutter-fringe+
 
-                                    smooth-scrolling
                                     evil-numbers
                                     doc-view
                                     evil-mc
@@ -141,12 +142,12 @@ values."
                                  '("Source Code Pro for Powerline"
                                    ;;"Consolas"
                                    ;; "Fira Mono for Powerline"
-                                   :size 14
+                                   :size 15
                                    :weight normal
                                    :width normal)
 
                                '("Source Code Pro for Powerline Regular"
-                                 :size 12
+                                 :size 14
                                  :weight normal
                                  :width normal))
    ;; The leader key
@@ -291,10 +292,11 @@ user code."
 layers configuration. You are free to put any user code."
   (progn
     (if (eq system-type 'darwin)
-        (setq mode-icons--directory "/Users/danielc/.emacs.d/private")
+        (setq mode-icons--directory "/Users/daniel.choi/.emacs.d/private")
       (setq mode-icons--directory "/home/danielc/.emacs.d/private")
       )
     (add-to-list 'mode-icons '("EnhRuby" "ruby" tiff))
+    (add-to-list 'mode-icons '("JSON" "json" png))
     (add-to-list 'mode-icons '("Ruby" "ruby" tiff))
     (add-to-list 'mode-icons '("Javascript-IDE" "javascript" tiff))
     (add-to-list 'mode-icons '("Web" "html" tiff))
@@ -326,12 +328,11 @@ layers configuration. You are free to put any user code."
     (add-to-list 'mode-icons '("Magit" "git" tiff))
     (add-to-list 'mode-icons '("Stackoverflow" "sof" tiff))
     (add-to-list 'mode-icons '("Question List" "sof" tiff))
+    (add-to-list 'mode-icons '("Dockerfile" "docker" tiff))
 
     (define-key evil-normal-state-map (kbd "M-.") nil)
     (setq helm-ag-use-agignore t)
     (global-company-mode)
-    (global-diff-hl-mode)
-    (global-hl-line-mode)
     (setq powerline-default-separator nil)
     ;; Make sparse keymap for not using packages, it's annoying with which-key
     (setq js2-mode-map (make-sparse-keymap))
@@ -339,12 +340,12 @@ layers configuration. You are free to put any user code."
     (setq jsx-indent-level 2)
 
     (defvar emmet-mode-keymap
-      (let
-          ((map (make-sparse-keymap)))
+      (let ((map (make-sparse-keymap)))
         (define-key map (kbd "C-j") 'emmet-expand-line)
         (define-key map (kbd "<C-return>") 'emmet-expand-line)
         map)
       "Keymap for emmet minor mode.")
+
     (add-hook 'prog-mode-hook (lambda ()
                                 (progn
                                   (helm-gtags-mode)
@@ -434,13 +435,36 @@ layers configuration. You are free to put any user code."
     (add-to-list 'evil-emacs-state-modes 'ielm-mode)
     (add-to-list 'evil-emacs-state-modes 'calendar-mode)
     (add-to-list 'evil-emacs-state-modes 'finder-mode)
-    (add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)
+    (add-to-list 'evil-emacs-state-modes 'comint-mode)
 
     (setq whitespace-display-mappings
           '((space-mark   ?\    [?\xB7]     [?.]); space
             (space-mark   ?\xA0 [?\xA4]     [?_]); hard space
             (newline-mark ?\n   [?\xB6 ?\n] [?$ ?\n]); end-of-line
             ))
+
+    ;; Default one is not wokring with old rubocop and REA is using old one
+    (require 'flycheck)
+    (add-to-list 'flycheck-disabled-checkers 'ruby-rubocop)
+
+    (flycheck-define-checker ruby-rubocop-2
+      ""
+      :command ("rubocop" "--display-cop-names" "--format" "emacs"
+                (config-file "--config" flycheck-rubocoprc)
+                (option-flag "--lint" flycheck-rubocop-lint-only))
+      :standard-input t
+      :error-patterns
+      ((info line-start (file-name) ":" line ":" column ": C: "
+             (optional (id (one-or-more (not (any ":")))) ": ") (message) line-end)
+       (warning line-start (file-name) ":" line ":" column ": W: "
+                (optional (id (one-or-more (not (any ":")))) ": ") (message)
+                line-end)
+       (error line-start (file-name) ":" line ":" column ": " (or "E" "F") ": "
+              (optional (id (one-or-more (not (any ":")))) ": ") (message)
+              line-end))
+      :modes (enh-ruby-mode ruby-mode)
+      :next-checkers ((warning . ruby-rubylint)))
+    (add-to-list 'flycheck-checkers 'ruby-rubocop-2)
     ))
 
 (custom-set-variables
