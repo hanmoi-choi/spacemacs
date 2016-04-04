@@ -123,6 +123,10 @@
             '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
       (setq org-catch-invisible-edits 'error)
 
+      ;; clojure
+      (require 'cider)
+      (setq org-babel-clojure-backend 'cider)
+      (setq org-babel-haskell-backend 'ghc)
 
       ;; Get this from https://raw.github.com/chenfengyuan/elisp/master/next-spec-day.el
       (load (concat vendor-directory "next-spec-day.el") t)

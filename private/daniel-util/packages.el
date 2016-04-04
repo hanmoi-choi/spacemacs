@@ -9,6 +9,8 @@
         pdf-tools
         sx
         docker
+        helm-chrome
+        edbi
         ;; esqlite
         ;; pscv
         helm-ls-git))
@@ -42,9 +44,14 @@
   (use-package pscv
     ))
 
-(defun daniel-util/init-esqlite ()
-  (use-package esqlite
+(defun daniel-util/init-helm-chrome ()
+  (use-package helm-chrome
     ))
+
+(defun daniel-util/init-edbi ()
+  (use-package edbi
+    ))
+
 (defun daniel-util/init-sx ()
   (use-package sx
     :config
@@ -117,6 +124,7 @@
                       (find (aref bn 0) " *")
                       (and
                        (> (length bn) 7)
+                       (not (string= "*terminal" (substring bn 0 9)))
                        (not (string= "*magit:" (substring bn 0 7)))
                        (not (string= "*rails*" (substring bn 0 7)))
                        (not (string= "*prodigy" (substring bn 0 8)))

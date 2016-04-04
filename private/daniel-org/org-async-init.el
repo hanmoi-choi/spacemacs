@@ -9,4 +9,6 @@
 (require 'cl)
 (require 'org-capture)
 (require 'org-id)
+(require 'ob-clojure)
+(require 'ob-haskell)
 (setq org-export-async-debug nil)

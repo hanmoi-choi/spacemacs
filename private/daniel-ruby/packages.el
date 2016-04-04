@@ -4,7 +4,7 @@
         evil-matchit
         flycheck
         company
-        rvm
+        rbenv
         rspec-mode
         enh-ruby-mode
         robe
@@ -48,13 +48,13 @@
       (add-hook 'enh-ruby-mode-hook 'yard-mode)
       (spacemacs|diminish yard-mode ""))))
 
-(defun daniel-ruby/init-rvm ()
-  "Initialize RVM mode"
-  (use-package rvm
+(defun daniel-ruby/init-rbenv ()
+  "Initialize RBENV mode"
+  (use-package rbenv
     :defer t
-    :init (rvm-use-default)
+    :init (global-rbenv-mode)
     :config (add-hook 'enh-ruby-mode-hook
-                      (lambda () (rvm-activate-corresponding-ruby)))))
+                      (lambda () (rbenv-use-corresponding)))))
 
 (defun daniel-ruby/init-rspec-mode ()
   (use-package rspec-mode
@@ -93,7 +93,7 @@
 (defun daniel-ruby/init-enh-ruby-mode ()
   "Initialize Ruby Mode"
   (use-package enh-ruby-mode
-    :mode (("\\(Rake\\|Thor\\|Guard\\|Gem\\|Cap\\|Vagrant\\|Berks\\|Pod\\|Puppet\\)file\\'" . enh-ruby-mode)
+    :mode (("\\(Rake\\|Thor\\|Guard\\|Gem\\|Cap\\|\\Envfile|Vagrant\\|Berks\\|Pod\\|Puppet\\)file\\'" . enh-ruby-mode)
            ("\\.\\(rb\\|rabl\\|ru\\|builder\\|rake\\|thor\\|gemspec\\|jbuilder\\)\\'" . enh-ruby-mode))
     :init (setq enh-ruby-mode-map (make-sparse-keymap))
     :config

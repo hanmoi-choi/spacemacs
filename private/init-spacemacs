@@ -53,7 +53,7 @@ values."
 
                                         ;Language
                                        clojure
-                                       ;; scala
+                                       scala
                                        shell-scripts
                                        javascript
                                        html
@@ -140,8 +140,6 @@ values."
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font (if (eq system-type 'darwin)
                                  '("Source Code Pro for Powerline"
-                                   ;;"Consolas"
-                                   ;; "Fira Mono for Powerline"
                                    :size 15
                                    :weight normal
                                    :width normal)
@@ -283,8 +281,7 @@ user code."
     (define-key input-decode-map "\e[1;8A" [C-M-up])
     (define-key input-decode-map "\e[1;8B" [C-M-down])
     (define-key input-decode-map "\e[1;8C" [C-M-right])
-    (define-key input-decode-map "\e[1;8D" [C-M-left])
-    ))
+    (define-key input-decode-map "\e[1;8D" [C-M-left])))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -293,8 +290,8 @@ layers configuration. You are free to put any user code."
   (progn
     (if (eq system-type 'darwin)
         (setq mode-icons--directory "/Users/daniel.choi/.emacs.d/private")
-      (setq mode-icons--directory "/home/danielc/.emacs.d/private")
-      )
+      (setq mode-icons--directory "/home/danielc/.emacs.d/private"))
+
     (add-to-list 'mode-icons '("EnhRuby" "ruby" tiff))
     (add-to-list 'mode-icons '("JSON" "json" png))
     (add-to-list 'mode-icons '("Ruby" "ruby" tiff))
@@ -339,6 +336,8 @@ layers configuration. You are free to put any user code."
     (setq ggtags-mode-map (make-sparse-keymap))
     (setq jsx-indent-level 2)
 
+    (defvar shell-default-shell 'multi-term)
+
     (defvar emmet-mode-keymap
       (let ((map (make-sparse-keymap)))
         (define-key map (kbd "C-j") 'emmet-expand-line)
@@ -346,32 +345,11 @@ layers configuration. You are free to put any user code."
         map)
       "Keymap for emmet minor mode.")
 
-    (add-hook 'prog-mode-hook (lambda ()
-                                (progn
-                                  (helm-gtags-mode)
-                                  (smartparens-mode)
-                                  (linum-mode))))
     (spacemacs/set-leader-keys
       "ghr" 'diff-hl-revert-hunk
       "ghp" 'diff-hl-previous-hunk
       "ghn" 'diff-hl-next-hunk
       "ghg" 'diff-hl-diff-goto-hunk)
-
-    (add-hook 'web-mode-hook (lambda ()
-                               (progn
-                                 (emmet-mode)
-                                 (show-smartparens-mode)
-                                 )))
-
-    (add-hook 'emacs-lisp-mode-hook (lambda ()
-                                      (progn
-                                        (show-smartparens-mode)
-                                        )))
-
-    (add-hook 'js2-mode-hook (lambda ()
-                               (progn
-                                 (show-smartparens-mode)
-                                 )))
 
     (add-hook 'message-mode-hook
               (lambda ()
@@ -421,7 +399,6 @@ layers configuration. You are free to put any user code."
 
     ;; This make Emacs really slow
     (setq global-hl-line-mode nil)
-    (setq show-smartparens-global-mode nil)
 
     ;; I want to see all filename
     (setq ibuffer-formats
@@ -489,7 +466,6 @@ layers configuration. You are free to put any user code."
         (mode . idl-mode)
         (mode . lisp-mode)))))))
  '(send-mail-function (quote smtpmail-send-it)))
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
