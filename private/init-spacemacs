@@ -328,10 +328,10 @@ layers configuration. You are free to put any user code."
     (add-to-list 'mode-icons '("Dockerfile" "docker" tiff))
 
     (define-key evil-normal-state-map (kbd "M-.") nil)
-    (setq helm-ag-use-agignore t)
     (global-company-mode)
     (setq powerline-default-separator nil)
     ;; Make sparse keymap for not using packages, it's annoying with which-key
+    (add-hook 'prog-mode-hook 'linum-mode)
     (setq js2-mode-map (make-sparse-keymap))
     (setq ggtags-mode-map (make-sparse-keymap))
     (setq jsx-indent-level 2)
@@ -351,24 +351,9 @@ layers configuration. You are free to put any user code."
       "ghn" 'diff-hl-next-hunk
       "ghg" 'diff-hl-diff-goto-hunk)
 
-    (add-hook 'message-mode-hook
-              (lambda ()
-                (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
-
     (add-hook 'org-mode-hook
               (lambda ()
                 (local-set-key "\C-c\M-o" 'org-mime-org-buffer-htmlize)))
-
-    (add-hook 'org-mime-html-hook
-              (lambda ()
-                (org-mime-change-element-style
-                 "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
-                               "#E6E1DC" "#232323"))))
-
-    (add-hook 'org-mime-html-hook
-              (lambda ()
-                (org-mime-change-element-style
-                 "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
 
     (require 'sgml-mode)
     (add-to-list 'hs-special-modes-alist
@@ -396,9 +381,6 @@ layers configuration. You are free to put any user code."
     ;; Deft Setting
     (setq deft-directory "~/Dropbox/org/notes")
     (setq deft-extensions '("org" "md" "txt"))
-
-    ;; This make Emacs really slow
-    (setq global-hl-line-mode nil)
 
     ;; I want to see all filename
     (setq ibuffer-formats
@@ -441,8 +423,7 @@ layers configuration. You are free to put any user code."
               line-end))
       :modes (enh-ruby-mode ruby-mode)
       :next-checkers ((warning . ruby-rubylint)))
-    (add-to-list 'flycheck-checkers 'ruby-rubocop-2)
-    ))
+    (add-to-list 'flycheck-checkers 'ruby-rubocop-2)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -481,5 +462,4 @@ layers configuration. You are free to put any user code."
  '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
  '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
- )
+ '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))

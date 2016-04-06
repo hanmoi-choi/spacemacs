@@ -109,7 +109,6 @@
     ))
 
 (defun daniel-util/init-tabbar-ruler ()
-  "Initialize my package"
   (use-package tabbar-ruler
     :init
     (progn
@@ -130,7 +129,7 @@
                        (not (string= "*prodigy" (substring bn 0 8)))
                        ))))
                  (buffer-list))))
-        (tabbar-mode ))
+        (tabbar-mode))
       (setq tabbar-ruler-global-tabbar t)
 
       ;; ;; Set nil

@@ -5,7 +5,7 @@
         flycheck
         company
         rbenv
-        rspec-mode
+        (rspec-mode :location local)
         enh-ruby-mode
         robe
         ruby-tools
@@ -202,8 +202,8 @@
         (push 'company-robe company-backends)))
     :config
     (progn
-      (defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
-        (rvm-activate-corresponding-ruby))
+      (defadvice inf-ruby-console-auto (before activate-rbenv-for-robe activate)
+        (rbenv-use-corresponding))
 
       (spacemacs|hide-lighter robe-mode)
       ;; robe mode specific

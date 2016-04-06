@@ -54,3 +54,4 @@ python-*-docs-html
 /recentf
 *.cache
 /.org-id-locations
+/.edbi-ds-history
