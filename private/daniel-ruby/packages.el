@@ -4,7 +4,7 @@
         evil-matchit
         flycheck
         company
-        rbenv
+        ;; rbenv
         (rspec-mode :location local)
         enh-ruby-mode
         robe
@@ -93,7 +93,7 @@
 (defun daniel-ruby/init-enh-ruby-mode ()
   "Initialize Ruby Mode"
   (use-package enh-ruby-mode
-    :mode (("\\(Rake\\|Thor\\|Guard\\|Gem\\|Cap\\|\\Envfile|Vagrant\\|Berks\\|Pod\\|Puppet\\)file\\'" . enh-ruby-mode)
+    :mode (("\\(Rake\\|Thor\\|Guard\\|Gem\\|Cap\\|\\Env\\|Vagrant\\|Berks\\|Pod\\|Puppet\\)file\\'" . enh-ruby-mode)
            ("\\.\\(rb\\|rabl\\|ru\\|builder\\|rake\\|thor\\|gemspec\\|jbuilder\\)\\'" . enh-ruby-mode))
     :init (setq enh-ruby-mode-map (make-sparse-keymap))
     :config
@@ -202,8 +202,6 @@
         (push 'company-robe company-backends)))
     :config
     (progn
-      (defadvice inf-ruby-console-auto (before activate-rbenv-for-robe activate)
-        (rbenv-use-corresponding))
 
       (spacemacs|hide-lighter robe-mode)
       ;; robe mode specific

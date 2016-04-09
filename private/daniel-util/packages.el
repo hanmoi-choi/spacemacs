@@ -11,6 +11,7 @@
         docker
         helm-chrome
         edbi
+        restclient
         ;; esqlite
         ;; pscv
         helm-ls-git))
@@ -28,7 +29,6 @@
   (use-package docker
     :init
     (progn
-      (setenv "DOCKER_TLS_VERIFY" "1")
       (setenv "DOCKER_HOST" "tcp://192.168.99.100:2376")
       (setenv "DOCKER_CERT_PATH" "/Users/daniel.choi/.docker/machine/machines/default")
       (setenv "DOCKER_MACHINE_NAME" "default")
@@ -83,7 +83,9 @@
     (progn
       (global-set-key [C-s-down] 'mc/mark-next-like-this)
       (global-set-key [C-s-up] 'mc/mark-previous-like-this)
-      (global-set-key (kbd "C-s-g") 'mc/delete-region-overlay))))
+      (global-set-key (kbd "C-s-g") 'mc/delete-region-overlay)
+      (global-set-key (kbd "<C-s-268632071>") 'mc/delete-region-overlay)
+      )))
 
 (defun daniel-util/init-cliphist()
   (use-package cliphist
@@ -134,9 +136,16 @@
 
       ;; ;; Set nil
       (define-key tabbar-mode-map (kbd "C-s-h") 'tabbar-backward-tab)
+      (define-key tabbar-mode-map (kbd "<C-s-268632072>") 'tabbar-backward-tab)
+
       (define-key tabbar-mode-map (kbd "C-s-l") 'tabbar-forward-tab)
+      (define-key tabbar-mode-map (kbd "<C-s-268632076>") 'tabbar-forward-tab)
+
       (define-key tabbar-mode-map (kbd "C-s-k") 'tabbar-backward-group)
+      (define-key tabbar-mode-map (kbd "<C-s-268632075>") 'tabbar-backward-group)
+
       (define-key tabbar-mode-map (kbd "C-s-j") 'tabbar-forward-group)
+      (define-key tabbar-mode-map (kbd "<C-s-268632074>") 'tabbar-forward-group)
 
       (tabbar-ruler-group-by-projectile-project)
       (mode-icons-mode)
@@ -147,3 +156,25 @@
   (use-package helm-ls-git
     :defer t
     :bind ("C-x C-d" . helm-browse-project)))
+
+(defun daniel-util/init-restclient ()
+  (use-package restclient
+    :mode ("\\(\\.http\\|\\.http\\.gpg\\)\\'" . restclient-mode)
+    :defer t
+    :init
+    (progn
+      (defun restclient-http-send-current-raw-stay-in-window ()
+        (interactive)
+        (restclient-http-send-current t t))
+
+      (spacemacs/set-leader-keys-for-major-mode 'restclient-mode
+        "s" 'restclient-http-send-current-stay-in-window
+        "S" 'restclient-http-send-current
+        "r" 'restclient-http-send-current-raw-stay-in-window
+        "R" 'restclient-http-send-current-raw
+        ))
+    :config
+    (progn
+      )
+    )
+  )

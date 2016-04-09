@@ -16,7 +16,7 @@
 
 (defun restclient/init-restclient ()
   (use-package restclient
-    :mode ("\\.http\\'" . restclient-mode)
+    :mode ("\\(\\.http\\|\\.http\\.gpg\\)\\'" . restclient-mode)
     :defer t
     :init
     (progn
@@ -32,11 +32,6 @@
         ))
     :config
     (progn
-      (defun my/load-restclient-file ()
-        (interactive)
-        (if (file-exists-p "~/Dropbox/restclient.http")
-           (find-file "~/Dropbox/restclient.http")))
-      (global-set-key (kbd "C-c <f1>") 'my/load-restclient-file)
       )
     )
   )

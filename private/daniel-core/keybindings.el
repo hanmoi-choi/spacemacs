@@ -23,6 +23,7 @@
 (define-key global-map (kbd "C-c b") 'bury-buffer)
 
 (global-set-key (kbd "C-s-\\") 'indent-region)
+(global-set-key (kbd "<C-s-268632092>") 'indent-region)
 
 (global-set-key (kbd "s-g") 'helm-ls-git-ls)
 (global-set-key (kbd "s-o") 'ibuffer)
@@ -52,7 +53,9 @@
 
 (global-set-key (kbd "C-c f") 'helm-projectile-find-file)
 (global-set-key (kbd "s-e") 'helm-projectile-recentf)
+
 (global-set-key (kbd "C-s-e") 'helm-recentf)
+(global-set-key (kbd "<C-s-268632069>") 'helm-recentf)
 
 ;; Search
 (global-set-key (kbd "s-f") 'helm-swoop)
@@ -64,6 +67,8 @@
 
 ;;;; Project scope
 (global-set-key (kbd "C-s-f") 'spacemacs/helm-project-smart-do-search)
+(global-set-key (kbd "<C-s-268632070>") 'spacemacs/helm-project-smart-do-search)
+
 (global-set-key (kbd "C-c C-p") 'neotree-project-dir)
 
 (global-unset-key (kbd "M-/"))
