@@ -35,9 +35,9 @@ values."
                                        colors
                                        dash
                                        git
-                                       github
+                                       ;; github
                                        haskell
-                                       vagrant
+                                       ;; vagrant
                                        dockerfile
                                        gtags
                                        better-defaults
@@ -281,7 +281,8 @@ user code."
     (define-key input-decode-map "\e[1;8A" [C-M-up])
     (define-key input-decode-map "\e[1;8B" [C-M-down])
     (define-key input-decode-map "\e[1;8C" [C-M-right])
-    (define-key input-decode-map "\e[1;8D" [C-M-left])))
+    (define-key input-decode-map "\e[1;8D" [C-M-left]))
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
