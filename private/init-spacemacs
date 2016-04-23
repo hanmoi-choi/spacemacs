@@ -60,6 +60,7 @@ values."
                                        common-lisp
                                        asciidoc
                                        emacs-lisp
+                                       python
                                        markdown
                                        spell-checking
 
@@ -303,7 +304,6 @@ layers configuration. You are free to put any user code."
     (add-to-list 'mode-icons '("Emacs-Lisp" "elisp" png))
     (add-to-list 'mode-icons '("Lisp Interaction" "elisp" png))
     (add-to-list 'mode-icons '("IELM" "elisp" png))
-    ;; (add-to-list 'mode-icons '("Lisp" "cl" png))
     (add-to-list 'mode-icons '("nXML" "xml" png))
     (add-to-list 'mode-icons '("XML" "xml" png))
     (add-to-list 'mode-icons '("Org" "org" png))
@@ -320,6 +320,7 @@ layers configuration. You are free to put any user code."
     (add-to-list 'mode-icons '("Elixir" "elixir" png))
     (add-to-list 'mode-icons '("Haskell" "haskell" png))
     (add-to-list 'mode-icons '("Clojure" "clojure" png))
+    (add-to-list 'mode-icons '("ClojureScript" "clojure" png))
     (add-to-list 'mode-icons '("Java/l" "java" png))
     (add-to-list 'mode-icons '("Scala" "scala" png))
     (add-to-list 'mode-icons '("w3m" "google" png))
