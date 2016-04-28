@@ -5,6 +5,7 @@
         flycheck
         company
         ;; rbenv
+        chruby
         (rspec-mode :location local)
         enh-ruby-mode
         robe
@@ -23,6 +24,10 @@
     (progn
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mx{" 'ruby-toggle-hash-syntax)
       (evil-leader/set-key-for-mode 'enh-ruby-mode "mxb" 'ruby-toggle-block))))
+
+(defun daniel-ruby/init-chruby ()
+  (use-package chruby
+    ))
 
 (defun daniel-ruby/init-ruby-refactor ()
   (use-package ruby-refactor
@@ -87,7 +92,11 @@
          (rspec-core-options)))
 
       (setq compilation-scroll-output t)
-      (setq rspec-command-options "--color")
+      (defadvice rspec-compile (around rspec-compile-around)
+        "Use BASH shell for running the specs because of ZSH issues."
+        (let ((shell-file-name "/bin/bash"))
+          ad-do-it))
+      (ad-activate 'rspec-compile)
       (fset 'rspec-verify-single 'sacha/rspec-verify-single))))
 
 (defun daniel-ruby/init-enh-ruby-mode ()

@@ -1,0 +1,4 @@
+#name : byebug
+#group : debugger
+# --
+require 'byebug'; byebug

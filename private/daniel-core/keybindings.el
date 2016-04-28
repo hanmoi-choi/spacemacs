@@ -126,87 +126,74 @@
   "Es" 'persp-save-state-to-file
   "El" 'persp-load-state-from-file)
 
+
 (eval-after-load 'smartparens
   '(progn
+     (defmacro def-pairs (pairs)
+       `(progn
+          ,@(loop for (key . val) in pairs
+                  collect
+                  `(defun ,(read (concat
+                                  "wrap-with-"
+                                  (prin1-to-string key)
+                                  "s"))
+                       (&optional arg)
+                     (interactive "p")
+                     (sp-wrap-with-pair ,val)))))
 
-     (spacemacs|define-micro-state smartparens
-       :doc "[a]^ [e]$ [u]up [d]down [h](<- [j](-> [k])-> [l])<- [f]fwd [b]bwd
-              [k]kill sexp [K]kill word
-              [u]unwrap [s]splice [S]split
-              [q]Quit"
-       :persistent t
-       :bindings
-       ("a" sp-beginning-of-sexp)
-       ("e" sp-end-of-sexp)
-       ("u" sp-up-sexp)
-       ("d" sp-down-sexp)
-       ("h" sp-backward-slurp-sexp)
-       ("j" sp-backward-barf-sexp)
-       ("k" sp-forward-barf-sexp)
-       ("l" sp-forward-slurp-sexp)
-       ("b" sp-backward-sexp)
-       ("u" sp-unwrap-sexp)
-       ("s" sp-splice-sexp)
-       ("S" sp-split-sexp)
-       ("q" nil :exit t))
+     (def-pairs ((paren        . "(")
+                 (bracket      . "[")
+                 (brace        . "{")
+                 (single-quote . "'")
+                 (double-quote . "\"")
+                 (back-quote   . "`")))
 
-     (define-key smartparens-mode-map (kbd "C-x p") 'spacemacs/smartparens-micro-state)
+     (bind-keys
+      :map smartparens-mode-map
+      ("C-M-a" . sp-beginning-of-sexp)
+      ("C-M-e" . sp-end-of-sexp)
 
-     (define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
-     (define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-splice-sexp)
-     (define-key smartparens-mode-map (kbd "C-M-d") 'sp-splice-sexp)
+      ("M-s-<down>" . sp-down-sexp)
+      ("M-s-<up>"   . sp-up-sexp)
+      ("M-<down>" . sp-backward-down-sexp)
+      ("M-<up>"   . sp-backward-up-sexp)
 
-     (define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)
-     (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
-     (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
-     (define-key smartparens-mode-map (kbd "C-S-<left>") 'sp-backward-slurp-sexp)
-     (define-key smartparens-mode-map (kbd "C-S-<right>") 'sp-backward-barf-sexp)
-     (define-key smartparens-mode-map (kbd "C-}") 'sp-select-next-thing)
-     (define-key smartparens-mode-map (kbd "C-M-n") 'sp-select-next-thing)
-     (define-key smartparens-mode-map (kbd "C-{") 'sp-select-previous-thing-exchange)
-     (define-key smartparens-mode-map (kbd "C-M-p") 'sp-select-previous-thing-exchange)
+      ("C-M-f" . sp-forward-sexp)
+      ("C-M-b" . sp-backward-sexp)
 
-     ;;;;;;;;;;;;;;;;;;
-     ;; pair management
-     (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-     (bind-key "M-(" 'lisp-state-wrap minibuffer-local-map)
-     ;;; markdown-mode
-     (sp-with-modes '(markdown-mode gfm-mode rst-mode)
-       (sp-local-pair "*" "*"
-                      :wrap "M-*"
-                      :unless '(sp-point-after-word-p sp-point-at-bol-p)
-                      :post-handlers '(("[d1]" "SPC"))
-                      :skip-match 'sp--gfm-skip-asterisk)
-       (sp-local-pair "**" "**")
-       (sp-local-pair "_" "_" :wrap "M-_" :unless '(sp-point-after-word-p)))
-     (defun sp--gfm-skip-asterisk (ms mb me)
-       (save-excursion
-         (goto-char mb)
-         (save-match-data (looking-at "^\\* "))))
-     ;;; lisp modes
-     (sp-with-modes sp--lisp-modes
-       (sp-local-pair "(" nil
-                      :wrap "M-("
-                      :pre-handlers '(my-add-space-before-sexp-insertion)
-                      :post-handlers '(my-add-space-after-sexp-insertion)))
-     (defun my-add-space-after-sexp-insertion (id action _context)
-       (when (eq action 'insert)
-         (save-excursion
-           (forward-char (sp-get-pair id :cl-l))
-           (when (or (eq (char-syntax (following-char)) ?w)
-                     (looking-at (sp--get-opening-regexp)))
-             (insert " ")))))
+      ("C-M-n" . sp-next-sexp)
+      ("C-M-p" . sp-previous-sexp)
 
-     (defun my-add-space-before-sexp-insertion (id action _context)
-       (when (eq action 'insert)
-         (save-excursion
-           (backward-char (length id))
-           (when (or (eq (char-syntax (preceding-char)) ?w)
-                     (and (looking-back (sp--get-closing-regexp))
-                          (not (eq (char-syntax (preceding-char)) ?'))))
-             (insert " ")))))
+      ("C-S-f" . sp-forward-symbol)
+      ("C-S-b" . sp-backward-symbol)
+
+      ("M-s-<right>" . sp-forward-slurp-sexp)
+      ("M-<right>" . sp-forward-barf-sexp)
+      ("M-s-<left>"  . sp-backward-slurp-sexp)
+      ("M-<left>"  . sp-backward-barf-sexp)
+
+      ("C-M-t" . sp-transpose-sexp)
+      ("C-M-k" . sp-kill-sexp)
+      ("C-M-w" . sp-copy-sexp)
+
+      ("M-<delete>" . sp-unwrap-sexp)
+      ("M-<backspace>" . sp-splice-sexp)
+
+      ("C-<backspace>" . sp-backward-kill-word)
+
+      ("M-[" . sp-backward-unwrap-sexp)
+      ("M-]" . sp-unwrap-sexp)
+
+      ("C-x C-t" . sp-transpose-hybrid-sexp)
+
+      ("C-c ("  . wrap-with-parens)
+      ("C-c ["  . wrap-with-brackets)
+      ("C-c {"  . wrap-with-braces)
+      ("C-c '"  . wrap-with-single-quotes)
+      ("C-c \"" . wrap-with-double-quotes)
+      ("C-c _"  . wrap-with-underscores)
+      ("C-c `"  . wrap-with-back-quotes))
      ))
-
 (define-key ctl-x-map "\C-i"
   #'endless/ispell-word-then-abbrev)
 
