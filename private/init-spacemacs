@@ -50,6 +50,7 @@ values."
                                        unimpaired
                                        ;; jabber
                                        osx
+                                       latex
 
                                         ;Language
                                        clojure
@@ -306,7 +307,6 @@ layers configuration. You are free to put any user code."
     (add-to-list 'mode-icons '("IELM" "elisp" png))
     (add-to-list 'mode-icons '("nXML" "xml" png))
     (add-to-list 'mode-icons '("XML" "xml" png))
-    (add-to-list 'mode-icons '("Org" "org" png))
     (add-to-list 'mode-icons '("Projectile Rails Server" "rails" png))
     (add-to-list 'mode-icons '("Shell-script" "bash" png))
     (add-to-list 'mode-icons '("Bat" "bash" png))

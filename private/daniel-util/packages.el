@@ -148,7 +148,7 @@
       (define-key tabbar-mode-map (kbd "<C-s-268632074>") 'tabbar-forward-group)
 
       (tabbar-ruler-group-by-projectile-project)
-      (mode-icons-mode)
+      ;; (mode-icons-mode)
       )))
 
 (defun daniel-util/init-helm-ls-git ()
