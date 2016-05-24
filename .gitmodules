@@ -1,0 +1,3 @@
+[submodule "private/reek-emacs"]
+	path = private/reek-emacs
+	url = git@github.com:hanmoi-choi/reek-emacs.git

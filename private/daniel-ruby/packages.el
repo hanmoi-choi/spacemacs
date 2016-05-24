@@ -6,7 +6,7 @@
         company
         ;; rbenv
         chruby
-        (rspec-mode :location local)
+        rspec-mode
         enh-ruby-mode
         robe
         ruby-tools
@@ -102,7 +102,7 @@
 (defun daniel-ruby/init-enh-ruby-mode ()
   "Initialize Ruby Mode"
   (use-package enh-ruby-mode
-    :mode (("\\(Rake\\|Thor\\|Guard\\|Gem\\|Cap\\|\\Env\\|Vagrant\\|Berks\\|Pod\\|Puppet\\)file\\'" . enh-ruby-mode)
+    :mode (("\\^\\(Rake\\|Thor\\|Guard\\|Gem\\|Cap\\|\\Env\\|Vagrant\\|Berks\\|Pod\\|Puppet\\)file\\'" . enh-ruby-mode)
            ("\\.\\(rb\\|rabl\\|ru\\|builder\\|rake\\|thor\\|gemspec\\|jbuilder\\)\\'" . enh-ruby-mode))
     :init (setq enh-ruby-mode-map (make-sparse-keymap))
     :config
@@ -116,7 +116,10 @@
                       '(enh-ruby-mode
                         "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
                         (lambda (arg) (ruby-end-of-block)) nil)))
-
+      (add-to-list 'load-path "~/.emacs.d/private/reek-emacs")
+      (require 'reek)
+      (add-hook 'enh-ruby-mode-hook #'reek-mode)
+      (require 'rubocop)
       (add-hook 'enh-ruby-mode-hook
                 (lambda ()
                   (hs-minor-mode 1) ;; Enables folding
