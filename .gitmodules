@@ -1,3 +1,9 @@
 [submodule "private/reek-emacs"]
 	path = private/reek-emacs
 	url = git@github.com:hanmoi-choi/reek-emacs.git
+[submodule "vendor/textmate"]
+	path = vendor/textmate
+	url = git://github.com/defunkt/textmate.el.git
+[submodule "vendor/structured-haskell-mode"]
+	path = vendor/structured-haskell-mode
+	url = git@github.com:chrisdone/structured-haskell-mode.git

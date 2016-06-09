@@ -74,25 +74,23 @@
              (invocation-name)))))
 
 ;;;###autoload
-;; (defun peepopen-bind-keys ()
-;;   (peepopen-bind-ns-keys))
+(defun peepopen-bind-keys ()
+  (cond ((featurep 'aquamacs) (peepopen-bind-aquamacs-keys))
+        ((featurep 'mac-carbon) (peepopen-bind-carbon-keys))
+        ((featurep 'ns) (peepopen-bind-ns-keys))))
 
-  ;; (cond ((featurep 'aquamacs) (peepopen-bind-aquamacs-keys))
-  ;;       ((featurep 'mac-carbon) (peepopen-bind-carbon-keys))
-  ;;       ((featurep 'ns) (peepopen-bind-ns-keys))))
+(defun peepopen-bind-aquamacs-keys ()
+  ;; Need `osx-key-mode-map' to override
+  (define-key osx-key-mode-map (kbd "A-t") 'peepopen-goto-file-gui)
+  (define-key *textmate-mode-map* (kbd "A-t") 'peepopen-goto-file-gui))
 
-;; (defun peepopen-bind-aquamacs-keys ()
-;;   ;; Need `osx-key-mode-map' to override
-;;   (define-key osx-key-mode-map (kbd "A-t") 'peepopen-goto-file-gui)
-;;   (define-key *textmate-mode-map* (kbd "A-t") 'peepopen-goto-file-gui))
+(defun peepopen-bind-carbon-keys ()
+  (define-key *textmate-mode-map* [(meta t)] 'peepopen-goto-file-gui))
 
-;; (defun peepopen-bind-carbon-keys ()
-;;   (define-key *textmate-mode-map* [(meta t)] 'peepopen-goto-file-gui))
-
-;; (defun peepopen-bind-ns-keys ()
-;;   (define-key *textmate-mode-map* (kbd "s-o")'peepopen-goto-file-gui))
+(defun peepopen-bind-ns-keys ()
+  (define-key *textmate-mode-map* [(super t)] 'peepopen-goto-file-gui))
 
 ;;;###autoload
-;; (add-hook 'textmate-mode-hook 'peepopen-bind-keys)
-(global-set-key (kbd "s-o") 'peepopen-goto-file-gui)
+(add-hook 'textmate-mode-hook 'peepopen-bind-keys)
+
 (provide 'peepopen)

@@ -131,9 +131,9 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         monokai
+                         ;; monokai
                          ;; spacemacs-light
-                         ;; spacemacs-dark
+                         spacemacs-dark
                          zenburn
                          monokai)
    ;; If non nil the cursor color matches the state color.
@@ -340,14 +340,14 @@ layers configuration. You are free to put any user code."
     (setq ggtags-mode-map (make-sparse-keymap))
     (setq jsx-indent-level 2)
     (setq-default
-      ;; js2-mode
-      js2-basic-offset 2
-      ;; web-mode
-      css-indent-offset 2
-      web-mode-markup-indent-offset 2
-      web-mode-css-indent-offset 2
-      web-mode-code-indent-offset 2
-      web-mode-attr-indent-offset 2)
+     ;; js2-mode
+     js2-basic-offset 2
+     ;; web-mode
+     css-indent-offset 2
+     web-mode-markup-indent-offset 2
+     web-mode-css-indent-offset 2
+     web-mode-code-indent-offset 2
+     web-mode-attr-indent-offset 2)
 
     (defadvice web-mode-highlight-part (around tweak-jsx activate)
       (if (equal web-mode-content-type "jsx")
@@ -416,7 +416,6 @@ layers configuration. You are free to put any user code."
     ;; Deft Setting
     (setq deft-directory "~/Dropbox/org/notes")
     (setq deft-extensions '("org" "md" "txt"))
-
     ;; I want to see all filename
     (setq ibuffer-formats
           '((mark modified read-only " "
@@ -431,16 +430,25 @@ layers configuration. You are free to put any user code."
     (add-to-list 'evil-emacs-state-modes 'finder-mode)
     (add-to-list 'evil-emacs-state-modes 'comint-mode)
 
-    (setq whitespace-display-mappings
-          '((space-mark   ?\    [?\xB7]     [?.]); space
-            (space-mark   ?\xA0 [?\xA4]     [?_]); hard space
-            (newline-mark ?\n   [?\xB6 ?\n] [?$ ?\n]); end-of-line
-            ))
+    ;; Haskell Structured Edit mode
+    (add-to-list 'load-path "~/.emacs.d/vendor/structured-haskell-mode/elisp")
+    (require 'shm)
+    (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+    (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+    (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
+    (defun my-haskell-mode-hook ()
+      (haskell-indentation-mode -1))
+
+    ;; Peepopen
+    (add-to-list 'load-path "~/.emacs.d/vendor/textmate")
+    (require 'textmate)
+    (require 'peepopen)
+    (textmate-mode)
+    (define-key *textmate-mode-map* [(super t)] 'peepopen-goto-file-gui)
 
     ;; Default one is not wokring with old rubocop and REA is using old one
     (require 'flycheck)
     (add-to-list 'flycheck-disabled-checkers 'ruby-rubocop)
-
     (flycheck-define-checker ruby-rubocop-2
       ""
       :command ("rubocop" "--display-cop-names" "--format" "emacs"
@@ -482,6 +490,7 @@ layers configuration. You are free to put any user code."
         (mode . java-mode)
         (mode . idl-mode)
         (mode . lisp-mode)))))))
+ '(powershell-indent 2)
  '(send-mail-function (quote smtpmail-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -490,12 +499,10 @@ layers configuration. You are free to put any user code."
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(sp-show-pair-match-face ((t (:background nil :foreground "red" :weight extra-bold :underline t :inverse-video nil))))
- '(helm-selection ((t (:background "blue"))))
- '(helm-match ((t (:foreground "orange"))))
- '(region ((t (:background "dark cyan" :foreground "white"))))
  '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
  '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
  '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+ '(region ((t (:background "dark cyan" :foreground "white"))))
+ '(sp-show-pair-match-face ((t (:background nil :foreground "red" :weight extra-bold :underline t :inverse-video nil)))))

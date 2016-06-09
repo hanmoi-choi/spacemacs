@@ -12,6 +12,7 @@
         helm-chrome
         edbi
         restclient
+        powershell
         ;; esqlite
         ;; pscv
         helm-ls-git))
@@ -24,6 +25,11 @@
     (progn
       (add-hook 'js2-mode-hook #'js2-refactor-mode)
       )))
+
+(defun daniel-util/init-powershell ()
+  (use-package powershell
+    :mode (("\\.\\(ps\\|ps1\\)\\'" . powershell-mode))
+    ))
 
 (defun daniel-util/init-docker ()
   (use-package docker
